@@ -12,6 +12,9 @@ TARGET_BOOT_ANIMATION_RES := 1920
 TARGET_USES_PREBUILT_VENDOR_SEPOLICY := true
 TARGET_HAS_FUSEBLK_SEPOLICY_ON_VENDOR := true
 
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.system.ota.json_url=https://raw.githubusercontent.com/ahnet-69/treble_voltage/2.8-EOL/ota.json
+
 PRODUCT_PACKAGE_OVERLAYS += \
    $(LOCAL_PATH)/overlay-voltage
 
