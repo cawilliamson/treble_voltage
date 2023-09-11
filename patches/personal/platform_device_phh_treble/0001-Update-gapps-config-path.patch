@@ -1,0 +1,25 @@
+From ec60cbbdec7dc410fbb53aa82ab4bc283be48b57 Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Thu, 22 Dec 2022 14:09:43 +0000
+Subject: [PATCH] Update gapps-config path
+
+---
+ gapps.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gapps.mk b/gapps.mk
+index 15e12a9..a9390fb 100644
+--- a/gapps.mk
++++ b/gapps.mk
+@@ -44,7 +44,7 @@ endif
+ #Pixel Experience gapps
+ ifneq ($(wildcard vendor/gapps),)
+ IS_PHONE := true
+-$(call inherit-product,vendor/gapps/config.mk)
++$(call inherit-product,vendor/gapps/common/common-vendor.mk)
+ PRODUCT_PACKAGES += \
+        phh-overrides \
+ 	   com.simplemobiletools.gallery.pro \
+-- 
+2.39.2
+
