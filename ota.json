@@ -1,16 +1,16 @@
 {
-  "version": "2.8-EOL-20230915",
-  "date": "1694771961",
+  "version": "2.8-EOL-20230920",
+  "date": "1695174461",
   "variants": [
     {
       "name": "treble_arm64_bvN",
-      "size": "907875872",
-      "url": "https://github.com/ahnet-69/treble_voltage/releases/download/2.8-EOL-20230915/VoltageOS-2.8-EOL-20230915-UNOFFICIAL_bvN.img.xz"
+      "size": "800126568",
+      "url": "https://github.com/ahnet-69/treble_voltage/releases/download/2.8-EOL-20230920/VoltageOS-2.8-EOL-20230920-UNOFFICIAL_bvN.img.xz"
     },
     {
       "name": "treble_arm64_bgN",
-      "size": "1277749252",
-      "url": "https://github.com/ahnet-69/treble_voltage/releases/download/2.8-EOL-20230915/VoltageOS-2.8-EOL-20230915-UNOFFICIAL_bgN.img.xz"
+      "size": "1168280832",
+      "url": "https://github.com/ahnet-69/treble_voltage/releases/download/2.8-EOL-20230920/VoltageOS-2.8-EOL-20230920-UNOFFICIAL_bgN.img.xz"
     }
   ]
 }
