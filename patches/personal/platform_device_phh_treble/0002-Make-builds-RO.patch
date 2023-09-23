@@ -1,0 +1,28 @@
+From 33fbd275770e3323bfe9a25354b81b41e9f2b134 Mon Sep 17 00:00:00 2001
+From: ahnet-69 <syedmusicrealise@gmail.com>
+Date: Sat, 23 Sep 2023 11:10:04 +0500
+Subject: [PATCH] Make builds RO
+
+---
+ board-base.mk | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/board-base.mk b/board-base.mk
+index c38e385..5430623 100644
+--- a/board-base.mk
++++ b/board-base.mk
+@@ -11,3 +11,11 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+ BUILD_BROKEN_DUP_RULES := true
+ 
+ BOARD_ROOT_EXTRA_SYMLINKS := $(filter-out $(BOARD_ROOT_EXTRA_SYMLINKS),/mnt/vendor/persist:/persist)
++
++
++
++
++BOARD_EXT4_SHARE_DUP_BLOCKS := true
++
++
++
+-- 
+2.42.0
+
