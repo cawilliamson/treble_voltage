@@ -32,10 +32,12 @@ repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 ```
 
 ### Apply the patches
-Copy the patches folder to the ROM folder, and run this in the ROM folder:
+Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
 ```bash
-patches/apply-patches.sh .
+apply-patches.sh . trebledroid
 ```
+
+Run the above command replacing trebledroid for each folder in the patches directory
 
 #### NOTE: It is recommended to apply patches manually by going to the respective directory of the patches, and applying them by using `git am`, as the script often skips applying critical patches for some reason.
 
