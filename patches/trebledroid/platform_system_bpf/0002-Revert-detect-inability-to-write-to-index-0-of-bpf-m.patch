@@ -1,19 +1,19 @@
-From c7da132f1de06c4c9777f25f79561710430da4f7 Mon Sep 17 00:00:00 2001
+From 059cfff8796aa45e138c67fc9cd6aa966cb8ef68 Mon Sep 17 00:00:00 2001
 From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
 Date: Wed, 19 Oct 2022 02:20:05 +0000
-Subject: [PATCH] Revert "detect inability to write to index != 0 of bpf map
- array"
+Subject: [PATCH 2/2] Revert "detect inability to write to index != 0 of bpf
+ map array"
 
 This reverts commit ead9d83423877458023056f6ccf9390950d6726f.
 ---
- bpfloader/BpfLoader.cpp | 8 --------
- 1 file changed, 8 deletions(-)
+ bpfloader/BpfLoader.cpp | 9 ---------
+ 1 file changed, 9 deletions(-)
 
 diff --git a/bpfloader/BpfLoader.cpp b/bpfloader/BpfLoader.cpp
-index 8ee3890..f11bda4 100644
+index 158dca6..0af23c9 100644
 --- a/bpfloader/BpfLoader.cpp
 +++ b/bpfloader/BpfLoader.cpp
-@@ -201,14 +201,6 @@ int main(int argc, char** argv) {
+@@ -306,15 +306,6 @@ int main(int argc, char** argv) {
          }
      }
  
@@ -24,10 +24,11 @@ index 8ee3890..f11bda4 100644
 -    if (android::bpf::writeToMapEntry(map, &key, &value, BPF_ANY)) {
 -        ALOGE("Critical kernel bug - failure to write into index 1 of 2 element bpf map array.");
 -        return 1;
--        }
-     }
- 
+-    }
+-
      if (android::base::SetProperty("bpf.progs_loaded", "1") == false) {
+         ALOGE("Failed to set bpf.progs_loaded property");
+         return 1;
 -- 
-2.39.2
+2.34.1
 

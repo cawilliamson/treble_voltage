@@ -16,14 +16,13 @@ cd VoltageOS
 
 ## Initalise the Treble VoltageOS repo
 ```bash
-# You must have git-lfs installed.
-repo init -u https://github.com/VoltageOS/manifest.git -b 13 --git-lfs
+repo init -u https://github.com/VoltageOS/manifest.git -b 14
 ```
 
 ## Clone the Manifest
 This adds necessary dependencies for the VoltageOS GSI.
 ```bash
-git clone https://github.com/ahnet-69/treble_manifest.git -b voltage-13 .repo/local_manifests
+git clone https://github.com/ahnet-69/treble_manifest.git -b voltage-14 .repo/local_manifests
 ```
 
 ## Sync the repository
@@ -85,7 +84,7 @@ xz -9 -T0 -v -z system.img
 
 ## Troubleshooting
 If you face any conflicts while applying patches, apply the patch manually.
-For any other issues, report them via the [Issues](https://github.com/ahnet-69/treble_yaap/issues) tab.
+For any other issues, report them via the [Issues](https://github.com/ahnet-69/treble_voltage/issues) tab.
 
 ## Credits
 These people have helped this project in some way or another, so they should be the ones who receive all the credit:
