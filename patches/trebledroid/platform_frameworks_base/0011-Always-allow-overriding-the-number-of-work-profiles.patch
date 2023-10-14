@@ -1,7 +1,7 @@
-From fc272941d85793fec06062e540ec51ed40c0a55b Mon Sep 17 00:00:00 2001
+From f00db6e90f3b0e562117f9f25017b43a8d7364df Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sun, 5 Apr 2020 16:32:46 +0200
-Subject: [PATCH 11/39] Always allow overriding the number of work profiles
+Subject: [PATCH] Always allow overriding the number of work profiles
 
 Change-Id: I6eb09aa71663c6fbe7563e3038bffcabdba0ff6a
 ---
@@ -9,14 +9,14 @@ Change-Id: I6eb09aa71663c6fbe7563e3038bffcabdba0ff6a
  1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/services/core/java/com/android/server/pm/UserManagerService.java b/services/core/java/com/android/server/pm/UserManagerService.java
-index 7e88e13e1788..9c35b31cf283 100644
+index e1114e7b..6781b6a0 100644
 --- a/services/core/java/com/android/server/pm/UserManagerService.java
 +++ b/services/core/java/com/android/server/pm/UserManagerService.java
-@@ -7327,12 +7327,8 @@ public class UserManagerService extends IUserManager.Stub {
+@@ -7337,12 +7337,8 @@ public class UserManagerService extends IUserManager.Stub {
       */
      private static int getMaxUsersOfTypePerParent(UserTypeDetails userTypeDetails) {
          final int defaultMax = userTypeDetails.getMaxAllowedPerParent();
--        if (!Build.IS_DEBUGGABLE) {
+-        if (!Build.IS_ENG) {
 -            return defaultMax;
 -        } else {
 -            if (userTypeDetails.isManagedProfile()) {
@@ -28,5 +28,5 @@ index 7e88e13e1788..9c35b31cf283 100644
          return defaultMax;
      }
 -- 
-2.34.1
+2.42.0
 
