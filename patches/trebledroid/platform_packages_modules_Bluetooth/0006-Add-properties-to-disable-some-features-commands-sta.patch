@@ -1,15 +1,15 @@
-From 38fde0e3896c88ee18150a56d8f984a97e70a393 Mon Sep 17 00:00:00 2001
+From 481a1485de945c70841e26593e502750687f6791 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 27 May 2023 06:41:32 -0400
-Subject: [PATCH 6/7] Add properties to disable some features/commands/states
- that the ble chip declared but doesnt actually support
+Subject: [PATCH] Add properties to disable some features/commands/states that
+ the ble chip declared but doesnt actually support
 
 ---
- system/gd/hci/controller.cc | 72 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 68 insertions(+), 4 deletions(-)
+ system/gd/hci/controller.cc | 82 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 67 insertions(+), 15 deletions(-)
 
 diff --git a/system/gd/hci/controller.cc b/system/gd/hci/controller.cc
-index c08ecab9d5..66b7de6b5e 100644
+index 3025cf6..293b239 100644
 --- a/system/gd/hci/controller.cc
 +++ b/system/gd/hci/controller.cc
 @@ -16,6 +16,7 @@
@@ -17,10 +17,10 @@ index c08ecab9d5..66b7de6b5e 100644
  #include "hci/controller.h"
  
 +#include <base/strings/string_split.h>
+ #include <android-base/strings.h>
  #include <future>
  #include <memory>
- #include <string>
-@@ -27,6 +28,7 @@
+@@ -28,6 +29,7 @@
  #include "os/metrics.h"
  #include "os/system_properties.h"
  #include "sysprops/sysprops_module.h"
@@ -28,15 +28,33 @@ index c08ecab9d5..66b7de6b5e 100644
  
  namespace bluetooth {
  namespace hci {
-@@ -297,7 +299,23 @@ struct Controller::impl {
+@@ -38,9 +40,6 @@ constexpr bool kDefaultVendorCapabilitiesEnabled = true;
+ static const std::string kPropertyVendorCapabilitiesEnabled =
+     "bluetooth.core.le.vendor_capabilities.enabled";
+ 
+-static const char kPropertyDisabledCommands[] =
+-    "bluetooth.hci.disabled_commands";
+-
+ using os::Handler;
+ 
+ struct Controller::impl {
+@@ -301,16 +300,23 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      ASSERT_LOG(status == ErrorCode::SUCCESS, "Status 0x%02hhx, %s", status, ErrorCodeText(status).c_str());
 -    local_supported_commands_ = complete_view.GetSupportedCommands();
+-
+-    if (auto disabledCommands = os::GetSystemProperty(kPropertyDisabledCommands)) {
+-      for (const auto& command : android::base::Split(*disabledCommands, ",")) {
+-        uint16_t index = std::stoi(command);
+-        uint16_t byte_index = index / 10;
+-        uint16_t bit_index = index % 10;
+-        local_supported_commands_[byte_index] &= ~(1 << bit_index);
+-      }
 +    //local_supported_commands_ = complete_view.GetSupportedCommands();
 +
 +    auto local_commands = complete_view.GetSupportedCommands();
-+    std::string ignored_commands = GetSystemProperty("persist.sys.bt.unsupported.commands").value_or("");
++    std::string ignored_commands = os::GetSystemProperty("persist.sys.bt.unsupported.commands").value_or("");
 +
 +    if (ignored_commands != "") {
 +        auto s = base::SplitString(ignored_commands, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_ALL);
@@ -47,13 +65,13 @@ index c08ecab9d5..66b7de6b5e 100644
 +            uint16_t bit_index = index % 10;
 +            local_commands[byte_index] &= ~(1 << bit_index);
 +        }
-+    }
+     }
 +
 +    local_supported_commands_ = local_commands;
    }
  
    void read_local_extended_features_complete_handler(std::promise<void> promise, CommandCompleteView view) {
-@@ -306,7 +324,25 @@ struct Controller::impl {
+@@ -319,7 +325,25 @@ struct Controller::impl {
      ErrorCode status = complete_view.GetStatus();
      ASSERT_LOG(status == ErrorCode::SUCCESS, "Status 0x%02hhx, %s", status, ErrorCodeText(status).c_str());
      uint8_t page_number = complete_view.GetPageNumber();
@@ -62,7 +80,7 @@ index c08ecab9d5..66b7de6b5e 100644
 +    //extended_lmp_features_array_.push_back(complete_view.GetExtendedLmpFeatures());
 +    auto lmp_features = complete_view.GetExtendedLmpFeatures();
 +
-+    std::string ignored_features = GetSystemProperty("persist.sys.bt.unsupported.ogfeatures").value_or("");
++    std::string ignored_features = os::GetSystemProperty("persist.sys.bt.unsupported.ogfeatures").value_or("");
 +
 +    if (ignored_features != "") {
 +        auto s = base::SplitString(ignored_features, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_ALL);
@@ -80,7 +98,7 @@ index c08ecab9d5..66b7de6b5e 100644
      bluetooth::os::LogMetricBluetoothLocalSupportedFeatures(page_number, complete_view.GetExtendedLmpFeatures());
      // Query all extended features
      if (page_number < complete_view.GetMaximumPageNumber()) {
-@@ -449,7 +485,21 @@ struct Controller::impl {
+@@ -462,7 +486,21 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      ASSERT_LOG(status == ErrorCode::SUCCESS, "Status 0x%02hhx, %s", status, ErrorCodeText(status).c_str());
@@ -88,7 +106,7 @@ index c08ecab9d5..66b7de6b5e 100644
 +
 +    //le_local_supported_features_ = complete_view.GetLeFeatures();
 +    auto local_features = complete_view.GetLeFeatures();
-+    std::string ignored_features = GetSystemProperty("persist.sys.bt.unsupported.lefeatures").value_or("");
++    std::string ignored_features = os::GetSystemProperty("persist.sys.bt.unsupported.lefeatures").value_or("");
 +
 +    if (ignored_features != "") {
 +        auto s = base::SplitString(ignored_features, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_ALL);
@@ -103,7 +121,7 @@ index c08ecab9d5..66b7de6b5e 100644
    }
  
    void le_read_supported_states_handler(CommandCompleteView view) {
-@@ -457,7 +507,21 @@ struct Controller::impl {
+@@ -470,7 +508,21 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      ASSERT_LOG(status == ErrorCode::SUCCESS, "Status 0x%02hhx, %s", status, ErrorCodeText(status).c_str());
@@ -111,7 +129,7 @@ index c08ecab9d5..66b7de6b5e 100644
 +    //le_supported_states_ = complete_view.GetLeStates();
 +
 +    auto local_states = complete_view.GetLeStates();
-+    std::string ignored_states = GetSystemProperty("persist.sys.bt.unsupported.states").value_or("");
++    std::string ignored_states = os::GetSystemProperty("persist.sys.bt.unsupported.states").value_or("");
 +
 +    if (ignored_states != "") {
 +        auto s = base::SplitString(ignored_states, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_ALL);
@@ -127,5 +145,5 @@ index c08ecab9d5..66b7de6b5e 100644
  
    void le_read_connect_list_size_handler(CommandCompleteView view) {
 -- 
-2.34.1
+2.42.0
 
