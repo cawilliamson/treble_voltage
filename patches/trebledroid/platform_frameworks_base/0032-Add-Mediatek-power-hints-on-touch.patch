@@ -1,7 +1,7 @@
-From dc79caf62c2ddb3e045c96cecd6f0afa502df7d4 Mon Sep 17 00:00:00 2001
+From bb165329841a667133ce65aa98e3cffb01f6161e Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 17 Jun 2023 08:31:55 -0400
-Subject: [PATCH 32/39] Add Mediatek power hints on touch
+Subject: [PATCH] Add Mediatek power hints on touch
 
 Mediatek has multiple HALs (which existed concurrently), so it is a bit
 of a mess.
@@ -27,13 +27,13 @@ Change-Id: I9f1eac5a20b98920a5d0c8204fe4d165ba069f5a
  2 files changed, 52 insertions(+), 1 deletion(-)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index 735959270c11..05782235ea1c 100644
+index c10ec8da..690696c2 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
-@@ -186,7 +186,9 @@ java_library_static {
-         "com.android.sysprop.watchdog",
+@@ -187,7 +187,9 @@ java_library_static {
          "ImmutabilityAnnotation",
          "securebox",
+         "vendor.aospa.biometrics.face",
 -        "vendor.samsung.hardware.sysinput-V1.2-java", // HIDL
 +        // HIDL
 +        "vendor.mediatek.hardware.mtkpower-V1.1-java",
@@ -42,7 +42,7 @@ index 735959270c11..05782235ea1c 100644
      javac_shard_size: 50,
      javacflags: [
 diff --git a/services/core/java/com/android/server/wm/DisplayPolicy.java b/services/core/java/com/android/server/wm/DisplayPolicy.java
-index a1a9a0877710..289a37b9b60a 100644
+index 485d7c67..9afad5e4 100644
 --- a/services/core/java/com/android/server/wm/DisplayPolicy.java
 +++ b/services/core/java/com/android/server/wm/DisplayPolicy.java
 @@ -208,6 +208,9 @@ public class DisplayPolicy {

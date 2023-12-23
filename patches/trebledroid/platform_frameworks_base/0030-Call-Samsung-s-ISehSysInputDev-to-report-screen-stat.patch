@@ -1,8 +1,8 @@
-From cf30ee029a579c89c7e2bd3a2f5217619225433e Mon Sep 17 00:00:00 2001
+From 74f769745798b471ca0c814d259bbeb4dad5b922 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Wed, 14 Dec 2022 17:21:00 -0500
-Subject: [PATCH 30/39] Call Samsung's ISehSysInputDev to report screen state
- to touchscreen driver
+Subject: [PATCH] Call Samsung's ISehSysInputDev to report screen state to
+ touchscreen driver
 
 This fixes touchscreen not waking up on Galaxy F23
 ---
@@ -11,19 +11,19 @@ This fixes touchscreen not waking up on Galaxy F23
  2 files changed, 33 insertions(+)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index f8d19ec9903d..735959270c11 100644
+index 88d76600..c10ec8da 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
-@@ -186,6 +186,7 @@ java_library_static {
-         "com.android.sysprop.watchdog",
+@@ -187,6 +187,7 @@ java_library_static {
          "ImmutabilityAnnotation",
          "securebox",
+         "vendor.aospa.biometrics.face",
 +        "vendor.samsung.hardware.sysinput-V1.2-java", // HIDL
      ],
      javac_shard_size: 50,
      javacflags: [
 diff --git a/services/core/java/com/android/server/display/LocalDisplayAdapter.java b/services/core/java/com/android/server/display/LocalDisplayAdapter.java
-index c7c0fab6140d..537027f2d77f 100644
+index 7701bc62..54aaaeda 100644
 --- a/services/core/java/com/android/server/display/LocalDisplayAdapter.java
 +++ b/services/core/java/com/android/server/display/LocalDisplayAdapter.java
 @@ -33,6 +33,7 @@ import android.os.Trace;
@@ -52,7 +52,7 @@ index c7c0fab6140d..537027f2d77f 100644
  
          LocalDisplayDevice(IBinder displayToken, long physicalDisplayId,
                  SurfaceControl.StaticDisplayInfo staticDisplayInfo,
-@@ -821,17 +826,44 @@ final class LocalDisplayAdapter extends DisplayAdapter {
+@@ -825,17 +830,44 @@ final class LocalDisplayAdapter extends DisplayAdapter {
                              }
                              mSidekickActive = false;
                          }

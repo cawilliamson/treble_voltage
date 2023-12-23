@@ -1,7 +1,7 @@
-From 9adcc2c90fdd7894cb938a75974e46c1f10f11d3 Mon Sep 17 00:00:00 2001
+From efa112706d84d526ddf1834641239c610df2cdea Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Wed, 5 Jul 2023 10:50:36 -0400
-Subject: [PATCH 33/39] Detect Moto dynamic hardware feature
+Subject: [PATCH 33/46] Detect Moto dynamic hardware feature
 
 Moto added a custom node in sysconfig XMLs:
 <unavailable-feature-conditional />
@@ -44,5 +44,5 @@ index 7fae31c0bb4b..6da8e9397829 100644
                          if (allowOverrideAppRestrictions) {
                              String pkgname = parser.getAttributeValue(null, "package");
 -- 
-2.34.1
+2.25.1
 

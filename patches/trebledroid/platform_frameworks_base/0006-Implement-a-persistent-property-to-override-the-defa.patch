@@ -1,28 +1,20 @@
-From c47433eb06a1fb40a76212064b760185b1819b5c Mon Sep 17 00:00:00 2001
+From 0a637d538609baffb422ef877b9ed9dc77b5d477 Mon Sep 17 00:00:00 2001
 From: Peter Cai <peter@typeblog.net>
 Date: Wed, 1 Jun 2022 16:56:20 -0400
-Subject: [PATCH 06/39] Implement a persistent property to override the default
+Subject: [PATCH] Implement a persistent property to override the default
  primary camera (0)
 
 Change-Id: I49b45d00bf71d7932591b3516d49a680e1b6568b
 ---
- core/java/android/hardware/Camera.java                | 6 ++++++
+ core/java/android/hardware/Camera.java                | 5 +++++
  core/java/android/hardware/camera2/CameraManager.java | 9 +++++++++
- 2 files changed, 15 insertions(+)
+ 2 files changed, 14 insertions(+)
 
 diff --git a/core/java/android/hardware/Camera.java b/core/java/android/hardware/Camera.java
-index ccc39b6080d7..a21bfdce6f05 100644
+index 0f2f2e4a..4b240a31 100644
 --- a/core/java/android/hardware/Camera.java
 +++ b/core/java/android/hardware/Camera.java
-@@ -41,6 +41,7 @@ import android.os.Message;
- import android.os.Process;
- import android.os.RemoteException;
- import android.os.ServiceManager;
-+import android.os.SystemProperties;
- import android.renderscript.Allocation;
- import android.renderscript.Element;
- import android.renderscript.RSIllegalArgumentException;
-@@ -409,6 +410,11 @@ public class Camera {
+@@ -481,6 +481,11 @@ public class Camera {
       * @see #open(int)
       */
      public static Camera open() {
@@ -35,10 +27,10 @@ index ccc39b6080d7..a21bfdce6f05 100644
          CameraInfo cameraInfo = new CameraInfo();
          for (int i = 0; i < numberOfCameras; i++) {
 diff --git a/core/java/android/hardware/camera2/CameraManager.java b/core/java/android/hardware/camera2/CameraManager.java
-index 85f8ca66715b..ee1bae4c854f 100644
+index 8c4a6ddc..5a53eaad 100644
 --- a/core/java/android/hardware/camera2/CameraManager.java
 +++ b/core/java/android/hardware/camera2/CameraManager.java
-@@ -2021,6 +2021,15 @@ public final class CameraManager {
+@@ -2029,6 +2029,15 @@ public final class CameraManager {
                          }
                      }});
  
