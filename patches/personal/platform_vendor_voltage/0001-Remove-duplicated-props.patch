@@ -1,36 +1,34 @@
-From 1f0c1ff25f1abfc335f74a8a1c0915dd0ed0a348 Mon Sep 17 00:00:00 2001
+From 57bbe46aac2e83863ce71e371808a2fed5145257 Mon Sep 17 00:00:00 2001
 From: ahnet-69 <syedmusicrealise@gmail.com>
-Date: Wed, 13 Sep 2023 20:53:02 +0500
-Subject: [PATCH] Remove duplicate props
+Date: Sun, 24 Dec 2023 11:45:59 +0500
+Subject: [PATCH] Remove duplicated props
 
 ---
- config/common.mk  | 5 -----
+ config/common.mk  | 7 +------
  config/version.mk | 1 -
- 2 files changed, 6 deletions(-)
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/config/common.mk b/config/common.mk
-index cdccf68..a8a0b95 100644
+index d31a6b7..5457bbc 100644
 --- a/config/common.mk
 +++ b/config/common.mk
-@@ -34,16 +34,11 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+@@ -34,13 +34,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
      persist.sys.recovery_update=true
  endif
  
 -ifeq ($(TARGET_BUILD_VARIANT),eng)
- # Disable ADB authentication
- PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=0
+-# Disable ADB authentication
+-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=0
 -else
 -# Enable ADB authentication
 -PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=1
  
++ifneq ($(TARGET_BUILD_VARIANT),eng)
  # Disable extra StrictMode features on all non-engineering builds
  PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.strictmode.disable=true
--endif
- 
- # Backup Tool
- PRODUCT_COPY_FILES += \
+ endif
 diff --git a/config/version.mk b/config/version.mk
-index 7043346..bbad546 100644
+index cb19a9a..eb4a20d 100644
 --- a/config/version.mk
 +++ b/config/version.mk
 @@ -52,6 +52,5 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
@@ -41,5 +39,5 @@ index 7043346..bbad546 100644
    ro.voltage.platform_release_or_codename=$(VOLTAGE_PLATFORM_RELEASE_OR_CODENAME) \
    org.voltage.version=$(VOLTAGEVERSION)
 -- 
-2.39.2
+2.34.1
 
