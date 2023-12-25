@@ -69,7 +69,7 @@ In the ROM folder, run this for building GAPPS:
 . build/envsetup.sh
 ccache -M 50G -F 0
 lunch treble_arm64_bgN-userdebug 
-makesystemimage -j$(nproc --all)
+make systemimage -j$(nproc --all)
 ```
 
 ## Compression
