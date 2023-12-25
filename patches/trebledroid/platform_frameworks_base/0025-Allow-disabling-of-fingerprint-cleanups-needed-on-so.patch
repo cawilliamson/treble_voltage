@@ -12,7 +12,7 @@ diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprin
 index fc5add34..c17d0b81 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/Fingerprint21.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/Fingerprint21.java
-@ -744,7 +744,8 @@
+@@ -744,7 +744,8 @@
  
      private void scheduleInternalCleanup(int userId,
              @Nullable ClientMonitorCallback callback) {
