@@ -39,6 +39,14 @@ index f5173b4c..3e17b36b 100644
          mContext = context;
          mExecution = execution;
          mVibrator = vibrator;
+@@ -968,6 +968,7 @@
+         mSecureSettings = secureSettings;
+         mUdfpsUtils = udfpsUtils;
+         mInputManager = inputManager;
++        mColorDisplayManager = colorDisplayManager;
+ 
+         mTouchProcessor = mFeatureFlags.isEnabled(Flags.UDFPS_NEW_TOUCH_DETECTION)
+                 ? singlePointerTouchProcessor : null;
 @@ -1056,6 +1060,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
      private void showUdfpsOverlay(@NonNull UdfpsControllerOverlay overlay) {
          mExecution.assertIsMainThread();
