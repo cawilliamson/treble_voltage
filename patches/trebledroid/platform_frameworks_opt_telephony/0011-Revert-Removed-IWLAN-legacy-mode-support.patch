@@ -98,9 +98,9 @@ index 13832de..8bca289 100644
                  resetIwlanRatVal = true;
              }
              // operator info should be kept in SS
--            String operator = mNewSS.getOperatorAlphaLong();
+             String operator = mNewSS.getOperatorAlphaLong();
+-            mNewSS.setOutOfService(true);
 +            mNewSS.setOutOfService(mAccessNetworksManager.isInLegacyMode(), true);
-             mNewSS.setOutOfService(true);
              if (resetIwlanRatVal) {
                  mNewSS.setDataRegState(ServiceState.STATE_IN_SERVICE);
 @@ -5528,6 +5533,17 @@ public class ServiceStateTracker extends Handler {
