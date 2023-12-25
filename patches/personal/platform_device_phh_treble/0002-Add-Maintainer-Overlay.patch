@@ -30,7 +30,7 @@ index 0000000..779c1a9
 +-->
 +<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 +
-+    <string name="voltage_maintainer">Ahnet</string>
++    <string name="voltage_maintainer">chrisaw</string>
 +
 +</resources> 
 -- 
