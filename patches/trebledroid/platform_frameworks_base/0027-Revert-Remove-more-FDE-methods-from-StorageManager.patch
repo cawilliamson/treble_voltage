@@ -7,9 +7,9 @@ This reverts commit bd13f84152449a3ead6fa8604fd31f48c0224676.
 
 Change-Id: Ic394934ec27b1a486c60123130825d44dad73412
 ---
- .../android/os/storage/StorageManager.java    | 57 +++++++++++++++++++
+ .../android/os/storage/StorageManager.java    | 42 +++++++++++++++++++
  .../internal/os/RoSystemProperties.java       |  4 ++
- 2 files changed, 61 insertions(+)
+ 2 files changed, 46 insertions(+)
 
 diff --git a/core/java/android/os/storage/StorageManager.java b/core/java/android/os/storage/StorageManager.java
 index ee387e7c284f..0adc55598d9b 100644
@@ -31,7 +31,7 @@ index ee387e7c284f..0adc55598d9b 100644
      /** {@hide}
       * Is this device encrypted?
       * <p>
-@@ -1702,6 +1711,54 @@ public class StorageManager {
+@@ -1702,6 +1711,39 @@ public class StorageManager {
          return isFileEncrypted();
      }
  
@@ -65,21 +65,6 @@ index ee387e7c284f..0adc55598d9b 100644
 +     * framework, so no service needs to check for changes during their lifespan
 +     */
 +    public static boolean isBlockEncrypting() {
-+        return false;
-+    }
-+
-+    /** {@hide}
-+     * Is this device non default block encrypted and in the process of
-+     * prompting for credentials?
-+     * @return true for prompting for credentials.
-+     *         (Implies isNonDefaultBlockEncrypted() == true)
-+     *         false otherwise
-+     * Note that only system services and CryptKeeper will ever see this return
-+     * true - no app will ever be launched in this state.
-+     * Also note that this state will not change without a teardown of the
-+     * framework, so no service needs to check for changes during their lifespan
-+     */
-+    public static boolean inCryptKeeperBounce() {
 +        return false;
 +    }
 +
