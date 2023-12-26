@@ -22,7 +22,8 @@ repo init -u https://github.com/VoltageOS/manifest.git -b 14
 ## Clone the Manifest
 This adds necessary dependencies for the VoltageOS GSI.
 ```bash
-git clone https://github.com/ahnet-69/treble_manifest.git -b voltage-14 .repo/local_manifests
+mkdir -p .repo/local_manifests
+cp manifest.xml .repo/local_manifests/
 ```
 
 ## Sync the repository
@@ -33,18 +34,17 @@ repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 ### Apply the patches
 Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
 ```bash
-apply-patches.sh . trebledroid
+./apply-patches.sh . trebledroid
+./apply-patches.sh . ponces
+./apply-patches.sh . personal
 ```
-
-Run the above command replacing trebledroid for each folder in the patches directory
-
-#### NOTE: It is recommended to apply patches manually by going to the respective directory of the patches, and applying them by using `git am`, as the script often skips applying critical patches for some reason.
 
 ## Adapting for VoltageOS
 Clone this repository and then copy Voltage.mk to device/phh/treble in the ROM folder. Then run the following commands:
 ```bash
- cd device/phh/treble
- bash generate.sh Voltage
+pushd  device/phh/treble
+bash generate.sh Voltage
+popd
 ```
 
 ### Turn On Caching
@@ -63,12 +63,12 @@ BOARD_EXT4_SHARE_DUP_BLOCKS := true
 This flag makes the blocks shared, and makes the build read-only. It ensures it fits on to all possible Treble-supported devices, since many devices have a small system partitions.
 
 ## Compilation 
-In the ROM folder, run this for building GAPPS:
+In the ROM folder, run this for building a non-gapps build:
 
 ```bash
 . build/envsetup.sh
 ccache -M 50G -F 0
-lunch treble_arm64_bgN-userdebug 
+lunch treble_arm64_bvN-userdebug 
 make systemimage -j$(nproc --all)
 ```
 
@@ -84,7 +84,7 @@ xz -9 -T0 -v -z system.img
 
 ## Troubleshooting
 If you face any conflicts while applying patches, apply the patch manually.
-For any other issues, report them via the [Issues](https://github.com/ahnet-69/treble_voltage/issues) tab.
+For any other issues, report them via the [Issues](https://github.com/cawilliamson/treble_voltage/issues) tab.
 
 ## Credits
 These people have helped this project in some way or another, so they should be the ones who receive all the credit:

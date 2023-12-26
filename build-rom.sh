@@ -5,7 +5,9 @@
 repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1
 
 git lfs install
-git clone https://github.com/ahnet-69/treble_manifest.git -b voltage-14 .repo/local_manifests
+
+mkdir -p .repo/local_manifests
+cp manifest.xml .repo/local_manifests/
 
 repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 repo forall -c git lfs pull
