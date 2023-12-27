@@ -8,7 +8,7 @@ mkdir -p .repo/local_manifests
 cp manifest.xml .repo/local_manifests/
 
 # setup git-lfs
-gis lfs install
+git lfs install
 
 # sync all necessary repos
 repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
