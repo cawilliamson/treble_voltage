@@ -9,15 +9,10 @@ TARGET_NO_KERNEL_IMAGE := true
 SELINUX_IGNORE_NEVERALLOWS := true
 TARGET_BOOT_ANIMATION_RES := 1920
 
-TARGET_USES_PREBUILT_VENDOR_SEPOLICY := true
-TARGET_HAS_FUSEBLK_SEPOLICY_ON_VENDOR := true
 BOARD_EXT4_SHARE_DUP_BLOCKS := true
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.system.ota.json_url=https://raw.githubusercontent.com/cawilliamson/treble_voltage/14.0/ota.json
-
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.system.gms.spoof_file=https://raw.githubusercontent.com/ponces/treble_aosp/android-14.0/config/spoof.json
 
 PRODUCT_PACKAGE_OVERLAYS += \
    $(LOCAL_PATH)/overlay-voltage
