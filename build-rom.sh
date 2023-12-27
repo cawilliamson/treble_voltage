@@ -1,31 +1,42 @@
 #!/usr/bin/env bash
 
-# Quick 'N dirty script to build gapps-free VoltageOS for arm64
-
+# initialize repo
 repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1
 
-git lfs install
-
+# copy manifest file
 mkdir -p .repo/local_manifests
 cp manifest.xml .repo/local_manifests/
 
-repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+# setup git-lfs
+gis lfs install
+
+# sync all necessary repos
+repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
+
+# sync all git-lfs files
 repo forall -c git lfs pull
 
-./apply-patches.sh . trebledroid
-./apply-patches.sh . ponces
-./apply-patches.sh . personal
+# apply all necessary patches
+./patches/apply.sh . trebledroid
+./patches/apply.sh . ponces
+./patches/apply.sh . personal
 
-pushd device/phh/treble
-bash generate.sh Voltage
-popd
+# generate basic device config
+pushd device/phh/treble || exit
+  bash generate.sh Voltage
+popd || exit
 
+# setup ccache
 CCACHE_COMPRESS=1
 CCACHE_MAXSIZE=50G
 USE_CCACHE=1
 export CCACHE_COMPRESS CCACHE_MAXSIZE USE_CCACHE
-
-. build/envsetup.sh
 ccache -M 50G -F 0
+
+# setup build environment
+# shellcheck source=/dev/null
+. build/envsetup.sh
 lunch treble_arm64_bvN-userdebug
-make systemimage -j$(nproc --all)
+
+# build system image
+make systemimage -j"$(nproc --all)"
