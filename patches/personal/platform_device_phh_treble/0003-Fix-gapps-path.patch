@@ -1,0 +1,24 @@
+From 0a800aaabb083045f289c517db14fcdacf382c59 Thu Dec 28 00:00:00 2023
+From: chrisaw <home@chrisaw.com>
+Date: Thu, 28 Dec 2023 22:01:00 +0000
+Subject: [PATCH] Fix gapps path
+
+---
+ gapps.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gapps.mk b/gapps.mk
+index eb12c67..f382c59
+--- a/gapps.mk
++++ b/gapps.mk
+@@ -44,7 +44,7 @@
+ #Pixel Experience gapps
+ ifneq ($(wildcard vendor/gapps),)
+ IS_PHONE := true
+-$(call inherit-product,vendor/gapps/config.mk)
++$(call inherit-product,vendor/gapps/common/common-vendor.mk)
+ PRODUCT_PACKAGES += \
+        phh-overrides \
+           com.simplemobiletools.gallery.pro \
+-- 
+2.34.1
