@@ -13,8 +13,8 @@ jobs:
     steps:
     - run: repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1 .
     - run: |
-      mkdir -p .repo/local_manifests && \
-        cp -v manifest.xml .repo/local_manifests/
+        mkdir -p .repo/local_manifests && \
+          cp -v manifest.xml .repo/local_manifests/
     - run: git lfs install
     - run: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
     - run: repo forall -c git lfs pull
@@ -25,6 +25,6 @@ jobs:
     - run: cd device/phh/treble && bash generate.sh Voltage
     - run: ccache -M 50G -F 0
     - run: |
-      . build/envsetup.sh && \
-        lunch treble_arm64_bvN-userdebug && \
-        make systemimage -j"$(nproc --all)"
+        . build/envsetup.sh && \
+          lunch treble_arm64_bvN-userdebug && \
+          make systemimage -j"$(nproc --all)"
