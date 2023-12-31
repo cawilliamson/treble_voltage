@@ -1,0 +1,30 @@
+name: Build VoltageOS GSI
+on:
+  workflow_dispatch:
+
+env:
+  CCACHE_COMPRESS: 1
+  CCACHE_MAXSIZE: 50G
+  USE_CCACHE: 1
+
+jobs:
+  build-image:
+    runs-on: [self-hosted]
+    steps:
+    - run: repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1 .
+    - run: |
+      mkdir -p .repo/local_manifests && \
+        cp -v manifest.xml .repo/local_manifests/
+    - run: git lfs install
+    - run: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
+    - run: repo forall -c git lfs pull
+    - run: ./patches/apply.sh . trebledroid
+    - run: ./patches/apply.sh . ponces
+    - run: ./patches/apply.sh . personal
+    - run: ./patches/apply.sh . graphene
+    - run: cd device/phh/treble && bash generate.sh Voltage
+    - run: ccache -M 50G -F 0
+    - run: |
+      . build/envsetup.sh && \
+        lunch treble_arm64_bvN-userdebug && \
+        make systemimage -j"$(nproc --all)"
