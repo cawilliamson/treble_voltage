@@ -20,6 +20,7 @@ repo forall -c git lfs pull
 ./patches/apply.sh . trebledroid
 ./patches/apply.sh . ponces
 ./patches/apply.sh . personal
+./patches/apply.sh . graphene
 
 # generate basic device config
 pushd device/phh/treble || exit

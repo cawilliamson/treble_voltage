@@ -1,0 +1,91 @@
+From a8cba3a50455616dad8d07b4ecdf710f1b676efe Mon Sep 17 00:00:00 2001
+From: Dmitry Muhomor <muhomor.dmitry@gmail.com>
+Date: Wed, 8 Nov 2023 15:56:51 +0200
+Subject: [PATCH] gmscompat: replace cross-user intent broadcasts with
+ user-local ones
+
+Cross-user broadcasts require a privileged permission.
+---
+ core/java/android/app/ContextImpl.java               | 12 +++++++++++-
+ .../gmscompat/sysservice/GmcUserManager.java         | 11 ++++++++++-
+ 2 files changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/core/java/android/app/ContextImpl.java b/core/java/android/app/ContextImpl.java
+index d4547d5cea32..9c52e4a8caaa 100644
+--- a/core/java/android/app/ContextImpl.java
++++ b/core/java/android/app/ContextImpl.java
+@@ -100,9 +100,9 @@
+ import android.window.WindowTokenClient;
+ 
+ import com.android.internal.annotations.GuardedBy;
+-import com.android.internal.gmscompat.GmsInfo;
+ import com.android.internal.gmscompat.sysservice.GmcPackageManager;
+ import com.android.internal.gmscompat.GmsHooks;
++import com.android.internal.gmscompat.sysservice.GmcUserManager;
+ import com.android.internal.util.Preconditions;
+ 
+ import dalvik.system.BlockGuard;
+@@ -1462,6 +1462,10 @@ resultReceiver, getOuterContext(), scheduler, null, false)
+ 
+     @Override
+     public void sendBroadcastAsUser(Intent intent, UserHandle user) {
++        if (GmsCompat.isEnabled()) {
++            user = GmcUserManager.translateUserHandle(user);
++        }
++
+         String resolvedType = intent.resolveTypeIfNeeded(getContentResolver());
+         try {
+             intent.prepareToLeaveProcess(this);
+@@ -1485,6 +1489,7 @@ public void sendBroadcastAsUser(Intent intent, UserHandle user, String receiverP
+             Bundle options) {
+         if (GmsCompat.isEnabled()) {
+             options = GmsHooks.filterBroadcastOptions(intent, options);
++            user = GmcUserManager.translateUserHandle(user);
+         }
+ 
+         String resolvedType = intent.resolveTypeIfNeeded(getContentResolver());
+@@ -1505,6 +1510,10 @@ public void sendBroadcastAsUser(Intent intent, UserHandle user, String receiverP
+     @Override
+     public void sendBroadcastAsUser(Intent intent, UserHandle user,
+             String receiverPermission, int appOp) {
++        if (GmsCompat.isEnabled()) {
++            user = GmcUserManager.translateUserHandle(user);
++        }
++
+         String resolvedType = intent.resolveTypeIfNeeded(getContentResolver());
+         String[] receiverPermissions = receiverPermission == null ? null
+                 : new String[] {receiverPermission};
+@@ -1542,6 +1551,7 @@ public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,
+             Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
+         if (GmsCompat.isEnabled()) {
+             options = GmsHooks.filterBroadcastOptions(intent, options);
++            user = GmcUserManager.translateUserHandle(user);
+         }
+ 
+         IIntentReceiver rd = null;
+diff --git a/core/java/com/android/internal/gmscompat/sysservice/GmcUserManager.java b/core/java/com/android/internal/gmscompat/sysservice/GmcUserManager.java
+index 82891af48024..2b1a8db750b0 100644
+--- a/core/java/com/android/internal/gmscompat/sysservice/GmcUserManager.java
++++ b/core/java/com/android/internal/gmscompat/sysservice/GmcUserManager.java
+@@ -43,11 +43,20 @@ private static int getUserId() {
+     }
+ 
+     private static void checkUserId(int userId) {
+-        if (userId != getUserId()) {
++        if (userId != getUserId() && userId != UserHandle.USER_CURRENT) {
+             throw new IllegalStateException("unexpected userId " + userId);
+         }
+     }
+ 
++    public static UserHandle translateUserHandle(UserHandle h) {
++        if (UserHandle.ALL.equals(h)) {
++            return UserHandle.of(getUserId());
++        }
++
++        checkUserId(h.getIdentifier());
++        return h;
++    }
++
+     private static int getUserSerialNumber() {
+         // GMS has several hardcoded (userSerialNumber == 0) checks
+         return 0;
