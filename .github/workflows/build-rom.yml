@@ -1,10 +1,12 @@
 name: Build VoltageOS GSI
+
 on:
   workflow_dispatch:
 
 env:
   CCACHE_COMPRESS: 1
   CCACHE_MAXSIZE: 50G
+  DISABLE_RUNNER_CLEANUP: true # should ONLY be set to true if ABSOLUTELY necessary
   USE_CCACHE: 1
 
 jobs:
@@ -21,8 +23,12 @@ jobs:
         cp -v manifest.xml .repo/local_manifests/
     - name: setup git-lfs hook
       run: git lfs install
-    - name: perform full sources sync
-      run: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
+    - name: perform full sources sync (with auto retry)
+      uses: corrupt952/retry-command@v1
+      with:
+        command: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
+        max_attempts: 5
+        retry_interval: 60
     - name: apply patches
       run: |
         ./patches/apply.sh . trebledroid
@@ -39,3 +45,6 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
+    - name: cleanup work directory
+      uses: eviden-actions/clean-self-hosted-runner@v1
+      if: ${{ always() }} # Run even if previous steps in the job fail or are canceled
