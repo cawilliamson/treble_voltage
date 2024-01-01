@@ -24,11 +24,10 @@ jobs:
     - name: setup git-lfs hook
       run: git lfs install
     - name: perform full sources sync (with auto retry)
-      uses: corrupt952/retry-command@v1
+      uses: nick-fields/retry@v2
       with:
         command: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
         max_attempts: 5
-        retry_interval: 60
     - name: apply patches
       run: |
         ./patches/apply.sh . trebledroid
