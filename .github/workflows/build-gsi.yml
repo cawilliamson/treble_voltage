@@ -30,7 +30,7 @@ jobs:
     - name: perform full sources sync (with auto retry)
       uses: nick-fields/retry@v2
       with:
-        command: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
+        command: repo sync -c -j"$(($(nproc --all)-1))" --force-sync --no-clone-bundle --no-tags
         max_attempts: 3
         retry_on: error
         timeout_minutes: 20
