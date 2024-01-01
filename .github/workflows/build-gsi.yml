@@ -1,4 +1,4 @@
-name: Build VoltageOS GSI
+name: Build Voltage GSI
 
 on:
   workflow_dispatch:
@@ -10,8 +10,8 @@ env:
   USE_CCACHE: 1
 
 jobs:
-  build-voltage:
-    runs-on: [self-hosted]
+  build-voltage-gsi:
+    runs-on: [androidbuild]
     steps:
     - name: setup git config
       run: |
@@ -33,7 +33,7 @@ jobs:
         command: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
         max_attempts: 3
         retry_on: error
-        timeout_minutes: 30
+        timeout_minutes: 20
     - name: apply patches
       run: |
         ./patches/apply.sh . trebledroid
@@ -45,7 +45,7 @@ jobs:
       working-directory: device/phh/treble
     - name: initialize ccache
       run: ccache -M 50G -F 0
-    - name: build gsi
+    - name: build gsi image
       run: |
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
