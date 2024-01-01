@@ -13,6 +13,10 @@ jobs:
   build-voltage:
     runs-on: [self-hosted]
     steps:
+    - name: setup git config
+      run: |
+        git config --global user.email "androidbuild@localhost"
+        git config --global user.name "androidbuild"
     - name: checkout basic repo
       uses: actions/checkout@v4
     - name: clone voltage manifest
