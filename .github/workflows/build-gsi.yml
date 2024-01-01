@@ -1,4 +1,4 @@
-name: Build Voltage GSI
+name: Build GSI
 
 on:
   workflow_dispatch:
@@ -10,8 +10,8 @@ env:
   USE_CCACHE: 1
 
 jobs:
-  build-voltage-gsi:
-    runs-on: [androidbuild]
+  build-gsi:
+    runs-on: [self-hosted]
     steps:
     - name: setup git config
       run: |
@@ -19,7 +19,7 @@ jobs:
         git config --global user.name "androidbuild"
     - name: checkout basic repo
       uses: actions/checkout@v4
-    - name: clone voltage manifest
+    - name: clone rom manifest
       run: repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1
     - name: copy manifest config
       run: |
@@ -40,7 +40,7 @@ jobs:
         ./patches/apply.sh . ponces
         ./patches/apply.sh . personal
         ./patches/apply.sh . graphene
-    - name: generate base voltage config
+    - name: generate base rom config
       run: bash generate.sh Voltage
       working-directory: device/phh/treble
     - name: initialize ccache
