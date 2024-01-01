@@ -27,7 +27,9 @@ jobs:
       uses: nick-fields/retry@v2
       with:
         command: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
-        max_attempts: 5
+        max_attempts: 3
+        retry_on: error
+        timeout_minutes: 30
     - name: apply patches
       run: |
         ./patches/apply.sh . trebledroid
