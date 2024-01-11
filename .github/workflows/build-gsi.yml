@@ -30,7 +30,7 @@ jobs:
     - name: perform full sources sync (with auto retry)
       uses: nick-fields/retry@v2
       with:
-        command: repo sync -c -j"$(($(nproc --all)-1))" --force-sync --no-clone-bundle --no-tags
+        command: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
         max_attempts: 3
         retry_on: error
         timeout_minutes: 20
@@ -51,7 +51,7 @@ jobs:
       run: |
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
-        make systemimage -j"$(($(nproc --all)-1))"
+        make systemimage -j"$(nproc --all)"
     - name: compress system.img with xz
       run: xz -9 -T0 -v -z system.img
       working-directory: out/target/product/tdgsi_arm64_ab
