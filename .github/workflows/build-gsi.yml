@@ -41,7 +41,6 @@ jobs:
         ./patches/apply.sh . trebledroid
         ./patches/apply.sh . ponces
         ./patches/apply.sh . personal
-        ./patches/apply.sh . graphene
     - name: generate base rom config
       run: bash generate.sh Voltage
       working-directory: device/phh/treble
