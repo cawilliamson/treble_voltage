@@ -7,7 +7,7 @@ $(call inherit-product, device/voltage/sepolicy/common/sepolicy.mk)
 TARGET_NO_KERNEL_OVERRIDE := true
 TARGET_NO_KERNEL_IMAGE := true
 SELINUX_IGNORE_NEVERALLOWS := true
-TARGET_BOOT_ANIMATION_RES := 1920
+TARGET_BOOT_ANIMATION_RES := 1280
 
 BOARD_EXT4_SHARE_DUP_BLOCKS := true
 
