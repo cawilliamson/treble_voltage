@@ -1,7 +1,7 @@
-From bb165329841a667133ce65aa98e3cffb01f6161e Mon Sep 17 00:00:00 2001
+From a501d218943c17e76bb36d09083a133228eaf186 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 17 Jun 2023 08:31:55 -0400
-Subject: [PATCH] Add Mediatek power hints on touch
+Subject: [PATCH 32/46] Add Mediatek power hints on touch
 
 Mediatek has multiple HALs (which existed concurrently), so it is a bit
 of a mess.
@@ -27,7 +27,7 @@ Change-Id: I9f1eac5a20b98920a5d0c8204fe4d165ba069f5a
  2 files changed, 52 insertions(+), 1 deletion(-)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index c10ec8da..690696c2 100644
+index 735959270c11..05782235ea1c 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
 @@ -187,7 +187,9 @@ java_library_static {
@@ -122,6 +122,6 @@ index 485d7c67..9afad5e4 100644
                  }
  
                  @Override
--- 
-2.34.1
+--
+2.25.1
 

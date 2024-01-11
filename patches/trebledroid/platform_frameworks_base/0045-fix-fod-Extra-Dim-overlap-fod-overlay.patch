@@ -1,18 +1,18 @@
-From 40ba0c2f67253bcc28e4efbb58e5fae1c1960a55 Mon Sep 17 00:00:00 2001
+From e2f079e9b30c1b103a86ee37e4e607cdf26c0ad9 Mon Sep 17 00:00:00 2001
 From: MrHereAndThere <38396158+boydaihungst@users.noreply.github.com>
 Date: Fri, 17 Nov 2023 09:22:29 +0700
-Subject: [PATCH] fix(fod): Extra Dim overlap fod overlay
+Subject: [PATCH 45/46] fix(fod): Extra Dim overlap fod overlay
 
 Extra Dim will set display panel brightness to lowest value possible, which will also effect FOD overlay.
 ---
- .../systemui/biometrics/UdfpsController.java   | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ .../systemui/biometrics/UdfpsController.java  | 20 +++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
-index f5173b4c..3e17b36b 100644
+index 19b67b5f3def..ef5e4f617138 100644
 --- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
 +++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
-@@ -44,6 +44,7 @@ import android.hardware.fingerprint.FingerprintSensorProperties;
+@@ -46,6 +46,7 @@
  import android.hardware.fingerprint.FingerprintSensorPropertiesInternal;
  import android.hardware.fingerprint.IUdfpsOverlayController;
  import android.hardware.fingerprint.IUdfpsOverlayControllerCallback;
@@ -20,34 +20,34 @@ index f5173b4c..3e17b36b 100644
  import android.hardware.input.InputManager;
  import android.net.Uri;
  import android.os.Build;
-@@ -187,6 +188,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+@@ -194,6 +195,8 @@
      @NonNull private final AlternateBouncerInteractor mAlternateBouncerInteractor;
      @NonNull private final SecureSettings mSecureSettings;
      @NonNull private final UdfpsUtils mUdfpsUtils;
 +    @NonNull private final ColorDisplayManager mColorDisplayManager;
 +    private boolean mIgnoreExtraDim;
      @NonNull private final InputManager mInputManager;
+     @NonNull private final UdfpsKeyguardAccessibilityDelegate mUdfpsKeyguardAccessibilityDelegate;
      private final boolean mIgnoreRefreshRate;
- 
-@@ -918,7 +921,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
-             @NonNull SecureSettings secureSettings,
-             @NonNull InputManager inputManager,
+@@ -942,7 +945,8 @@
              @NonNull UdfpsUtils udfpsUtils,
--            @NonNull KeyguardFaceAuthInteractor keyguardFaceAuthInteractor) {
-+            @NonNull KeyguardFaceAuthInteractor keyguardFaceAuthInteractor,
+             @NonNull KeyguardFaceAuthInteractor keyguardFaceAuthInteractor,
+             @NonNull UdfpsKeyguardAccessibilityDelegate udfpsKeyguardAccessibilityDelegate,
+-            @NonNull Provider<UdfpsKeyguardViewModels> udfpsKeyguardViewModelsProvider) {
++            @NonNull Provider<UdfpsKeyguardViewModels> udfpsKeyguardViewModelsProvider,
 +            @NonNull ColorDisplayManager colorDisplayManager) {
          mContext = context;
          mExecution = execution;
          mVibrator = vibrator;
-@@ -968,6 +968,7 @@
-         mSecureSettings = secureSettings;
+@@ -989,6 +993,7 @@
          mUdfpsUtils = udfpsUtils;
          mInputManager = inputManager;
+         mUdfpsKeyguardAccessibilityDelegate = udfpsKeyguardAccessibilityDelegate;
 +        mColorDisplayManager = colorDisplayManager;
  
          mTouchProcessor = mFeatureFlags.isEnabled(Flags.UDFPS_NEW_TOUCH_DETECTION)
                  ? singlePointerTouchProcessor : null;
-@@ -1056,6 +1060,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+@@ -1113,6 +1118,10 @@
      private void showUdfpsOverlay(@NonNull UdfpsControllerOverlay overlay) {
          mExecution.assertIsMainThread();
  
@@ -58,7 +58,7 @@ index f5173b4c..3e17b36b 100644
          mOverlay = overlay;
          final int requestReason = overlay.getRequestReason();
          if (requestReason == REASON_AUTH_KEYGUARD
-@@ -1321,6 +1329,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+@@ -1390,6 +1399,10 @@
          updateViewDimAmount(true);
  
          if (isOptical()) {
@@ -69,7 +69,7 @@ index f5173b4c..3e17b36b 100644
              mLatencyTracker.onActionStart(LatencyTracker.ACTION_UDFPS_ILLUMINATE);
          }
          // Refresh screen timeout and boost process priority if possible.
-@@ -1407,6 +1419,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+@@ -1476,6 +1489,10 @@
          mActivePointerId = -1;
          mAcquiredReceived = false;
          if (mOnFingerDown) {
@@ -80,6 +80,5 @@ index f5173b4c..3e17b36b 100644
              if (mAlternateTouchProvider != null) {
                  mBiometricExecutor.execute(() -> {
                      mAlternateTouchProvider.onPointerUp(requestId);
--- 
-2.34.1
-
+--
+2.25.1

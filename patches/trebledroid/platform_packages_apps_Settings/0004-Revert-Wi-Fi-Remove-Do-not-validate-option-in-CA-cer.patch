@@ -20,48 +20,24 @@ Signed-off-by: TogoFire <italomellopereira@gmail.com>
 Signed-off-by: xawlw <abdulazizawlw@gmail.com>
 Change-Id: I3cec92b74a419b5463c5e5db496863e66d034703
 ---
- res/layout/wifi_network_config.xml | 12 ++++++++++++
- res/values/strings.xml             |  4 ++++
- 2 files changed, 16 insertions(+)
+ res/values/strings.xml                        |  4 +++
+ 1 files changed, 4 insertions(+)
 
-diff --git a/res/layout/wifi_network_config.xml b/res/layout/wifi_network_config.xml
-index 5a9d6e6..f727e7c 100644
---- a/res/layout/wifi_network_config.xml
-+++ b/res/layout/wifi_network_config.xml
-@@ -236,6 +236,18 @@
-                         android:text="@string/wifi_do_not_validate_eap_server_warning" />
-             </LinearLayout>
- 
-+            <LinearLayout android:id="@+id/no_ca_cert_warning"
-+                    android:layout_width="match_parent"
-+                    android:layout_height="wrap_content"
-+                    android:visibility="gone"
-+                    style="@style/wifi_item" >
-+                <TextView
-+                        android:layout_width="wrap_content"
-+                        android:layout_height="wrap_content"
-+                        style="@style/wifi_item_warning"
-+                        android:text="@string/wifi_do_not_validate_eap_server_warning" />
-+            </LinearLayout>
-+
-             <LinearLayout android:id="@+id/l_domain"
-                           android:layout_width="match_parent"
-                           android:layout_height="wrap_content"
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index e1d4f76..39157b0 100644
+index 7fe1daa5cb..b5e993fe84 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -1898,6 +1898,10 @@
-     <string name="wifi_use_system_certs">Use system certificates</string>
+@@ -1908,6 +1908,10 @@
      <!-- Menu option for not providing an EAP user certificate -->
      <string name="wifi_do_not_provide_eap_user_cert">Do not provide</string>
+     <!-- Menu option for Trust On First Use[CHAR_LIMIT=64] -->
 +    <!-- Menu option for not validating the EAP server -->
 +    <string name="wifi_do_not_validate_eap_server">Do not validate</string>
 +    <!-- Warning message displayed if user choses not to validate the EAP server -->
 +    <string name="wifi_do_not_validate_eap_server_warning">No certificate specified. Your connection will not be private.</string>
-     <!-- Menu option for Trust On First Use[CHAR_LIMIT=64] -->
      <string name="wifi_trust_on_first_use">Trust on First Use</string>
      <!-- Warning message displayed if network name (ssid) is too long -->
+     <string name="wifi_ssid_too_long">Network name is too long.</string>
 -- 
-2.34.1
+2.25.1
 

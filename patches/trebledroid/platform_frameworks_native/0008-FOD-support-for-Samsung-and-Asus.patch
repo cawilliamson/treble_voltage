@@ -1,7 +1,7 @@
-From 7f6e71d45e5dca7976fd88fef432cad3773d8bd1 Mon Sep 17 00:00:00 2001
+From 3dfb2a604c9c9633c29c9b80484e1da0c3b723ce Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sun, 18 Dec 2022 18:17:30 -0500
-Subject: [PATCH] FOD support for Samsung and Asus
+Subject: [PATCH 08/10] FOD support for Samsung and Asus
 
 ---
  libs/gui/BLASTBufferQueue.cpp                 | 20 ++++++++++++++--
@@ -19,7 +19,7 @@ Subject: [PATCH] FOD support for Samsung and Asus
  12 files changed, 77 insertions(+), 5 deletions(-)
 
 diff --git a/libs/gui/BLASTBufferQueue.cpp b/libs/gui/BLASTBufferQueue.cpp
-index 5c324b2..01b6eb5 100644
+index 207fa4fd31..a162658e30 100644
 --- a/libs/gui/BLASTBufferQueue.cpp
 +++ b/libs/gui/BLASTBufferQueue.cpp
 @@ -35,12 +35,21 @@
@@ -64,10 +64,10 @@ index 5c324b2..01b6eb5 100644
      static std::atomic<uint32_t> nextId = 0;
      mProducerId = nextId++;
 diff --git a/libs/ui/Gralloc2.cpp b/libs/ui/Gralloc2.cpp
-index 9bb18e9..8b02a57 100644
+index e9b5decee8..88cc90eec6 100644
 --- a/libs/ui/Gralloc2.cpp
 +++ b/libs/ui/Gralloc2.cpp
-@@ -115,7 +115,6 @@ status_t Gralloc2Mapper::validateBufferDescriptorInfo(
+@@ -108,7 +108,6 @@ status_t Gralloc2Mapper::validateBufferDescriptorInfo(
      if (descriptorInfo->usage & ~validUsageBits) {
          ALOGE("buffer descriptor contains invalid usage bits 0x%" PRIx64,
                descriptorInfo->usage & ~validUsageBits);
@@ -76,10 +76,10 @@ index 9bb18e9..8b02a57 100644
  
      // Gralloc2 implementations never understand non-BLOB with GPU_DATA_BUFFER
 diff --git a/libs/ui/Gralloc3.cpp b/libs/ui/Gralloc3.cpp
-index 8bd5010..cb90f8f 100644
+index 474d381dbb..8c6a5babd4 100644
 --- a/libs/ui/Gralloc3.cpp
 +++ b/libs/ui/Gralloc3.cpp
-@@ -106,7 +106,6 @@ status_t Gralloc3Mapper::validateBufferDescriptorInfo(
+@@ -99,7 +99,6 @@ status_t Gralloc3Mapper::validateBufferDescriptorInfo(
      if (descriptorInfo->usage & ~validUsageBits) {
          ALOGE("buffer descriptor contains invalid usage bits 0x%" PRIx64,
                descriptorInfo->usage & ~validUsageBits);
@@ -88,10 +88,10 @@ index 8bd5010..cb90f8f 100644
  
      // Gralloc3 implementations never understand non-BLOB with GPU_DATA_BUFFER
 diff --git a/libs/ui/Gralloc4.cpp b/libs/ui/Gralloc4.cpp
-index 85a89ca..95718b3 100644
+index b6274ab9c0..f35009fe28 100644
 --- a/libs/ui/Gralloc4.cpp
 +++ b/libs/ui/Gralloc4.cpp
-@@ -129,7 +129,6 @@ static status_t validateBufferDescriptorInfo(IMapper::BufferDescriptorInfo* desc
+@@ -122,7 +122,6 @@ static status_t validateBufferDescriptorInfo(IMapper::BufferDescriptorInfo* desc
      if (descriptorInfo->usage & ~validUsageBits) {
          ALOGE("buffer descriptor contains invalid usage bits 0x%" PRIx64,
                descriptorInfo->usage & ~validUsageBits);
@@ -100,18 +100,18 @@ index 85a89ca..95718b3 100644
  
      // Combinations that are only allowed with gralloc 4.1.
 diff --git a/services/surfaceflinger/CompositionEngine/src/OutputLayer.cpp b/services/surfaceflinger/CompositionEngine/src/OutputLayer.cpp
-index a314553..5b28819 100644
+index fc5f8ca1d3..4b81cc1df0 100644
 --- a/services/surfaceflinger/CompositionEngine/src/OutputLayer.cpp
 +++ b/services/surfaceflinger/CompositionEngine/src/OutputLayer.cpp
-@@ -28,6 +28,7 @@
+@@ -26,6 +26,7 @@
  #include "system/graphics-base-v1.0.h"
  
- #include <ui/DataspaceUtils.h>
+ #include <ui/HdrRenderTypeUtils.h>
 +#include <cutils/properties.h>
  
  // TODO(b/129481165): remove the #pragma below and fix conversion issues
  #pragma clang diagnostic push
-@@ -38,6 +39,9 @@
+@@ -36,6 +37,9 @@
  // TODO(b/129481165): remove the #pragma below and fix conversion issues
  #pragma clang diagnostic pop // ignored "-Wconversion"
  
@@ -121,7 +121,7 @@ index a314553..5b28819 100644
  using aidl::android::hardware::graphics::composer3::Composition;
  
  namespace android::compositionengine {
-@@ -433,6 +437,26 @@ void OutputLayer::writeOutputDependentGeometryStateToHWC(HWC2::Layer* hwcLayer,
+@@ -438,6 +442,26 @@ void OutputLayer::writeOutputDependentGeometryStateToHWC(HWC2::Layer* hwcLayer,
                                                       ->getHeight()));
      }
  
@@ -149,7 +149,7 @@ index a314553..5b28819 100644
            displayFrame.right, displayFrame.bottom);
  
 diff --git a/services/surfaceflinger/DisplayHardware/AidlComposerHal.cpp b/services/surfaceflinger/DisplayHardware/AidlComposerHal.cpp
-index c0eb36d..782e22c 100644
+index c0eb36dc02..782e22cbc2 100644
 --- a/services/surfaceflinger/DisplayHardware/AidlComposerHal.cpp
 +++ b/services/surfaceflinger/DisplayHardware/AidlComposerHal.cpp
 @@ -1599,5 +1599,13 @@ void AidlComposer::addDisplay(Display display) {
@@ -167,10 +167,10 @@ index c0eb36d..782e22c 100644
  } // namespace Hwc2
  } // namespace android
 diff --git a/services/surfaceflinger/DisplayHardware/AidlComposerHal.h b/services/surfaceflinger/DisplayHardware/AidlComposerHal.h
-index b8ae26f..c8dc409 100644
+index 8d21b491c3..349278771d 100644
 --- a/services/surfaceflinger/DisplayHardware/AidlComposerHal.h
 +++ b/services/surfaceflinger/DisplayHardware/AidlComposerHal.h
-@@ -237,6 +237,8 @@ public:
+@@ -238,6 +238,8 @@ public:
      Error setHdrConversionStrategy(HdrConversionStrategy, Hdr*) override;
      Error setRefreshRateChangedCallbackDebugEnabled(Display, bool) override;
  
@@ -180,7 +180,7 @@ index b8ae26f..c8dc409 100644
      // Many public functions above simply write a command into the command
      // queue to batch the calls.  validateDisplay and presentDisplay will call
 diff --git a/services/surfaceflinger/DisplayHardware/ComposerHal.h b/services/surfaceflinger/DisplayHardware/ComposerHal.h
-index cf67795..eb5a2bf 100644
+index cf677955bf..eb5a2bf786 100644
 --- a/services/surfaceflinger/DisplayHardware/ComposerHal.h
 +++ b/services/surfaceflinger/DisplayHardware/ComposerHal.h
 @@ -291,6 +291,9 @@ public:
@@ -194,7 +194,7 @@ index cf67795..eb5a2bf 100644
  
  } // namespace Hwc2
 diff --git a/services/surfaceflinger/DisplayHardware/HWC2.cpp b/services/surfaceflinger/DisplayHardware/HWC2.cpp
-index aaf2523..2acb79a 100644
+index aaf2523338..2acb79ad2f 100644
 --- a/services/surfaceflinger/DisplayHardware/HWC2.cpp
 +++ b/services/surfaceflinger/DisplayHardware/HWC2.cpp
 @@ -1003,6 +1003,14 @@ Error Layer::setBlockingRegion(const Region& region) {
@@ -213,7 +213,7 @@ index aaf2523..2acb79a 100644
  } // namespace HWC2
  } // namespace android
 diff --git a/services/surfaceflinger/DisplayHardware/HWC2.h b/services/surfaceflinger/DisplayHardware/HWC2.h
-index 23dd3e5..a63d609 100644
+index 23dd3e5016..a63d609df7 100644
 --- a/services/surfaceflinger/DisplayHardware/HWC2.h
 +++ b/services/surfaceflinger/DisplayHardware/HWC2.h
 @@ -345,6 +345,9 @@ public:
@@ -236,7 +236,7 @@ index 23dd3e5..a63d609 100644
      // These are references to data owned by HWComposer, which will outlive
      // this HWC2::Layer, so these references are guaranteed to be valid for
 diff --git a/services/surfaceflinger/DisplayHardware/HidlComposerHal.cpp b/services/surfaceflinger/DisplayHardware/HidlComposerHal.cpp
-index 9b41da5..f16c3f1 100644
+index 9b41da5754..f16c3f17a7 100644
 --- a/services/surfaceflinger/DisplayHardware/HidlComposerHal.cpp
 +++ b/services/surfaceflinger/DisplayHardware/HidlComposerHal.cpp
 @@ -1409,6 +1409,13 @@ Error HidlComposer::getPhysicalDisplayOrientation(Display, AidlTransform*) {
@@ -254,7 +254,7 @@ index 9b41da5..f16c3f1 100644
      const bool vsyncSwitchingSupported =
              isSupported(Hwc2::Composer::OptionalFeature::RefreshRateSwitching);
 diff --git a/services/surfaceflinger/DisplayHardware/HidlComposerHal.h b/services/surfaceflinger/DisplayHardware/HidlComposerHal.h
-index 0521acf..1acb8b0 100644
+index 0521acf9c4..1acb8b0efe 100644
 --- a/services/surfaceflinger/DisplayHardware/HidlComposerHal.h
 +++ b/services/surfaceflinger/DisplayHardware/HidlComposerHal.h
 @@ -346,6 +346,8 @@ public:
@@ -267,5 +267,5 @@ index 0521acf..1acb8b0 100644
      class CommandWriter : public CommandWriterBase {
      public:
 -- 
-2.34.1
+2.25.1
 
