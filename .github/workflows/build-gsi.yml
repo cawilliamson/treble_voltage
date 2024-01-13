@@ -30,12 +30,17 @@ jobs:
     - name: perform full sources sync (with auto retry)
       uses: nick-fields/retry@v2
       with:
-        command: repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
+        command: repo sync -c -j8 --force-sync --no-clone-bundle --no-tags # set to 8 cores to slow down sync and avoid github-actions timeouts
         max_attempts: 3
         retry_on: error
         timeout_minutes: 20
     - name: fetch all git-lfs objects
-      run: repo forall -c git lfs pull
+      run: |
+        grep -l 'merge=lfs' $( find $PWD -name .gitattributes ) /dev/null | while IFS= read -r line; do
+          dir=$(dirname $line)
+          echo $dir
+          ( cd $dir ; git lfs pull )
+        done
     - name: apply patches
       run: |
         ./patches/apply.sh . trebledroid
