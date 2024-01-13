@@ -1,21 +1,21 @@
-From dbe19e9eef67309210e38cb8c82dde7207af0f43 Mon Sep 17 00:00:00 2001
+From 802bdaaf5ee19687b3a27122b9fc11442969d87c Mon Sep 17 00:00:00 2001
 From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
 Date: Sat, 15 Oct 2022 09:33:56 +0000
-Subject: [PATCH 27/47] Revert "Remove more FDE methods from StorageManager"
+Subject: [PATCH 27/46] Revert "Remove more FDE methods from StorageManager"
 
 This reverts commit bd13f84152449a3ead6fa8604fd31f48c0224676.
 
 Change-Id: Ic394934ec27b1a486c60123130825d44dad73412
 ---
- .../android/os/storage/StorageManager.java    | 54 +++++++++++++++++++
+ .../android/os/storage/StorageManager.java    | 42 +++++++++++++++++++
  .../internal/os/RoSystemProperties.java       |  4 ++
- 2 files changed, 61 insertions(+)
+ 2 files changed, 46 insertions(+)
 
 diff --git a/core/java/android/os/storage/StorageManager.java b/core/java/android/os/storage/StorageManager.java
-index 80dd48825ba7..cb4769ff4ec3 100644
+index ee387e7c284f..0adc55598d9b 100644
 --- a/core/java/android/os/storage/StorageManager.java
 +++ b/core/java/android/os/storage/StorageManager.java
-@@ -1660,6 +1660,13 @@ public class StorageManager {
+@@ -1669,6 +1669,15 @@ public class StorageManager {
          return false;
      }
  
@@ -31,7 +31,7 @@ index 80dd48825ba7..cb4769ff4ec3 100644
      /** {@hide}
       * Is this device encrypted?
       * <p>
-@@ -1693,6 +1702,53 @@ public class StorageManager {
+@@ -1702,6 +1711,39 @@ public class StorageManager {
          return isFileEncrypted();
      }
  
@@ -67,18 +67,6 @@ index 80dd48825ba7..cb4769ff4ec3 100644
 +    public static boolean isBlockEncrypting() {
 +        return false;
 +    }
-+
-+    /** {@hide}
-+     * Is this device non default block encrypted and in the process of
-+     * prompting for credentials?
-+     * @return true for prompting for credentials.
-+     *         (Implies isNonDefaultBlockEncrypted() == true)
-+     *         false otherwise
-+     * Note that only system services and CryptKeeper will ever see this return
-+     * true - no app will ever be launched in this state.
-+     * Also note that this state will not change without a teardown of the
-+     * framework, so no service needs to check for changes during their lifespan
-+     */
 +
      /** {@hide}
       * @deprecated Use {@link #isFileEncrypted} instead, since emulated FBE is no longer supported.
