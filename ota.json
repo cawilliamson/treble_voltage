@@ -1,11 +1,11 @@
 {
-  "version": "3.0-20240101",
-  "date": "1704110400",
+  "version": "3.1-20240114-2",
+  "date": "1705265970",
   "variants": [
     {
       "name": "treble_arm64_bvN",
-      "size": "874829008",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/3.0-20240101/VoltageOS-3.0-20240101-UNOFFICIAL_bvN.img.xz"
+      "size": "880228100",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/VoltageOS-3.1-20240114-2/VoltageOS-3.1-20240114-2-UNOFFICIAL_bvN.img.xz"
     }
   ]
 }
