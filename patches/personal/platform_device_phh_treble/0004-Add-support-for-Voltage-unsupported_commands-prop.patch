@@ -16,7 +16,7 @@ index 3029abf..96966aa 100644
     exec u:r:phhsu_daemon:s0 root -- /system/bin/resetprop_phh ro.telephony.iwlan_operation_mode AP-assisted
  
 +on property:persist.sys.bt.unsupported_commands=*
-+   exec u:r:phhsu_daemon:s0 root -- /system/bin/setprop bluetooth.hci.disabled_commands ${persist.sys.bt.unsupported_commands}
++   exec u:r:phhsu_daemon:s0 root -- /system/bin/setprop bluetooth.hci.disabled_commands ${persist.sys.bt.unsupported.commands}
 +
  # Set watchdog timer to 30 seconds and pet it every 10 seconds to get a 20 second margin
  service watchdogd-gsi /system/bin/watchdogd 10 20
