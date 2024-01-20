@@ -42,6 +42,7 @@ Copy the patches folder to the ROM folder and copy the apply-patches.sh to the r
 Clone this repository and then copy Voltage.mk to device/phh/treble in the ROM folder. Then run the following commands:
 ```bash
 pushd  device/phh/treble
+cp -v ../../../Voltage.mk .
 bash generate.sh Voltage
 popd
 ```
@@ -54,12 +55,6 @@ export USE_CCACHE=1
 export CCACHE_COMPRESS=1
 export CCACHE_MAXSIZE=50G # 50 GB
 ```
-
-### Reduce File Sizes
-```Makefile
-BOARD_EXT4_SHARE_DUP_BLOCKS := true
-```
-This flag makes the blocks shared, and makes the build read-only. It ensures it fits on to all possible Treble-supported devices, since many devices have a small system partitions.
 
 ## Compilation 
 In the ROM folder, run this for building a non-gapps build:
