@@ -58,7 +58,7 @@ jobs:
     - name: create vndklite image from standard image
       run: sudo bash lite-adapter.sh 64 out/target/product/tdgsi_arm64_ab/system.img
     - name: rename image files
-      shell: |
+      run: |
         buildDate=$(date +%Y%m%d)
         mv -v out/target/product/tdgsi_arm64_ab/system.img VoltageOS-arm64-ab-3.1-"${buildDate}"-UNOFFICIAL.img
         mv -v s.img VoltageOS-arm64-ab-vndklite-3.1-"${buildDate}"-UNOFFICIAL.img
