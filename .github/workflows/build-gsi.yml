@@ -56,9 +56,11 @@ jobs:
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
     - name: create vndklite image from standard image
-      run: sudo bash lite-adapter.sh 64 ../out/target/product/tdgsi_arm64_ab/system.img
+      run: |
+        sudo bash lite-adapter.sh 64 ../out/target/product/tdgsi_arm64_ab/system.img
+        sudo chown -R $(whoami):$(id | awk -F'[()]' '{ print $2 }') .
       working-directory: treble_adapter
-    - name: rename image files
+    - name: copy image files to work directory
       run: |
         buildDate=$(date +%Y%m%d)
         mv -v out/target/product/tdgsi_arm64_ab/system.img VoltageOS-arm64-ab-3.1-"${buildDate}"-UNOFFICIAL.img
@@ -66,7 +68,7 @@ jobs:
     - name: compress images with xz
       run: find . -name 'VoltageOS*.img' -maxdepth 1 -exec xz -9 -T0 -v -z "{}" \;
     - name: upload images to temp.sh
-      run: find . -name 'VoltageOS*.img.xz' -maxdepth 1 -exec curl -F "file=@{}" https://temp.sh/upload
+      run: find . -name 'VoltageOS*.img.xz' -maxdepth 1 -exec curl -F "file=@{}" https://temp.sh/upload \;
     - name: cleanup work directory
       uses: eviden-actions/clean-self-hosted-runner@v1
       if: ${{ always() }} # Run even if previous steps in the job fail or are canceled
