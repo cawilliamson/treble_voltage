@@ -56,12 +56,13 @@ jobs:
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
     - name: create vndklite image from standard image
-      run: sudo bash lite-adapter.sh 64 out/target/product/tdgsi_arm64_ab/system.img
+      run: sudo bash lite-adapter.sh 64 ../out/target/product/tdgsi_arm64_ab/system.img
+      working-directory: treble_adapter
     - name: rename image files
       run: |
         buildDate=$(date +%Y%m%d)
         mv -v out/target/product/tdgsi_arm64_ab/system.img VoltageOS-arm64-ab-3.1-"${buildDate}"-UNOFFICIAL.img
-        mv -v s.img VoltageOS-arm64-ab-vndklite-3.1-"${buildDate}"-UNOFFICIAL.img
+        mv -v treble_adapter/s.img VoltageOS-arm64-ab-vndklite-3.1-"${buildDate}"-UNOFFICIAL.img
     - name: compress images with xz
       run: find . -name 'VoltageOS*.img' -maxdepth 1 -exec xz -9 -T0 -v -z "{}" \;
     - name: upload images to temp.sh
