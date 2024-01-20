@@ -46,7 +46,9 @@ jobs:
         ./patches/apply.sh . trebledroid
         ./patches/apply.sh . personal
     - name: generate base rom config
-      run: bash generate.sh Voltage
+      run: |
+        cp -v ../../../Voltage.mk .
+        bash generate.sh Voltage
       working-directory: device/phh/treble
     - name: initialize ccache
       run: ccache -M 50G -F 0
