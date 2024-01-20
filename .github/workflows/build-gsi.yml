@@ -50,17 +50,17 @@ jobs:
       working-directory: device/phh/treble
     - name: initialize ccache
       run: ccache -M 50G -F 0
-    - name: build standard gsi image
+    - name: build standard image
       run: |
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
-    - name: create vndklite image from standard image
+    - name: create vndklite image
       run: |
         sudo bash lite-adapter.sh 64 ../out/target/product/tdgsi_arm64_ab/system.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s.img
       working-directory: treble_adapter
-    - name: copy image files to work directory
+    - name: rename image files
       run: |
         buildDate=$(date +%Y%m%d)
         mv -v out/target/product/tdgsi_arm64_ab/system.img VoltageOS-arm64-ab-3.1-"${buildDate}"-UNOFFICIAL.img
