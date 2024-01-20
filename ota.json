@@ -1,16 +1,16 @@
 {
-  "version": "3.1-20240120",
-  "date": "1705784427",
+  "version": "3.1-20240120-2",
+  "date": "1705794716",
   "variants": [
     {
       "name": "treble_arm64_bvN",
-      "size": "880324764",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/3.1-20240120/VoltageOS-arm64-ab-3.1-20240120-UNOFFICIAL.img.xz"
+      "size": "877842452",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/3.1-20240120-2/VoltageOS-arm64-ab-3.1-20240120-2-UNOFFICIAL.img.xz"
     },
     {
       "name": "treble_arm64_bvN-vndklite",
-      "size": "867913724",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/3.1-20240120/VoltageOS-arm64-ab-vndklite-3.1-20240120-UNOFFICIAL.img.xz"
+      "size": "865874924",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/3.1-20240120-2/VoltageOS-arm64-ab-vndklite-3.1-20240120-2-UNOFFICIAL.img.xz"
     }
   ]
 }
