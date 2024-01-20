@@ -16,8 +16,9 @@
   <project path="vendor/magisk" name="phhusson/vendor_magisk" remote="github" revision="android-10.0" />
   <project path="vendor/vndk-tests" name="phhusson/vendor_vndk-tests" remote="github" revision="master" />
 
-  <!-- ponces -->
+  <!-- treble_adapter -->
   <project name="ponces/treble_adapter" path="treble_adapter" remote="github" revision="master" />
+  <project name="phhuson/vendor_vndk" path="treble_adapter/vendor_vndk" remote="github" revision="android-10.0" />
 
   <!-- trebledroid -->
   <project path="device/phh/treble" name="TrebleDroid/device_phh_treble" remote="github" revision="android-14.0" />

@@ -58,7 +58,7 @@ jobs:
     - name: create vndklite image from standard image
       run: |
         sudo bash lite-adapter.sh 64 ../out/target/product/tdgsi_arm64_ab/system.img
-        sudo chown -R $(whoami):$(id | awk -F'[()]' '{ print $2 }') .
+        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s.img
       working-directory: treble_adapter
     - name: copy image files to work directory
       run: |
