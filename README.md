@@ -35,9 +35,7 @@ repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
 ```bash
 ./patches/apply.sh . trebledroid
-./patches/apply.sh . ponces
 ./patches/apply.sh . personal
-./patches/apply.sh . graphene
 ```
 
 ## Adapting for VoltageOS
