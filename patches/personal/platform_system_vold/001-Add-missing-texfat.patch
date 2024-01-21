@@ -1,0 +1,23 @@
+From f715fa9d60b183eecc0a80803aebb252c967f8ae Mon Sep 17 00:00:00 2001
+From: Huy Hoang <boydaihungst@gmail.com>
+Date: Tue, 24 Oct 2023 20:30:39 +0700
+Subject: [PATCH] Add-missing-texfat
+
+---
+ main.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/main.cpp b/main.cpp
+index d19f051..2de0532 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -72,6 +72,7 @@ int main(int argc, char** argv) {
+     ATRACE_BEGIN("main");
+ 
+     LOG(DEBUG) << "Detected support for:"
++               << (android::vold::IsFilesystemSupported("texfat") ? " texfat" : "")
+                << (android::vold::IsFilesystemSupported("exfat") ? " exfat" : "")
+                << (android::vold::IsFilesystemSupported("ext4") ? " ext4" : "")
+                << (android::vold::IsFilesystemSupported("f2fs") ? " f2fs" : "")
+-- 
+2.42.0
