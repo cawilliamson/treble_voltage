@@ -7,6 +7,8 @@ env:
   CCACHE_COMPRESS: 1
   CCACHE_MAXSIZE: 50G
   DISABLE_RUNNER_CLEANUP: false # should ONLY be set to true if ABSOLUTELY necessary
+  ROM_NAME: VoltageOS
+  ROM_VERSION: 3.1
   USE_CCACHE: 1
 
 jobs:
@@ -59,19 +61,25 @@ jobs:
         make systemimage -j"$(nproc --all)"
     - name: create vndklite image
       run: |
+        git clone --depth=1 https://github.com/ponces/treble_adapter.git
+        cd treble_adapter/
         cp -v ../out/target/product/tdgsi_arm64_ab/system.img standard_system.img
         sudo bash lite-adapter.sh 64 standard_system.img
         sudo chown -R $(whoami):$(id | awk -F'[()]' '{ print $2 }') .
-      working-directory: treble_adapter
     - name: rename image files
+      id: rename-image-files
       run: |
         buildDate=$(date +%Y%m%d)
-        mv -v out/target/product/tdgsi_arm64_ab/system.img VoltageOS-arm64-ab-3.1-"${buildDate}"-UNOFFICIAL.img
-        mv -v treble_adapter/s.img VoltageOS-arm64-ab-vndklite-3.1-"${buildDate}"-UNOFFICIAL.img
-    - name: compress images with xz
-      run: find . -name 'VoltageOS*.img' -maxdepth 1 -exec xz -9 -T0 -v -z "{}" \;
-    - name: upload images to temp.sh
-      run: find . -name 'VoltageOS*.img.xz' -maxdepth 1 -exec curl -F "file=@{}" https://temp.sh/upload \;
+        mv -v out/target/product/tdgsi_arm64_ab/system.img "${ROM_NAME}"-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v treble_adapter/s.img "${ROM_NAME}"-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+    - name: compress standard image with xz
+      run: xz -9 -T0 -v -z "${ROM_NAME}"-arm64-ab-"${ROM_VERSION}"-*-UNOFFICIAL.img
+    - name: compress vndklite image with xz
+      run: xz -9 -T0 -v -z "${ROM_NAME}"-arm64-ab-vndklite-"${ROM_VERSION}"-*-UNOFFICIAL.img
+    - name: upload standard image to temp.sh
+      run: curl -F "file=@"${ROM_NAME}"-arm64-ab-"${ROM_VERSION}"-*-UNOFFICIAL.img" https://temp.sh/upload
+    - name: upload vndklite image to temp.sh
+      run: curl -F "file=@"${ROM_NAME}"-arm64-ab-vndklite-"${ROM_VERSION}"-*-UNOFFICIAL.img" https://temp.sh/upload
     - name: cleanup work directory
       uses: eviden-actions/clean-self-hosted-runner@v1
       if: ${{ always() }} # Run even if previous steps in the job fail or are canceled
