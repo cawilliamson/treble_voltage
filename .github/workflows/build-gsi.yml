@@ -59,8 +59,9 @@ jobs:
         make systemimage -j"$(nproc --all)"
     - name: create vndklite image
       run: |
-        sudo bash lite-adapter.sh 64 ../out/target/product/tdgsi_arm64_ab/system.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s.img
+        cp -v ../out/target/product/tdgsi_arm64_ab/system.img standard_system.img
+        sudo bash lite-adapter.sh 64 standard_system.img
+        sudo chown -R $(whoami):$(id | awk -F'[()]' '{ print $2 }') .
       working-directory: treble_adapter
     - name: rename image files
       run: |
