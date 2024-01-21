@@ -6,7 +6,7 @@ $(call inherit-product, device/voltage/sepolicy/common/sepolicy.mk)
 -include vendor/voltage/build/core/config.mk
 
 # Bootanimation
-TARGET_BOOT_ANIMATION_RES := 1280 # 720x1280 - 720p
+TARGET_BOOT_ANIMATION_RES := 720
 
 # Kernel
 TARGET_NO_KERNEL_IMAGE := true
