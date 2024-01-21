@@ -1,0 +1,22 @@
+From e037b571fd4e2bcaab02760fa7438fe996ad78b5 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Sun, 21 Jan 2024 10:43:26 +0000
+Subject: [PATCH] Set builds to read-only
+
+---
+ board-base.mk | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/board-base.mk b/board-base.mk
+index c38e385..97a4d02 100644
+--- a/board-base.mk
++++ b/board-base.mk
+@@ -11,3 +11,5 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+ BUILD_BROKEN_DUP_RULES := true
+ 
+ BOARD_ROOT_EXTRA_SYMLINKS := $(filter-out $(BOARD_ROOT_EXTRA_SYMLINKS),/mnt/vendor/persist:/persist)
++
++BOARD_EXT4_SHARE_DUP_BLOCKS := true
+-- 
+2.42.0
+
