@@ -77,9 +77,9 @@ jobs:
     - name: compress vndklite image with xz
       run: xz -9 -T0 -v -z "${ROM_NAME}"-arm64-ab-vndklite-"${ROM_VERSION}"-*-UNOFFICIAL.img
     - name: upload standard image to temp.sh
-      run: curl -F "file=@${ROM_NAME}-arm64-ab-${ROM_VERSION}-*-UNOFFICIAL.img" https://temp.sh/upload
+      run: find . -maxdepth 1 -name "${ROM_NAME}-arm64-ab-${ROM_VERSION}-*-UNOFFICIAL.img" -exec curl -F "file=@{}" https://temp.sh/upload \;
     - name: upload vndklite image to temp.sh
-      run: curl -F "file=@${ROM_NAME}-arm64-ab-vndklite-${ROM_VERSION}-*-UNOFFICIAL.img" https://temp.sh/upload
+      run: find . -maxdepth 1 -name "${ROM_NAME}-arm64-ab-vndklite-${ROM_VERSION}-*-UNOFFICIAL.img" -exec curl -F "file=@{}" https://temp.sh/upload \;
     - name: cleanup work directory
       uses: eviden-actions/clean-self-hosted-runner@v1
       if: ${{ always() }} # Run even if previous steps in the job fail or are canceled
