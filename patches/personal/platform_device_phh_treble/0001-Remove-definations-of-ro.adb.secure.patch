@@ -11,14 +11,13 @@ diff --git a/base.mk b/base.mk
 index 83bb3f7..91d523c 100644
 --- a/base.mk
 +++ b/base.mk
-@@ -33,7 +33,6 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+@@ -33,6 +33,5 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
  	ro.build.version.all_codenames=$(PLATFORM_VERSION_ALL_CODENAMES) \
  	ro.build.version.release=$(PLATFORM_VERSION) \
  	ro.build.version.security_patch=$(PLATFORM_SECURITY_PATCH) \
 -	ro.adb.secure=0 \
  	ro.logd.auditd=true \
  	ro.logd.kernel=true \
- 
--- 
+--
 2.34.1
 
