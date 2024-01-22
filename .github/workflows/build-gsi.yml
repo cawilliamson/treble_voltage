@@ -59,6 +59,9 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
+    - name: run vndk-sepolicy tests
+      run: make vndk-test-sepolicy
+      working-directory: vendor/vndk-tests
     - name: create vndklite image
       run: |
         git clone --depth=1 https://github.com/ponces/treble_adapter.git
