@@ -1,0 +1,27 @@
+From 5d10e450c825f09dec5b1065e03f3fa424fbf26e Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Mon, 22 Jan 2024 21:32:28 +0000
+Subject: [PATCH] Leave adb alone please
+
+---
+ core/main.mk | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/core/main.mk b/core/main.mk
+index eb12c67..2673354 100644
+--- a/core/main.mk
++++ b/core/main.mk
+@@ -375,10 +375,6 @@ ifneq (,$(user_variant))
+   # Target is secure in user builds.
+   ADDITIONAL_SYSTEM_PROPERTIES += ro.secure=1
+ 
+-  ifeq ($(user_variant),user)
+-    ADDITIONAL_SYSTEM_PROPERTIES += ro.adb.secure=1
+-  endif
+-
+   # Disable debugging in plain user builds.
+   enable_target_debugging :=
+ 
+-- 
+2.42.0
+
