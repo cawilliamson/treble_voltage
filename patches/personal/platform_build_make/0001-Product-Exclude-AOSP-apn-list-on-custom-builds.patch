@@ -12,10 +12,10 @@ diff --git a/target/product/aosp_product.mk b/target/product/aosp_product.mk
 index a4c3a91145..1dd0102171 100644
 --- a/target/product/aosp_product.mk
 +++ b/target/product/aosp_product.mk
-@@ -34,8 +34,3 @@ PRODUCT_PACKAGES += \
+@@ -24,8 +24,3 @@ PRODUCT_PACKAGES += \
+     messaging \
      PhotoTable \
      preinstalled-packages-platform-aosp-product.xml \
-     WallpaperPicker \
 -
 -# Telephony:
 -#   Provide a APN configuration to GSI product
