@@ -54,6 +54,12 @@ jobs:
       working-directory: device/phh/treble
     - name: initialize ccache
       run: ccache -M 50G -F 0
+    - name: build treble app
+      run: |
+        . build/envsetup.sh
+        cd treble_app/
+        bash build.sh release
+        cp TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
     - name: build standard image
       run: |
         . build/envsetup.sh

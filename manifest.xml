@@ -18,6 +18,7 @@
 
   <!-- trebledroid -->
   <project path="device/phh/treble" name="TrebleDroid/device_phh_treble" remote="github" revision="android-14.0" />
+  <project path="treble_app" name="TrebleDroid/treble_app" remote="github" revision="master" />
   <project path="vendor/hardware_overlay" name="TrebleDroid/vendor_hardware_overlay" remote="github" revision="pie" />
   <project path="vendor/interfaces" name="TrebleDroid/vendor_interfaces" remote="github" revision="android-14.0" />
 </manifest>
