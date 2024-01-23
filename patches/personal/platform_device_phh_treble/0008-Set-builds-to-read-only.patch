@@ -11,12 +11,11 @@ diff --git a/board-base.mk b/board-base.mk
 index c38e385..97a4d02 100644
 --- a/board-base.mk
 +++ b/board-base.mk
-@@ -11,3 +11,5 @@ BOARD_ROOT_EXTRA_FOLDERS += bt_firmware sec_storage efs persist
- BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
- 
+@@ -11,3 +11,5 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+ BUILD_BROKEN_DUP_RULES := true
+
  BOARD_ROOT_EXTRA_SYMLINKS := $(filter-out $(BOARD_ROOT_EXTRA_SYMLINKS),/mnt/vendor/persist:/persist)
 +
 +BOARD_EXT4_SHARE_DUP_BLOCKS := true
 -- 
 2.42.0
-
