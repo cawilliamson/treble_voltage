@@ -835,7 +835,7 @@ index 5ce0c8b3..081716d4 100644
 -                providers.addAll(getHidlProviders(filteredInstances.first));
                  providers.addAll(getAidlProviders(filteredInstances.second));
 +                if (providers.isEmpty())
-++                    providers.addAll(getHidlProviders(filteredInstances.first));
++                    providers.addAll(getHidlProviders(filteredInstances.first));
  
                  return providers;
              });
