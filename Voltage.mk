@@ -16,6 +16,10 @@ TARGET_NO_KERNEL_OVERRIDE := true
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.system.ota.json_url=https://raw.githubusercontent.com/cawilliamson/treble_voltage/14.0/ota.json
 
+# Overlay
+PRODUCT_PACKAGE_OVERLAYS += \
+   $(LOCAL_PATH)/overlay-voltage
+
 # SELinux
 SELINUX_IGNORE_NEVERALLOWS := true
 TARGET_USES_PREBUILT_VENDOR_SEPOLICY := true
