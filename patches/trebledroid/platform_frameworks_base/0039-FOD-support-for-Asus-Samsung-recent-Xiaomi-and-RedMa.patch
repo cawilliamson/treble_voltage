@@ -21,6 +21,7 @@ Change-Id: Ibd0f9ea8fba584a38c060fd9271549a5e106b4eb
  .../android/systemui/biometrics/UdfpsView.kt  | 233 ++++-
  services/core/Android.bp                      |   5 +
  .../server/biometrics/AuthService.java        | 296 +++++-
+ .../fingerprint/FingerprintService.java       |   3 +-
  7 files changed, 578 insertions(+), 23 deletions(-)
 
 diff --git a/packages/SystemUI/Android.bp b/packages/SystemUI/Android.bp
@@ -823,6 +824,20 @@ index bc741a5e..26ca8c99 100644
 +        }
 +    }
  }
+diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/FingerprintService.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/FingerprintService.java
+index 5ce0c8b3..081716d4 100644
+--- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/FingerprintService.java
++++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/FingerprintService.java
+@@ -885,8 +885,9 @@ public class FingerprintService extends SystemService {
+                         filteredInstances = filterAvailableHalInstances(hidlSensors, aidlSensors);
+ 
+                 final List<ServiceProvider> providers = new ArrayList<>();
+-                providers.addAll(getHidlProviders(filteredInstances.first));
+                 providers.addAll(getAidlProviders(filteredInstances.second));
++                if (providers.isEmpty())
+++                    providers.addAll(getHidlProviders(filteredInstances.first));
+ 
+                 return providers;
+             });
 --
 2.25.1
-
