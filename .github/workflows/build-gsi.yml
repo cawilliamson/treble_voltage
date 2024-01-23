@@ -50,7 +50,6 @@ jobs:
     - name: generate base rom config
       run: |
         cp -v ../../../Voltage.mk .
-        lunch treble_arm64_bvN-userdebug
         bash generate.sh Voltage
       working-directory: device/phh/treble
     - name: initialize ccache
