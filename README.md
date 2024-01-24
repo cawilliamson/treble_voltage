@@ -10,8 +10,8 @@ As a first step, you'll have to create and enter a folder with the appropriate n
 To do that, run these commands:
 
 ```bash
-mkdir VoltageOS
-cd VoltageOS
+git clone --depth=1 https://github.com/cawilliamson/treble_voltage.git
+cd treble_voltage/
 ```
 
 ## Initalise the Treble VoltageOS repo
