@@ -6,8 +6,7 @@
 You'll need to get familiar with [Git and Repo](https://source.android.com/source/using-repo.html) as well as [How to build a GSI](https://github.com/phhusson/treble_experimentations/wiki/How-to-build-a-GSI%3F).
 
 ## Glone base repo
-As a first step, you'll have to create and enter a folder with the appropriate name.
-To do that, run these commands:
+Firstly we need to clone the base repo (this one) which we can do by runnng the following:
 
 ```bash
 git clone --depth=1 https://github.com/cawilliamson/treble_voltage.git
@@ -15,18 +14,20 @@ cd treble_voltage/
 ```
 
 ## Initalise the Treble VoltageOS repo
+Now we want to fetch the VoltageOS manifest files:
 ```bash
 repo init -u https://github.com/VoltageOS/manifest.git -b 14
 ```
 
 ## Clone the Manifest
-This adds necessary dependencies for the VoltageOS GSI.
+Copy our own manifest which is needed for the GSI portion of the build:
 ```bash
 mkdir -p .repo/local_manifests
 cp manifest.xml .repo/local_manifests/
 ```
 
 ## Sync the repository
+Sync ALL necessary sources to build the ROM:
 ```bash
 repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 ```
@@ -49,7 +50,6 @@ popd
 
 ### Turn On Caching
 You can speed up subsequent builds by adding these lines to your `~/.bashrc` OR `~/.zshrc` file:
-
 ```bash
 export USE_CCACHE=1
 export CCACHE_COMPRESS=1
