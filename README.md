@@ -5,7 +5,7 @@
 ### Building
 You'll need to get familiar with [Git and Repo](https://source.android.com/source/using-repo.html) as well as [How to build a GSI](https://github.com/phhusson/treble_experimentations/wiki/How-to-build-a-GSI%3F).
 
-## Create Directories
+## Glone base repo
 As a first step, you'll have to create and enter a folder with the appropriate name.
 To do that, run these commands:
 
