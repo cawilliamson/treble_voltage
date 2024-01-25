@@ -6,7 +6,7 @@ on:
 env:
   CCACHE_COMPRESS: 1
   CCACHE_MAXSIZE: 50G
-  DISABLE_RUNNER_CLEANUP: true # should ONLY be set to true if ABSOLUTELY necessary
+  DISABLE_RUNNER_CLEANUP: false # should ONLY be set to true if ABSOLUTELY necessary
   ROM_NAME: VoltageOS
   ROM_VERSION: 3.1
   USE_CCACHE: 1
