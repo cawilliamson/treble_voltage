@@ -6,7 +6,7 @@ on:
 env:
   CCACHE_COMPRESS: 1
   CCACHE_MAXSIZE: 50G
-  DISABLE_RUNNER_CLEANUP: false # should ONLY be set to true if ABSOLUTELY necessary
+  DISABLE_RUNNER_CLEANUP: true # should ONLY be set to true if ABSOLUTELY necessary
   ROM_NAME: VoltageOS
   ROM_VERSION: 3.1
   USE_CCACHE: 1
@@ -59,7 +59,8 @@ jobs:
         . build/envsetup.sh
         cd treble_app/
         bash build.sh release
-        cp -fv TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
+        ls -l ../vendor/hardware_overlay/TrebleApp/
+        cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
     - name: build standard image
       run: |
         . build/envsetup.sh
