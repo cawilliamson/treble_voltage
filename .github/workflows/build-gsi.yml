@@ -4,12 +4,9 @@ on:
   workflow_dispatch:
 
 env:
-  CCACHE_COMPRESS: 1
-  CCACHE_MAXSIZE: 50G
-  DISABLE_RUNNER_CLEANUP: true # should ONLY be set to true if ABSOLUTELY necessary
+  DISABLE_RUNNER_CLEANUP: false # should ONLY be set to true if ABSOLUTELY necessary
   ROM_NAME: VoltageOS
   ROM_VERSION: 3.1
-  USE_CCACHE: 1
 
 jobs:
   build-gsi:
@@ -52,14 +49,11 @@ jobs:
         cp -v ../../../Voltage.mk .
         bash generate.sh Voltage
       working-directory: device/phh/treble
-    - name: initialize ccache
-      run: ccache -M 50G -F 0
     - name: build treble app
       run: |
         . build/envsetup.sh
         cd treble_app/
         bash build.sh release
-        ls -l ../vendor/hardware_overlay/TrebleApp/
         cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
     - name: build standard image
       run: |
@@ -82,8 +76,8 @@ jobs:
       id: rename-image-files
       run: |
         buildDate=$(date +%Y%m%d)
-        mv -v out/target/product/tdgsi_arm64_ab/system.img "${ROM_NAME}"-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v treble_adapter/s.img "${ROM_NAME}"-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        cp -v out/target/product/tdgsi_arm64_ab/system.img "${ROM_NAME}"-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        cp -v treble_adapter/s.img "${ROM_NAME}"-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
     - name: compress standard image with xz
       run: xz -9 -T0 -v -z "${ROM_NAME}"-arm64-ab-"${ROM_VERSION}"-*-UNOFFICIAL.img
     - name: compress vndklite image with xz
