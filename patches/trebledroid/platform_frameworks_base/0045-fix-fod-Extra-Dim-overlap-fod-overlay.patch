@@ -58,9 +58,9 @@ index 19b67b5f3def..ef5e4f617138 100644
          mOverlay = overlay;
          final int requestReason = overlay.getRequestReason();
          if (requestReason == REASON_AUTH_KEYGUARD
-@@ -1390,6 +1399,10 @@
-         updateViewDimAmount(true);
- 
+@@ -1386,6 +1386,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+             return;
+         }
          if (isOptical()) {
 +            if (mIgnoreExtraDim) {
 +                mColorDisplayManager.setReduceBrightColorsActivated(false);

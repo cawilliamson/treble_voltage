@@ -16,7 +16,7 @@ index 4377dd7e70a7..91053b2c5f8e 100644
      val hasSamsungMask = File(samsungActualMaskBrightness).exists()
      var fodFileObserver: FileObserver? = null
  
--   val xiaomiDispParam = "/sys/class/mi_display/disp-DSI-0/disp_param"
+-    val xiaomiDispParam = "/sys/class/mi_display/disp-DSI-0/disp_param"
 -    var hasXiaomiLhbm = File(xiaomiDispParam).exists()
 +    val xiaomiDispParam = "/sys/class/mi_display/disp-DSI-0/disp_param"
 +    var hasXiaomiLhbm = try {
