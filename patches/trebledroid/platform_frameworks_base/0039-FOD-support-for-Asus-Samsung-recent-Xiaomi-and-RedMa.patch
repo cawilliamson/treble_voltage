@@ -459,13 +459,13 @@ index ef7fcc95..2914e24b 100644
      }
  }
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index 88d76600..87f22c3c 100644
+index 690696c2..7031d5f9 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
-@@ -187,6 +187,11 @@ java_library_static {
-         "ImmutabilityAnnotation",
-         "securebox",
-         "vendor.aospa.biometrics.face",
+@@ -190,6 +190,11 @@ java_library_static {
+         // HIDL
+         "vendor.mediatek.hardware.mtkpower-V1.1-java",
+         "vendor.samsung.hardware.sysinput-V1.2-java",
 +        "vendor.goodix.hardware.biometrics.fingerprint-V2.1-java",
 +        "vendor.samsung.hardware.biometrics.fingerprint-V3.0-java",
 +        "vendor.oplus.hardware.biometrics.fingerprint-V2.1-java",
@@ -520,7 +520,7 @@ index 6f4ad13b..abbbbcee 100644
              final int firstApiLevel = SystemProperties.getInt(SYSPROP_FIRST_API_LEVEL, 0);
              final int apiLevel = SystemProperties.getInt(SYSPROP_API_LEVEL, firstApiLevel);
              String[] configStrings = mInjector.getConfiguration(getContext());
--            if (configStrings.length == 0 && apiLevel == Build.VERSION_CODES.R) {
+-            if (configStrings.length == 0 && apiLevel <= Build.VERSION_CODES.R) {
 +            if (configStrings.length == 0) {
                  // For backwards compatibility with R where biometrics could work without being
                  // configured in config_biometric_sensors. In the absence of a vendor provided
