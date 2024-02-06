@@ -1,0 +1,192 @@
+From 6dbe0d16c6926a781557ab9586a86f041c0b82d1 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Tue, 6 Feb 2024 23:05:11 +0000
+Subject: [PATCH] Add Conquest S32 overlay
+
+---
+ CONQUEST/S23/Android.mk                |   8 ++
+ CONQUEST/S23/AndroidManifest.xml       |   3 +
+ CONQUEST/S23/res/values/integers.xml   |   4 +
+ CONQUEST/S23/res/xml/power_profile.xml | 107 +++++++++++++++++++++++++
+ overlay.mk                             |   9 ++-
+ 5 files changed, 127 insertions(+), 4 deletions(-)
+ create mode 100644 CONQUEST/S23/Android.mk
+ create mode 100644 CONQUEST/S23/AndroidManifest.xml
+ create mode 100644 CONQUEST/S23/res/values/integers.xml
+ create mode 100644 CONQUEST/S23/res/xml/power_profile.xml
+
+diff --git a/CONQUEST/S23/Android.mk b/CONQUEST/S23/Android.mk
+new file mode 100644
+index 0000000..fd11056
+--- /dev/null
++++ b/CONQUEST/S23/Android.mk
+@@ -0,0 +1,8 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_PACKAGE_NAME := treble-overlay-conquest-s23
++LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/overlay
++LOCAL_IS_RUNTIME_RESOURCE_OVERLAY := true
++LOCAL_PRIVATE_PLATFORM_APIS := true
++include $(BUILD_PACKAGE)
+diff --git a/CONQUEST/S23/AndroidManifest.xml b/CONQUEST/S23/AndroidManifest.xml
+new file mode 100644
+index 0000000..d76b691
+--- /dev/null
++++ b/CONQUEST/S23/AndroidManifest.xml
+@@ -0,0 +1,3 @@
++<?xml version="1.0" encoding="utf-8" standalone="no"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="me.phh.treble.overlay.conquest.s23" platformBuildVersionCode="27" platformBuildVersionName="8.1.0">
++    <overlay android:isStatic="true" android:priority="999" android:requiredSystemPropertyName="ro.vendor.build.fingerprint" android:requiredSystemPropertyValue="+CONQUEST/S23*" android:targetPackage="android"/>
++</manifest>
+diff --git a/CONQUEST/S23/res/values/integers.xml b/CONQUEST/S23/res/values/integers.xml
+new file mode 100644
+index 0000000..5c8d77d
+--- /dev/null
++++ b/CONQUEST/S23/res/values/integers.xml
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <integer name="config_defaultPeakRefreshRate">120</integer>
++</resources>
+diff --git a/CONQUEST/S23/res/xml/power_profile.xml b/CONQUEST/S23/res/xml/power_profile.xml
+new file mode 100644
+index 0000000..9df206d
+--- /dev/null
++++ b/CONQUEST/S23/res/xml/power_profile.xml
+@@ -0,0 +1,107 @@
++<?xml version="1.0" encoding="utf-8"?>
++<device name="Android">
++    <item name="none">0</item>
++    <item name="screen.on">108</item>
++    <item name="screen.full">430</item>
++    <item name="bluetooth.active">93</item>
++    <item name="bluetooth.on">0.65</item>
++    <item name="wifi.on">0.1</item>
++    <item name="wifi.active">156</item>
++    <item name="wifi.scan">1</item>
++    <item name="audio">26</item>
++    <item name="video">66</item>
++    <item name="camera.flashlight">620</item>
++    <item name="camera.avg">410</item>
++    <item name="gps.on">5</item>
++    <item name="radio.active">171</item>
++    <item name="radio.scanning">6</item>
++    <array name="radio.on">
++        <value>88</value>
++        <value>8</value>
++    </array>
++    <array name="cpu.clusters.cores">
++        <value>6</value>
++        <value>2</value>
++    </array>
++    <array name="cpu.core_speeds.cluster0">
++        <value>614400</value>
++        <value>864000</value>
++        <value>1075200</value>
++        <value>1363200</value>
++        <value>1516800</value>
++        <value>1651200</value>
++        <value>1804800</value>
++    </array>
++    <array name="cpu.core_power.cluster0">
++        <value>8</value>
++        <value>13</value>
++        <value>17</value>
++        <value>22</value>
++        <value>28</value>
++        <value>33</value>
++        <value>37</value>
++    </array>
++    <array name="cpu.core_speeds.cluster1">
++        <value>652800</value>
++        <value>806400</value>
++        <value>940800</value>
++        <value>1094400</value>
++        <value>1152000</value>
++        <value>1401600</value>
++        <value>1478400</value>
++        <value>1728000</value>
++        <value>1766400</value>
++        <value>1900800</value>
++        <value>1996800</value>
++        <value>2092800</value>
++        <value>2188800</value>
++        <value>2208000</value>
++        <value>2342400</value>
++        <value>2400000</value>
++        <value>2611200</value>
++        <value>2707200</value>
++    </array>
++    <array name="cpu.core_power.cluster1">
++        <value>18</value>
++        <value>32</value>
++        <value>33</value>
++        <value>48</value>
++        <value>48</value>
++        <value>76</value>
++        <value>78</value>
++        <value>110</value>
++        <value>120</value>
++        <value>153</value>
++        <value>169</value>
++        <value>189</value>
++        <value>219</value>
++        <value>210</value>
++        <value>254</value>
++        <value>265</value>
++        <value>335</value>
++        <value>369</value>
++    </array>
++    <item name="cpu.active">8.5</item>
++    <item name="cpu.idle">0.1</item>
++    <item name="cpu.suspend">0</item>
++    <array name="memory.bandwidths">
++        <value>22.7</value>
++    </array>
++    <item name="battery.capacity">10000</item>
++    <item name="wifi.controller.idle">1</item>
++    <item name="wifi.controller.rx">127</item>
++    <item name="wifi.controller.tx">168</item>
++    <item name="wifi.controller.tx_levels">1</item>
++    <item name="wifi.controller.voltage">3700</item>
++    <array name="wifi.batchedscan">
++        <value>.0001</value>
++        <value>.001</value>
++        <value>.01</value>
++        <value>.1</value>
++        <value>1</value>
++    </array>
++    <item name="modem.controller.idle">6</item>
++    <item name="modem.controller.rx">221</item>
++    <item name="modem.controller.tx">203</item>
++    <item name="modem.controller.voltage">3700</item>
++</device>
+\ No newline at end of file
+diff --git a/overlay.mk b/overlay.mk
+index 84d3e46..78ef9c6 100644
+--- a/overlay.mk
++++ b/overlay.mk
+@@ -303,10 +303,6 @@ PRODUCT_PACKAGES += \
+ 	treble-overlay-tecno-pova4-systemui \
+ 	treble-overlay-tecno-pova4pro \
+ 	treble-overlay-tecno-pova4pro-systemui \
+-        treble-overlay-tecno-pova5 \
+-        treble-overlay-tecno-pova5-systemui \
+-        treble-overlay-tecno-pova5pro \
+-        treble-overlay-tecno-pova5pro-systemui \
+ 	treble-overlay-tecno-spark5 \
+ 	treble-overlay-tecno-spark6 \
+ 	treble-overlay-telephony-caf-ims \
+@@ -409,4 +405,9 @@ PRODUCT_PACKAGES += \
+ 	treble-overlay-xiaomi-redminote9s \
+ 	treble-overlay-xiaomi-redminote9t \
+ 	treble-overlay-xiaomi-redmis2 \
++        treble-overlay-conquest-s23 \
++        treble-overlay-tecno-pova5 \
++        treble-overlay-tecno-pova5-systemui \
++        treble-overlay-tecno-pova5pro \
++        treble-overlay-tecno-pova5pro-systemui \
+ 
+-- 
+2.42.0
+
