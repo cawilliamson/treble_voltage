@@ -60,16 +60,16 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
+    - name: run vndk sepolicy tests (as early as possible)
+      run: |
+        . build/envsetup.sh
+        lunch treble_arm64_bvN-userdebug
+        make vndk-test-sepolicy
     - name: build standard arm32_binder64 image
       run: |
         . build/envsetup.sh
         lunch treble_a64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
-    - name: run vndk sepolicy tests
-      run: |
-        . build/envsetup.sh
-        lunch treble_arm64_bvN-userdebug
-        make vndk-test-sepolicy
     - name: create vndklite arm64 image
       run: |
         cp -v ../out/target/product/tdgsi_arm64_ab/system.img standard_system_arm64.img
