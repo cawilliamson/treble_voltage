@@ -85,21 +85,14 @@ jobs:
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm32_binder64.img
       working-directory: treble_adapter
     - name: rename image files
-      id: rename-image-files
       run: |
         buildDate=$(date +%Y%m%d)
         cp -v out/target/product/tdgsi_arm64_ab/system.img "${ROM_NAME}"-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         cp -v out/target/product/tdgsi_a64_ab/system.img "${ROM_NAME}"-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         cp -v treble_adapter/s_arm64.img "${ROM_NAME}"-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         cp -v treble_adapter/s_arm32_binder64.img "${ROM_NAME}"-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    - name: compress arm64 standard image with xz
-      run: xz -9 -T0 -v -z "${ROM_NAME}"-arm64-ab-"${ROM_VERSION}"-*-UNOFFICIAL.img
-    - name: compress arm64 vndklite image with xz
-      run: xz -9 -T0 -v -z "${ROM_NAME}"-arm64-ab-vndklite-"${ROM_VERSION}"-*-UNOFFICIAL.img
-    - name: compress arm32_binder64 standard image with xz
-      run: xz -9 -T0 -v -z "${ROM_NAME}"-arm32_binder64-ab-"${ROM_VERSION}"-*-UNOFFICIAL.img
-    - name: compress arm32_binder64 vndklite image with xz
-      run: xz -9 -T0 -v -z "${ROM_NAME}"-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-*-UNOFFICIAL.img
+    - name: compress all images with xz
+      run: find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \;
     - name: upload arm64 standard image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-arm64-ab-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
     - name: upload arm64 vndklite image to temp.sh
