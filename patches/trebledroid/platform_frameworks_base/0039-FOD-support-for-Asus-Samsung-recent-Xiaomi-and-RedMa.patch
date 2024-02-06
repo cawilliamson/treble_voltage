@@ -41,10 +41,10 @@ index 8da9ba4e..b2722d7c 100644
      manifest: "AndroidManifest.xml",
  
 diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
-index 9c1f253c..4dfd9a40 100644
+index dc8c3a52..ffcf8148 100644
 --- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
 +++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
-@@ -53,6 +53,7 @@ import android.os.Handler;
+@@ -54,6 +54,7 @@ import android.os.Handler;
  import android.os.PowerManager;
  import android.os.Process;
  import android.os.Trace;
@@ -52,7 +52,7 @@ index 9c1f253c..4dfd9a40 100644
  import android.os.UserHandle;
  import android.os.VibrationAttributes;
  import android.os.VibrationEffect;
-@@ -123,9 +124,13 @@ import java.util.HashSet;
+@@ -124,9 +125,13 @@ import java.util.HashSet;
  import java.util.Optional;
  import java.util.Set;
  import java.util.concurrent.Executor;
@@ -66,7 +66,7 @@ index 9c1f253c..4dfd9a40 100644
  
  /**
   * Shows and hides the under-display fingerprint sensor (UDFPS) overlay, handles UDFPS touch events,
-@@ -273,6 +278,47 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+@@ -276,6 +281,47 @@ public class UdfpsController implements DozeReceiver, Dumpable {
          }
      };
  
@@ -114,7 +114,7 @@ index 9c1f253c..4dfd9a40 100644
      @Override
      public void dump(@NonNull PrintWriter pw, @NonNull String[] args) {
          pw.println("mSensorProps=(" + mSensorProps + ")");
-@@ -1383,9 +1429,17 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+@@ -1407,9 +1453,17 @@ public class UdfpsController implements DozeReceiver, Dumpable {
              }
          }
  
@@ -129,10 +129,10 @@ index 9c1f253c..4dfd9a40 100644
 +        if(SystemProperties.get("ro.vendor.build.fingerprint").contains("nubia/NX669")) {
 +            processCmd(14, 0, 0, new byte[0], 0);
 +        }
-     }
- 
-     private void onFingerUp(long requestId, @NonNull UdfpsView view) {
-@@ -1436,6 +1490,11 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+         if (mUdfpsAnimation != null) {
+             mUdfpsAnimation.show();
+         }
+@@ -1463,6 +1517,11 @@ public class UdfpsController implements DozeReceiver, Dumpable {
                      mFingerprintManager.onPointerUp(requestId, mSensorProps.sensorId);
                  }
              }
@@ -834,4 +834,3 @@ index 5ce0c8b3..df99478d 100644
              });
 -- 
 2.42.0
-
