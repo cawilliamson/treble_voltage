@@ -8,7 +8,7 @@ Subject: [PATCH] Add Conquest S23 device overlay
  CONQUEST/S23/AndroidManifest.xml       |   3 +
  CONQUEST/S23/res/values/integers.xml   |   8 ++
  CONQUEST/S23/res/xml/power_profile.xml | 107 +++++++++++++++++++++++++
- overlay.mk                             |   9 ++-
+ overlay.mk                             |   1 +
  5 files changed, 131 insertions(+), 4 deletions(-)
  create mode 100644 CONQUEST/S23/Android.mk
  create mode 100644 CONQUEST/S23/AndroidManifest.xml
@@ -170,21 +170,6 @@ diff --git a/overlay.mk b/overlay.mk
 index 84d3e46..2ddec52 100644
 --- a/overlay.mk
 +++ b/overlay.mk
-@@ -303,10 +303,10 @@ PRODUCT_PACKAGES += \
- 	treble-overlay-tecno-pova4-systemui \
- 	treble-overlay-tecno-pova4pro \
- 	treble-overlay-tecno-pova4pro-systemui \
--        treble-overlay-tecno-pova5 \
--        treble-overlay-tecno-pova5-systemui \
--        treble-overlay-tecno-pova5pro \
--        treble-overlay-tecno-pova5pro-systemui \
-+	treble-overlay-tecno-pova5 \
-+	treble-overlay-tecno-pova5-systemui \
-+	treble-overlay-tecno-pova5pro \
-+	treble-overlay-tecno-pova5pro-systemui \
- 	treble-overlay-tecno-spark5 \
- 	treble-overlay-tecno-spark6 \
- 	treble-overlay-telephony-caf-ims \
 @@ -409,4 +409,5 @@ PRODUCT_PACKAGES += \
  	treble-overlay-xiaomi-redminote9s \
  	treble-overlay-xiaomi-redminote9t \
