@@ -6,7 +6,7 @@ Subject: [PATCH] Add Conquest S32 overlay
 ---
  CONQUEST/S23/Android.mk                |   8 ++
  CONQUEST/S23/AndroidManifest.xml       |   3 +
- CONQUEST/S23/res/values/integers.xml   |   4 +
+ CONQUEST/S23/res/values/integers.xml   |   5 +
  CONQUEST/S23/res/xml/power_profile.xml | 107 +++++++++++++++++++++++++
  overlay.mk                             |   9 ++-
  5 files changed, 127 insertions(+), 4 deletions(-)
@@ -43,9 +43,10 @@ new file mode 100644
 index 0000000..5c8d77d
 --- /dev/null
 +++ b/CONQUEST/S23/res/values/integers.xml
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,5 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<resources>
++    <integer name="config_defaultRefreshRate">0</integer>
 +    <integer name="config_defaultPeakRefreshRate">120</integer>
 +</resources>
 diff --git a/CONQUEST/S23/res/xml/power_profile.xml b/CONQUEST/S23/res/xml/power_profile.xml
