@@ -1,15 +1,15 @@
-From 6dbe0d16c6926a781557ab9586a86f041c0b82d1 Mon Sep 17 00:00:00 2001
+From 79e2adad4b77b2275b4bf15c4f8820674cb0fd4d Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
-Date: Tue, 6 Feb 2024 23:05:11 +0000
-Subject: [PATCH] Add Conquest S32 overlay
+Date: Wed, 7 Feb 2024 10:20:29 +0000
+Subject: [PATCH] Add Conquest S23 device overlay
 
 ---
  CONQUEST/S23/Android.mk                |   8 ++
  CONQUEST/S23/AndroidManifest.xml       |   3 +
- CONQUEST/S23/res/values/integers.xml   |   5 +
+ CONQUEST/S23/res/values/integers.xml   |   8 ++
  CONQUEST/S23/res/xml/power_profile.xml | 107 +++++++++++++++++++++++++
  overlay.mk                             |   9 ++-
- 5 files changed, 127 insertions(+), 4 deletions(-)
+ 5 files changed, 131 insertions(+), 4 deletions(-)
  create mode 100644 CONQUEST/S23/Android.mk
  create mode 100644 CONQUEST/S23/AndroidManifest.xml
  create mode 100644 CONQUEST/S23/res/values/integers.xml
@@ -40,13 +40,16 @@ index 0000000..d76b691
 +</manifest>
 diff --git a/CONQUEST/S23/res/values/integers.xml b/CONQUEST/S23/res/values/integers.xml
 new file mode 100644
-index 0000000..5c8d77d
+index 0000000..5941b1a
 --- /dev/null
 +++ b/CONQUEST/S23/res/values/integers.xml
-@@ -0,0 +1,5 @@
+@@ -0,0 +1,8 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<resources>
++    <!-- Disable auto refresh rate to allow auto scaling to work -->
 +    <integer name="config_defaultRefreshRate">0</integer>
++
++    <!-- Define max refresh rate for auto scaling -->
 +    <integer name="config_defaultPeakRefreshRate">120</integer>
 +</resources>
 diff --git a/CONQUEST/S23/res/xml/power_profile.xml b/CONQUEST/S23/res/xml/power_profile.xml
@@ -164,10 +167,10 @@ index 0000000..9df206d
 +</device>
 \ No newline at end of file
 diff --git a/overlay.mk b/overlay.mk
-index 84d3e46..78ef9c6 100644
+index 84d3e46..2ddec52 100644
 --- a/overlay.mk
 +++ b/overlay.mk
-@@ -303,10 +303,6 @@ PRODUCT_PACKAGES += \
+@@ -303,10 +303,10 @@ PRODUCT_PACKAGES += \
  	treble-overlay-tecno-pova4-systemui \
  	treble-overlay-tecno-pova4pro \
  	treble-overlay-tecno-pova4pro-systemui \
@@ -175,18 +178,18 @@ index 84d3e46..78ef9c6 100644
 -        treble-overlay-tecno-pova5-systemui \
 -        treble-overlay-tecno-pova5pro \
 -        treble-overlay-tecno-pova5pro-systemui \
++	treble-overlay-tecno-pova5 \
++	treble-overlay-tecno-pova5-systemui \
++	treble-overlay-tecno-pova5pro \
++	treble-overlay-tecno-pova5pro-systemui \
  	treble-overlay-tecno-spark5 \
  	treble-overlay-tecno-spark6 \
  	treble-overlay-telephony-caf-ims \
-@@ -409,4 +405,9 @@ PRODUCT_PACKAGES += \
+@@ -409,4 +409,5 @@ PRODUCT_PACKAGES += \
  	treble-overlay-xiaomi-redminote9s \
  	treble-overlay-xiaomi-redminote9t \
  	treble-overlay-xiaomi-redmis2 \
-+        treble-overlay-conquest-s23 \
-+        treble-overlay-tecno-pova5 \
-+        treble-overlay-tecno-pova5-systemui \
-+        treble-overlay-tecno-pova5pro \
-+        treble-overlay-tecno-pova5pro-systemui \
++	treble-overlay-conquest-s23 \
  
 -- 
 2.42.0
