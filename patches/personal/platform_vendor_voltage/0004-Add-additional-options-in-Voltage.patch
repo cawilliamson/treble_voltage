@@ -1,13 +1,24 @@
-From e5f834600b21944df576355af1de0cb156b8767f Mon Sep 17 00:00:00 2001
+From 9a673ec1311460a0f44358f232b18fd3ad14219d Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
-Date: Wed, 7 Feb 2024 21:22:49 +0000
+Date: Thu, 8 Feb 2024 21:35:29 +0000
 Subject: [PATCH] Add additional options in VoltageOS
 
 ---
+ .../packages/SystemUI/res/values/flags.xml    |  1 +
  .../Settings/res/values/voltage_config.xml    | 26 +++++++++++++++++++
  .../SimpleDeviceConfig/res/values/config.xml  |  8 ++++++
- 2 files changed, 34 insertions(+)
+ 3 files changed, 35 insertions(+)
 
+diff --git a/overlay/common/frameworks/base/packages/SystemUI/res/values/flags.xml b/overlay/common/frameworks/base/packages/SystemUI/res/values/flags.xml
+index 6bd3e89..ad15bce 100644
+--- a/overlay/common/frameworks/base/packages/SystemUI/res/values/flags.xml
++++ b/overlay/common/frameworks/base/packages/SystemUI/res/values/flags.xml
+@@ -18,4 +18,5 @@
+     <bool name="flag_monet">true</bool>
+     <bool name="flag_conversations">true</bool>
+     <bool name="flag_charging_ripple">true</bool>
++    <bool name="flag_combined_status_bar_signal_icons">true</bool>
+ </resources>
 diff --git a/overlay/common/packages/apps/Settings/res/values/voltage_config.xml b/overlay/common/packages/apps/Settings/res/values/voltage_config.xml
 index 31f6c0a..3f4c995 100644
 --- a/overlay/common/packages/apps/Settings/res/values/voltage_config.xml
