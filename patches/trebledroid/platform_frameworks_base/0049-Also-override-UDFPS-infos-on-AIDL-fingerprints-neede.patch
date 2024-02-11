@@ -1,7 +1,7 @@
-From f15609eb037dc79abf08e9e113428896bea2ba45 Mon Sep 17 00:00:00 2001
+From f44db1cd62b6655349abf786a8ec49a1034d2ebd Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sun, 28 Jan 2024 19:16:13 -0500
-Subject: [PATCH 49/49] Also override UDFPS infos on AIDL fingerprints --
+Subject: [PATCH 49/54] Also override UDFPS infos on AIDL fingerprints --
  needed for FP on S24
 
 ---
@@ -88,5 +88,5 @@ index 5f4b89439fd0..a26fe945d940 100644
                                                              location.display,
                                                              location.sensorLocationX,
 -- 
-2.34.1
+2.25.1
 
