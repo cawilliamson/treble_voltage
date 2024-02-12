@@ -11,6 +11,9 @@
   <!-- aosp -->
   <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" clone-depth="1" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" />
 
+  <!-- grapheneos -->
+  <project path="external/Apps" name="GrapheneOS/platform_external_Apps" remote="github" revision="14" clone-depth="1" />
+
   <!-- phhusson -->
   <project path="vendor/lptools" name="phhusson/vendor_lptools" remote="github" revision="master" />
   <project path="vendor/magisk" name="phhusson/vendor_magisk" remote="github" revision="android-10.0" />
