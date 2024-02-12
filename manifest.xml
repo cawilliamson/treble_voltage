@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+f<?xml version="1.0" encoding="UTF-8"?>
 <manifest>
   <remote name="github" fetch="https://github.com/" />
 
@@ -15,7 +15,11 @@
   <project path="external/Apps" name="GrapheneOS/platform_external_Apps" remote="github" revision="14" clone-depth="1" />
 
   <!-- mulch -->
-  <remove-project name="platform/external/chromium-webview" />
+  <remove-project name="LineageOS/android_external_chromium-webview_patches" />
+  <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_arm" />
+  <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_arm64" />
+  <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_x86" />
+  <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_x86_64" />
   <project path="external/mulch" name="platform/external/mulch" remote="gitlab" revision="master" clone-depth="1" />
 
   <!-- phhusson -->
