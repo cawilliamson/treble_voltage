@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remote name="github" fetch="https://github.com/" />
+  <remote name="ahnet-69" fetch="https://github.com/ahnet-69/" />
+  <remote name="andycgyan" fetch="https://github.com/AndyCGYan/" />
+  <remote name="aosp" fetch="https://android.googlesource.com/" />
+  <remote name="divested-mobile" fetch="https://gitlab.com/divested-mobile/" />
+  <remote name="grapheneos" fetch="https://github.com/GrapheneOS/" />
+  <remote name="phhusson" fetch="https://github.com/phhusson/" />
+  <remote name="ponces" fetch="https://github.com/ponces/" />
+  <remote name="trebledroid" fetch="https://github.com/TrebleDroid/" />
 
   <!-- ahnet-69 -->
-  <project path="packages/apps/openeuicc" name="ahnet-69/packages_apps_openeuicc" remote="github" revision="main" />
+  <project path="packages/apps/openeuicc" name="packages_apps_openeuicc" remote="ahnet-69" revision="main" />
 
   <!-- andycgyan -->
-  <project path="packages/apps/QcRilAm" name="AndyCGYan/android_packages_apps_QcRilAm" remote="github" revision="master" />
+  <project path="packages/apps/QcRilAm" name="android_packages_apps_QcRilAm" remote="andycgyan" revision="master" />
 
   <!-- aosp -->
   <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" clone-depth="1" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" />
 
   <!-- grapheneos -->
-  <project path="external/Apps" name="GrapheneOS/platform_external_Apps" remote="github" revision="14" clone-depth="1" />
+  <project path="external/Apps" name="platform_external_Apps" remote="grapheneos" revision="14" clone-depth="1" />
 
   <!-- mulch -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
@@ -20,20 +27,20 @@
   <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_arm64" />
   <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_x86" />
   <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_x86_64" />
-  <project path="external/mulch" name="platform/external/mulch" remote="gitlab" revision="master" clone-depth="1" />
+  <project path="external/mulch" name="mulch" remote="divested-mobile" revision="master" clone-depth="1" />
 
   <!-- phhusson -->
-  <project path="vendor/lptools" name="phhusson/vendor_lptools" remote="github" revision="master" />
-  <project path="vendor/magisk" name="phhusson/vendor_magisk" remote="github" revision="android-10.0" />
-  <project path="vendor/vndk-tests" name="phhusson/vendor_vndk-tests" remote="github" revision="master" />
+  <project path="vendor/lptools" name="vendor_lptools" remote="phhusson" revision="master" />
+  <project path="vendor/magisk" name="vendor_magisk" remote="phhusson" revision="android-10.0" />
+  <project path="vendor/vndk-tests" name="vendor_vndk-tests" remote="phhusson" revision="master" />
 
   <!-- treble_adapter -->
-  <project name="ponces/treble_adapter" path="treble_adapter" remote="github" revision="master" />
-  <project name="phhusson/vendor_vndk" path="treble_adapter/vendor_vndk" remote="github" revision="android-10.0" />
+  <project name="treble_adapter" path="treble_adapter" remote="ponces" revision="master" />
+  <project name="vendor_vndk" path="treble_adapter/vendor_vndk" remote="phhusson" revision="android-10.0" />
 
   <!-- trebledroid -->
-  <project path="device/phh/treble" name="TrebleDroid/device_phh_treble" remote="github" revision="android-14.0" />
-  <project path="treble_app" name="TrebleDroid/treble_app" remote="github" revision="master" />
-  <project path="vendor/hardware_overlay" name="TrebleDroid/vendor_hardware_overlay" remote="github" revision="pie" />
-  <project path="vendor/interfaces" name="TrebleDroid/vendor_interfaces" remote="github" revision="android-14.0" />
+  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-14.0" />
+  <project path="treble_app" name="treble_app" remote="trebledroid" revision="master" />
+  <project path="vendor/hardware_overlay" name="vendor_hardware_overlay" remote="trebledroid" revision="pie" />
+  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="android-14.0" />
 </manifest>
