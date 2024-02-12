@@ -2,7 +2,7 @@
 <manifest>
   <remote name="ahnet-69" fetch="https://github.com/ahnet-69/" />
   <remote name="andycgyan" fetch="https://github.com/AndyCGYan/" />
-  <remote name="aosp" fetch="https://android.googlesource.com/" />
+  <remote name="aosp" fetch="https://android.googlesource.com/" review="https://android-review.googlesource.com/" />
   <remote name="divested-mobile" fetch="https://gitlab.com/divested-mobile/" />
   <remote name="grapheneos" fetch="https://github.com/GrapheneOS/" />
   <remote name="phhusson" fetch="https://github.com/phhusson/" />
