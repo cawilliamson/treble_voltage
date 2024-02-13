@@ -17,7 +17,7 @@ index 5457bbc..1a8956a 100644
  
 +# GrapheneOS Apps
 +PRODUCT_PACKAGES += \
-+    Apps
++    grapheneos-apps
 +
  # RRO
  include vendor/voltage/config/rro_overlays.mk

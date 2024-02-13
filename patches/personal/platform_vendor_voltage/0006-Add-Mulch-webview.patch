@@ -17,7 +17,7 @@ index 1a8956a..8bc690d 100644
  
 +# Mulch Webview
 +PRODUCT_PACKAGES += \
-+    Mulch
++    mulch-webview
 +
  # RRO
  include vendor/voltage/config/rro_overlays.mk
