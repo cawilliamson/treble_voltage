@@ -1,23 +1,23 @@
-From fabc949d3b83bacaca18fe7c5cc5fbdf04398555 Mon Sep 17 00:00:00 2001
+From aa19bef6e8dc679c415bb6ec0de90cbf3839a9f3 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
-Date: Tue, 13 Feb 2024 00:37:48 +0000
-Subject: [PATCH] Add VoltageOS Apps
+Date: Tue, 13 Feb 2024 00:58:51 +0000
+Subject: [PATCH] Add Mulch Webview
 
 ---
  config/common.mk | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/config/common.mk b/config/common.mk
-index 5457bbc..1a8956a 100644
+index 1f4c2b1..fe66fe1 100644
 --- a/config/common.mk
 +++ b/config/common.mk
-@@ -179,6 +179,10 @@ PRODUCT_PACKAGES += \
+@@ -183,6 +183,10 @@ PRODUCT_PACKAGES += \
  PRODUCT_PACKAGES += \
-     BtHelper
+     grapheneos-apps
  
-+# GrapheneOS Apps
++# Mulch Webview
 +PRODUCT_PACKAGES += \
-+    grapheneos-apps
++    mulch-webview
 +
  # RRO
  include vendor/voltage/config/rro_overlays.mk
