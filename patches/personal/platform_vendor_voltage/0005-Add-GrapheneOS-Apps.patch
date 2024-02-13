@@ -1,6 +1,6 @@
-From 602389730ff9b1108355b9f97b4114e0998dbf4a Mon Sep 17 00:00:00 2001
+From f5edaa7ed2740249a7ad52b16de1edc3442c6543 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
-Date: Tue, 13 Feb 2024 00:57:47 +0000
+Date: Tue, 13 Feb 2024 09:27:42 +0000
 Subject: [PATCH] Add GrapheneOS Apps
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] Add GrapheneOS Apps
  1 file changed, 4 insertions(+)
 
 diff --git a/config/common.mk b/config/common.mk
-index 5457bbc..1f4c2b1 100644
+index 5457bbc..1a8956a 100644
 --- a/config/common.mk
 +++ b/config/common.mk
 @@ -179,6 +179,10 @@ PRODUCT_PACKAGES += \
@@ -17,7 +17,7 @@ index 5457bbc..1f4c2b1 100644
  
 +# GrapheneOS Apps
 +PRODUCT_PACKAGES += \
-+    grapheneos-apps
++    Apps
 +
  # RRO
  include vendor/voltage/config/rro_overlays.mk
