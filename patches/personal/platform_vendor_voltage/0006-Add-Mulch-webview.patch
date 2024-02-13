@@ -1,0 +1,27 @@
+From e93fc12c77d487423c9b9dff3bf28bd1a46bce48 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Tue, 13 Feb 2024 00:38:51 +0000
+Subject: [PATCH] Add Mulch webview
+
+---
+ config/common.mk | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/config/common.mk b/config/common.mk
+index 1a8956a..8bc690d 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -183,6 +183,10 @@ PRODUCT_PACKAGES += \
+ PRODUCT_PACKAGES += \
+     Apps
+ 
++# Mulch Webview
++PRODUCT_PACKAGES += \
++    Mulch
++
+ # RRO
+ include vendor/voltage/config/rro_overlays.mk
+ 
+-- 
+2.42.0
+
