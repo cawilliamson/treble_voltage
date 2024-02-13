@@ -19,7 +19,7 @@
   <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" clone-depth="1" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" />
 
   <!-- grapheneos -->
-  <project path="external/grapheneos-apps" name="platform_external_Apps" remote="grapheneos" revision="14" clone-depth="1" />
+  <project path="external/Apps" name="platform_external_Apps" remote="grapheneos" revision="14" clone-depth="1" />
 
   <!-- mulch -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
