@@ -14,8 +14,8 @@ jobs:
     steps:
     - name: setup git config
       run: |
-        git config --global user.email "androidbuild@localhost"
-        git config --global user.name "androidbuild"
+        git config --global user.email "frankiekelechi@gmail.com"
+        git config --global user.name "kelexine"
     - name: checkout basic repo
       uses: actions/checkout@v4
     - name: clone rom manifest
@@ -29,7 +29,7 @@ jobs:
     - name: perform full sources sync (with auto retry)
       uses: nick-fields/retry@v3
       with:
-        command: repo sync -c -j8 --force-sync --no-clone-bundle --no-tags # set to 8 cores to slow down sync and avoid github-actions timeouts
+        command: repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags # set to 8 cores to slow down sync and avoid github-actions timeouts
         max_attempts: 3
         retry_on: error
         timeout_minutes: 20
@@ -46,8 +46,8 @@ jobs:
         ./patches/apply.sh . personal
     - name: generate base rom config
       run: |
-        cp -v ../../../Voltage.mk .
-        bash generate.sh Voltage
+        cp -v ../../../voltage.mk .
+        bash generate.sh voltage
       working-directory: device/phh/treble
     - name: build treble app
       run: |
