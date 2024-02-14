@@ -9,7 +9,7 @@ You'll need to get familiar with [Git and Repo](https://source.android.com/sourc
 Firstly we need to clone the base repo (this one) which we can do by runnng the following:
 
 ```bash
-git clone --depth=1 https://github.com/cawilliamson/treble_voltage.git
+git clone --depth=1 https://github.com/kelexine/treble_voltage.git
 cd treble_voltage/
 ```
 
@@ -43,8 +43,8 @@ Copy the patches folder to the ROM folder and copy the apply-patches.sh to the r
 Clone this repository and then copy Voltage.mk to device/phh/treble in the ROM folder. Then run the following commands:
 ```bash
 pushd  device/phh/treble
-cp -v ../../../Voltage.mk .
-bash generate.sh Voltage
+cp -v ../../../voltage.mk .
+bash generate.sh vltage
 popd
 ```
 
@@ -62,7 +62,7 @@ In the ROM folder, run this for building a non-gapps build:
 ```bash
 . build/envsetup.sh
 ccache -M 50G -F 0
-lunch treble_arm64_bvN-userdebug 
+lunch treble_a64_bvN-userdebug 
 make systemimage -j$(nproc --all)
 ```
 
@@ -78,7 +78,7 @@ xz -9 -T0 -v -z system.img
 
 ## Troubleshooting
 If you face any conflicts while applying patches, apply the patch manually.
-For any other issues, report them via the [Issues](https://github.com/cawilliamson/treble_voltage/issues) tab.
+For any other issues, report them via the [Issues](https://github.com/kelexine/treble_voltage/issues) tab.
 
 ## Credits
 These people have helped this project in some way or another, so they should be the ones who receive all the credit:
