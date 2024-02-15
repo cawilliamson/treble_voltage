@@ -3,6 +3,7 @@
   <remote name="ahnet-69" fetch="https://github.com/ahnet-69/" />
   <remote name="andycgyan" fetch="https://github.com/AndyCGYan/" />
   <remote name="aosp" fetch="https://android.googlesource.com/" review="https://android-review.googlesource.com/" />
+  <remote name="calyxos" fetch="https://github.com/CalyxOS/" />
   <remote name="divested-mobile" fetch="https://gitlab.com/divested-mobile/" />
   <remote name="grapheneos" fetch="https://github.com/GrapheneOS/" />
   <remote name="phhusson" fetch="https://github.com/phhusson/" />
@@ -17,6 +18,10 @@
 
   <!-- aosp -->
   <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" clone-depth="1" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" />
+
+  <!-- calyxos -->
+  <project path="packages/apps/AuroraStorePrivilegedExtension" name="platform_packages_apps_AuroraStorePrivilegedExtension" remote="calyxos" revision="android14" />
+  <project path="packages/apps/F-DroidPrivilegedExtension" name="platform_packages_apps_F-DroidPrivilegedExtension" remote="calyxos" revision="android14" />
 
   <!-- grapheneos -->
   <project path="external/Apps" name="platform_external_Apps" remote="grapheneos" revision="14" clone-depth="1" />
