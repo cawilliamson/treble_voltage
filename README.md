@@ -48,10 +48,13 @@ bash generate.sh voltage
 popd
 ```
 
-### Turn On Caching
+### Installing CCACHE
+```shell
+sudo apt update && sudo apt install ccache -y
+```
+## Setting Up CCACHE
 You can speed up subsequent builds by adding these lines to your `~/.bashrc` OR `~/.zshrc` file:
 ```shell
-sudo apt update && sudo apt install ccache
 export USE_CCACHE=1
 export CCACHE_COMPRESS=1
 export CCACHE_MAXSIZE=50G # 50 GB
