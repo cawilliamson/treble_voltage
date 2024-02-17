@@ -105,6 +105,7 @@ For any other issues, report them via the [Issues](https://github.com/kelexine/t
 ## Credits
 These people have helped this project in some way or another, so they should be the ones who receive all the credit:
 - [VoltageOS Team](https://github.com/VoltageOS)
+- [cawilliamson](https://github.com/cawilliamson)
 - [Phhusson](https://github.com/phhusson)
 - [AndyYan](https://github.com/AndyCGYan)
 - [Ponces](https://github.com/ponces)
