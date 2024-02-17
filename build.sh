@@ -16,7 +16,7 @@ BD=$BL/builds
 initRepos() {
     if [ ! -d .repo ]; then
         echo "--> Initializing workspace"
-        repo init -u https://github.com/Evolution-X/manifest -b udc
+        repo init --depth=1 -u https://github.com/VoltageOS/manifest.git -b 14
         echo
 
         echo "--> Preparing local manifest"
@@ -44,8 +44,14 @@ applyPatches() {
     echo "--> Generating makefiles"
     cd device/phh/treble
     cp $BL/voltage.mk .
-    bash generate.sh evo
+    bash generate.sh voltage
     cd ../../..
+    echo
+}
+
+setupCcache() {
+    echo "--> Setting up CCACHE"
+    sudo apt update && sudo apt install ccache -y
     echo
 }
 
@@ -118,7 +124,7 @@ generateOta() {
                 name="treble_a64_bvN"
             fi
             size=$(wc -c $file | awk '{print $1}')
-            url="https://github.com/kelexine/treble_evo/releases/download/$version/$filename"
+            url="https://github.com/kelexine/treble_voltage/releases/download/$version/$filename"
             json="${json} {\"name\": \"$name\",\"size\": \"$size\",\"url\": \"$url\"},"
         done
         json="${json%?}]}"
@@ -132,6 +138,7 @@ START=$(date +%s)
 initRepos
 syncRepos
 applyPatches
+setupCcache
 setupEnv
 buildTrebleApp
 buildVariant
