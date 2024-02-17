@@ -39,8 +39,8 @@ repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
 Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
 
 ```shell
-./patches/apply.sh . trebledroid
-./patches/apply.sh . personal
+./patches/apply-patches.sh . trebledroid
+./patches/apply-patches.sh . personal
 ```
 
 ## Adapting for VoltageOS
@@ -54,12 +54,14 @@ popd
 ```
 
 ### Installing CCACHE
+Install ccache in order to enable caching for faster build time later:
 
 ```shell
 sudo apt update && sudo apt install ccache -y
 ```
 ## Setting Up CCACHE
 You can speed up subsequent builds by adding these lines to your `~/.bashrc` OR `~/.zshrc` file:
+
 ```shell
 export USE_CCACHE=1
 export CCACHE_COMPRESS=1
