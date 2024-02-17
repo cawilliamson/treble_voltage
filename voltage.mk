@@ -6,7 +6,13 @@ $(call inherit-product, device/voltage/sepolicy/common/sepolicy.mk)
 -include vendor/voltage/build/core/config.mk
 
 # Bootanimation (force 720p - 720x1280)
-TARGET_BOOT_ANIMATION_RES := 720p
+TARGET_BOOT_ANIMATION_RES := 720
+
+#TARGET_SUPPORTS_QUICK_TAP := true
+
+# OTA
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.system.ota.json_url=https://raw.githubusercontent.com/kelexine/treble_voltage/14/ota.json
 
 # Kernel
 TARGET_NO_KERNEL_IMAGE := true
