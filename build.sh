@@ -10,7 +10,7 @@ echo
 
 set -e
 
-BL=$PWD/treble_evo
+BL=$PWD/treble_voltage
 BD=$BL/builds
 
 initRepos() {
@@ -21,7 +21,7 @@ initRepos() {
 
         echo "--> Preparing local manifest"
         mkdir -p .repo/local_manifests
-        cp $BL/manifest.xml .repo/local_manifests/evo.xml
+        cp $BL/manifest.xml .repo/local_manifests/
         echo
     fi
 }
@@ -37,17 +37,13 @@ applyPatches() {
     bash $BL/apply-patches.sh $BL trebledroid
     echo
 
-    echo "--> Applying pre patches"
-    bash $BL/apply-patches.sh $BL ponces
-    echo
-
     echo "--> Applying personal patches"
     bash $BL/apply-patches.sh $BL personal
     echo
 
     echo "--> Generating makefiles"
     cd device/phh/treble
-    cp $BL/evo.mk .
+    cp $BL/voltage.mk .
     bash generate.sh evo
     cd ../../..
     echo
@@ -80,18 +76,18 @@ buildVariant() {
 
 buildMiniVariant() {
     echo "--> Building treble_a64_bvN-mini"
-    (cd vendor/evolution && git am $BL/patches/mini.patch)
+    (cd vendor/voltage && git am $BL/patches/mini.patch)
     make -j$(nproc --all) systemimage
-    (cd vendor/evolution && git reset --hard HEAD~1)
+    (cd vendor/voltage && git reset --hard HEAD~1)
     mv $OUT/system.img $BD/system-treble_a64_bvN-mini.img
     echo
 }
 
 buildPicoVariant() {
     echo "--> Building treble_a64_bvN-pico"
-    (cd vendor/evolution && git am $BL/patches/pico.patch)
+    (cd vendor/voltage && git am $BL/patches/pico.patch)
     make -j$(nproc --all) systemimage
-    (cd vendor/evolution && git reset --hard HEAD~1)
+    (cd vendor/voltage && git reset --hard HEAD~1)
     mv $OUT/system.img $BD/system-treble_a64_bvN-pico.img
     echo
 }
@@ -99,9 +95,9 @@ buildPicoVariant() {
 generatePackages() {
     echo "--> Generating packages"
     buildDate="$(date +%Y%m%d)"
-    xz -cv $BD/system-treble_a64_bvN.img -T0 > $BD/evolution_a64-ab-8.2-unofficial-$buildDate.img.xz
-    xz -cv $BD/system-treble_a64_bvN-mini.img -T0 > $BD/evolution_a64-ab-mini-8.2-unofficial-$buildDate.img.xz
-    xz -cv $BD/system-treble_a64_bvN-pico.img -T0 > $BD/evolution_a64-ab-pico-8.2-unofficial-$buildDate.img.xz
+    xz -cv $BD/system-treble_a64_bvN.img -T0 > $BD/voltage_a64-ab-3.2-unofficial-$buildDate.img.xz
+    xz -cv $BD/system-treble_a64_bvN-mini.img -T0 > $BD/voltage_a64-ab-mini-3.2-unofficial-$buildDate.img.xz
+    xz -cv $BD/system-treble_a64_bvN-pico.img -T0 > $BD/voltage_a64-ab-pico-3.2-unofficial-$buildDate.img.xz
     rm -rf $BD/system-*.img
     echo
 }
@@ -111,7 +107,7 @@ generateOta() {
     version="$(date +v%Y.%m.%d)"
     timestamp="$START"
     json="{\"version\": \"$version\",\"date\": \"$timestamp\",\"variants\": ["
-    find $BD/ -name "evolution_*" | sort | {
+    find $BD/ -name "voltage_*" | sort | {
         while read file; do
             filename="$(basename $file)"
             if [[ $filename == *"mini"* ]]; then
