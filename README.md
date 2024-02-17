@@ -15,12 +15,14 @@ cd treble_voltage/
 
 ## Initalise the Treble VoltageOS repo
 Now we want to fetch the VoltageOS manifest files:
+
 ```shell
 repo init --depth=1 -u https://github.com/VoltageOS/manifest.git -b 14
 ```
 
 ## Clone the Manifest
 Copy our own manifest which is needed for the GSI portion of the build:
+
 ```shell
 mkdir -p .repo/local_manifests
 cp manifest.xml .repo/local_manifests/
@@ -28,12 +30,14 @@ cp manifest.xml .repo/local_manifests/
 
 ## Sync the repository
 Sync ALL necessary sources to build the ROM:
+
 ```shell
-repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
+repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
 ```
 
 ### Apply the patches
 Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
+
 ```shell
 ./patches/apply.sh . trebledroid
 ./patches/apply.sh . personal
@@ -41,6 +45,7 @@ Copy the patches folder to the ROM folder and copy the apply-patches.sh to the r
 
 ## Adapting for VoltageOS
 Clone this repository and then copy Voltage.mk to device/phh/treble in the ROM folder. Then run the following commands:
+
 ```shell
 pushd  device/phh/treble
 cp -v ../../../voltage.mk .
@@ -49,6 +54,7 @@ popd
 ```
 
 ### Installing CCACHE
+
 ```shell
 sudo apt update && sudo apt install ccache -y
 ```
