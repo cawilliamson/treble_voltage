@@ -11,7 +11,7 @@ echo
 set -e
 
 BL=$PWD/treble_voltage
-BD=$BL/builds
+BD=$BL/gsi
 
 initRepos() {
     if [ ! -d .repo ]; then
@@ -51,12 +51,14 @@ applyPatches() {
 
 setupCcache() {
     echo "--> Setting up CCACHE"
-    sudo apt update && sudo apt install ccache -y
+    sudo apt update && sudo apt install wget nano ccache -y
     echo
 }
 
 setupEnv() {
     echo "--> Setting up build environment"
+    wget https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_linux_amd64.deb -O gh.deb
+    sudo apt install ./gh.deb
     source build/envsetup.sh &>/dev/null
     mkdir -p $BD
     echo
