@@ -1,14 +1,14 @@
-From d5c93c44bc43b71523ddbcd1af50552eb6d3d5f2 Mon Sep 17 00:00:00 2001
+From 019eaac33fc89e03240fbc47920deeaf391718d3 Mon Sep 17 00:00:00 2001
 From: ChonDoit <thphantomblog@gmail.com>
 Date: Mon, 24 Apr 2023 16:55:33 +0000
-Subject: [PATCH] Enable Auxiliary Camera
+Subject: [PATCH] Enable Auxiliary Cameras
 
 ---
- app/src/main/res/values/config.xml | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ app/src/main/res/values/config.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/app/src/main/res/values/config.xml b/app/src/main/res/values/config.xml
-index 39d9698..81eca4e 100644
+index 39d9698..f044d7f 100644
 --- a/app/src/main/res/values/config.xml
 +++ b/app/src/main/res/values/config.xml
 @@ -5,7 +5,7 @@
@@ -20,16 +20,6 @@ index 39d9698..81eca4e 100644
  
      <!-- List of ID of auxiliary cameras that must be ignored by the app. -->
      <string-array name="config_ignoredAuxCameraIds">
-@@ -54,9 +54,6 @@
-                  <item>1</item> <item>sd|hd|fhd</item> <item>60</item>
-              </string-array>
-     -->
--    <string-array name="config_additionalVideoConfigurations">
--        <!-- No additional configuration is added by default. -->
--    </string-array>
- 
-     <!-- An array of triplets made of (camera ID, approximate zoom ratio, exact zoom ratio).
-          These values will be added to the lens selector if one or more cameras uses the
 -- 
 2.42.0
 
