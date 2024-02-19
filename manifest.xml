@@ -28,7 +28,7 @@
 
   <!-- grapheneos camera -->
   <remove-project name="LineageOS/android_packages_apps_Aperture" />
-  <project path="external/Camera" name="GrapheneOS/platform_external_Camera" remote="grapheneos" revision="14" />
+  <project path="external/Camera" name="platform_external_Camera" remote="grapheneos" revision="14" />
 
   <!-- mulch -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
