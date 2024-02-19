@@ -23,8 +23,12 @@
   <project path="packages/apps/AuroraStorePrivilegedExtension" name="platform_packages_apps_AuroraStorePrivilegedExtension" remote="calyxos" revision="android14" />
   <project path="packages/apps/F-DroidPrivilegedExtension" name="platform_packages_apps_F-DroidPrivilegedExtension" remote="calyxos" revision="android14" />
 
-  <!-- grapheneos -->
+  <!-- grapheneos apps -->
   <project path="external/Apps" name="platform_external_Apps" remote="grapheneos" revision="14" clone-depth="1" />
+
+  <!-- grapheneos camera -->
+  <remove-project name="LineageOS/android_packages_apps_Aperture" />
+  <project path="external/Camera" name="GrapheneOS/platform_external_Camera" remote="grapheneos" revision="14" />
 
   <!-- mulch -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
