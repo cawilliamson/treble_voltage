@@ -31,8 +31,8 @@
   <project path="external/Camera" name="platform_external_Camera" remote="grapheneos" revision="14" />
 
   <!-- grapheneos: launcher -->
-  <remove-project name="packages_apps_Launcher3" />
-  <project path="packages/apps/Launcher3" name="platform_packages_apps_Launcher3" remote="grapheneos" revision="14" />
+  <!--<remove-project name="packages_apps_Launcher3" />-->
+  <!--<project path="packages/apps/Launcher3" name="platform_packages_apps_Launcher3" remote="grapheneos" revision="14" />-->
 
   <!-- mulch -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
