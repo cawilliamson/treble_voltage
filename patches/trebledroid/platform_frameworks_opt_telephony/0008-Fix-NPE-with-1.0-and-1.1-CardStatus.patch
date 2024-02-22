@@ -23,4 +23,3 @@ index 0bc29583fb..71bb2e5b75 100644
                  sendMessageResponse(rr.mResult, iccCardStatus);
 -- 
 2.25.1
-

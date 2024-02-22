@@ -42,4 +42,3 @@ index 91053b2c5f8e..d47a7d2068fa 100644
                          Log.d("PHH-Enroll", "myHandler.postDelayed 600ms -SetTouchMode 10,0 was NOT executed successfully. Ret is " + ret600)
 -- 
 2.25.1
-

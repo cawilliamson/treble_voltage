@@ -26,4 +26,3 @@ index 44af367a38..4adec48daa 100644
      echo "ro.$(1).build.fingerprint=$(BUILD_FINGERPRINT_FROM_FILE)" >> $(2);\
 -- 
 2.25.1
-

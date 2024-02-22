@@ -29,4 +29,3 @@ index 16ea602bc4..262afbcbb3 100644
                      .getParcelable(UsbManager.EXTRA_PORT_STATUS);
 -- 
 2.25.1
-

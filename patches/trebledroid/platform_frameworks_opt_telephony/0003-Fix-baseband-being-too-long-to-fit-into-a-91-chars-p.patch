@@ -24,4 +24,3 @@ index e48d10e8b5..3e97f0ab32 100644
                                  : version.substring(length - MAX_VERSION_LEN, length));
 -- 
 2.25.1
-

@@ -99,4 +99,3 @@ index 7701bc62..54aaaeda 100644
                          if (Display.isSuspendedState(state) && state != Display.STATE_OFF
 -- 
 2.25.1
-

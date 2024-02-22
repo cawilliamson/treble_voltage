@@ -118,4 +118,3 @@ index 91f14de040fe..8fa9c4f3a698 100644
                  setLightLocked(color, LIGHT_FLASH_NONE, 0, 0, brightnessMode);
 -- 
 2.25.1
-

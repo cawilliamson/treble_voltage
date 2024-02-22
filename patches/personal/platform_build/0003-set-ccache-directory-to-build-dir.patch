@@ -22,4 +22,3 @@ index 23f1e1b..25c0450 100644
          echo -e "ccache enabled and CCACHE_EXEC has been set to : $ccache_path"
 -- 
 2.42.0
-

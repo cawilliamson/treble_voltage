@@ -27,4 +27,3 @@ index 1fc981719..d0e00b316 100644
          LOG(INFO) << "AVB is not enabled, skip verity setup for '" << begin->mount_point << "'";
 -- 
 2.25.1
-

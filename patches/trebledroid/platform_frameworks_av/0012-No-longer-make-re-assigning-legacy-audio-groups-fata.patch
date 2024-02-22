@@ -29,4 +29,3 @@ index 218aff80e6..c7ea035191 100644
              addSupportedAttributesToGroup(group, volumeGroup, strategy);
 -- 
 2.25.1
-

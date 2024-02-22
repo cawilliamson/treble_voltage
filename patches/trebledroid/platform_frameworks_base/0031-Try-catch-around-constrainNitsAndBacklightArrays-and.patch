@@ -83,4 +83,3 @@ index b0ebab8e4002..77dafd5068d0 100644
      private Spline loadSdrHdrRatioMap(HighBrightnessMode hbmConfig) {
 -- 
 2.25.1
-

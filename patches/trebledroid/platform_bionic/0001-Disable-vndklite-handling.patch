@@ -33,4 +33,3 @@ index 17b574fc1..c863f8ea6 100644
    if (insert_pos == std::string::npos) {
 -- 
 2.25.1
-

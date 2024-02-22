@@ -61,4 +61,3 @@ index fc6cc72c1c..8b3a1f0e4f 100644
          devTag = strtok(NULL, ",");
 -- 
 2.25.1
-

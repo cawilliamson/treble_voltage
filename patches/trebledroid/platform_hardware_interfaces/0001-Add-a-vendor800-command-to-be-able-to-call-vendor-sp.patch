@@ -28,4 +28,3 @@ index 499d3b96e..489578468 100644
       void beginCommand(T command, uint16_t length) {
 -- 
 2.25.1
-

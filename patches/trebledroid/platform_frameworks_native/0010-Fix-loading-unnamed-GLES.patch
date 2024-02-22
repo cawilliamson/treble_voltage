@@ -37,4 +37,3 @@ index 654e5b7c03..55f59e2a17 100644
          hnd = attempt_to_load_system_driver(cnx, nullptr, false);
 -- 
 2.25.1
-

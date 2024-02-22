@@ -30,4 +30,3 @@ index 3e8ab78371..32495069a2 100644
              "Received %s event with OpCode 0x%02hx (%s) without a waiting command"
 -- 
 2.25.1
-

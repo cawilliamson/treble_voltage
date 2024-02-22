@@ -40,4 +40,3 @@ index 622de5b7a..e580190e9 100644
      for (int i = 0; i <= new_opts_list.size(); ++i) {
 -- 
 2.25.1
-

@@ -56,13 +56,13 @@ export CCACHE_COMPRESS=1
 export CCACHE_MAXSIZE=50G # 50 GB
 ```
 
-## Compilation 
+## Compilation
 In the ROM folder, run this for building a non-gapps build:
 
 ```bash
 . build/envsetup.sh
 ccache -M 50G -F 0
-lunch treble_arm64_bvN-userdebug 
+lunch treble_arm64_bvN-userdebug
 make systemimage -j$(nproc --all)
 ```
 
@@ -73,7 +73,7 @@ After compiling the GSI, you can run this to reduce the `system.img` file size:
 
 ```bash
 cd out/target/product/tdgsi_arm64_ab
-xz -9 -T0 -v -z system.img 
+xz -9 -T0 -v -z system.img
 ```
 
 ## Troubleshooting

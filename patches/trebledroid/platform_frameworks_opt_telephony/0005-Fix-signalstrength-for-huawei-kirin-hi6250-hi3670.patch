@@ -190,4 +190,3 @@ index 4f75412ad9..42a4f73da3 100644
              mRil.mSignalStrengthRegistrant.notifyRegistrant(new AsyncResult (null, ss, null));
 -- 
 2.25.1
-

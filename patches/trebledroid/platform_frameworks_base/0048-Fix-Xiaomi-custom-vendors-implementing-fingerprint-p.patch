@@ -30,4 +30,3 @@ index 4377dd7e70a7..91053b2c5f8e 100644
      val myHandler = Handler(handlerThread.looper)
 -- 
 2.25.1
-

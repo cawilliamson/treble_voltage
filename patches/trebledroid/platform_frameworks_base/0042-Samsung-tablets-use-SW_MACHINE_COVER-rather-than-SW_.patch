@@ -84,4 +84,3 @@ index ff69719c9497..3b168b59423a 100644
                      for (int i = 0; i < mLidSwitchCallbacks.size(); i++) {
 -- 
 2.25.1
-
