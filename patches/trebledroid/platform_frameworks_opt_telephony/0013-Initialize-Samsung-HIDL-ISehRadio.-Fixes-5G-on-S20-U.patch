@@ -140,7 +140,7 @@ index 1fb4e9c1dd..6555cfc4f7 100644
 +public void getCsgListResponse() {}
 +public void selectCsgManualResponse(RadioResponseInfo info) {}
 +public void setMobileDataSettingResponse(RadioResponseInfo info) {}
-+public void sendRequestRawResponse(RadioResponseInfo info, ArrayList<Byte> data) {} 
++public void sendRequestRawResponse(RadioResponseInfo info, ArrayList<Byte> data) {}
 +public void sendRequestStringsResponse(RadioResponseInfo info, ArrayList<String> data) {}
 +public void setNrModeResponse(RadioResponseInfo info) {}
 +public void getNrModeResponse(RadioResponseInfo info, int nrMode) {}
