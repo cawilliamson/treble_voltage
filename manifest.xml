@@ -4,6 +4,7 @@
   <remote name="andycgyan" fetch="https://github.com/AndyCGYan/" />
   <remote name="aosp" fetch="https://android.googlesource.com/" review="https://android-review.googlesource.com/" />
   <remote name="calyxos" fetch="https://github.com/CalyxOS/" />
+  <remote name="cawilliamson" fetch="https://github.com/cawilliamson/" />
   <remote name="divested-mobile" fetch="https://gitlab.com/divested-mobile/" />
   <remote name="grapheneos" fetch="https://github.com/GrapheneOS/" />
   <remote name="phhusson" fetch="https://github.com/phhusson/" />
@@ -30,9 +31,9 @@
   <remove-project name="LineageOS/android_packages_apps_Aperture" />
   <project path="external/Camera" name="platform_external_Camera" remote="grapheneos" revision="14" />
 
-  <!-- grapheneos: launcher -->
+  <!-- lawnchair -->
   <remove-project name="packages_apps_Launcher3" />
-  <project path="packages/apps/Launcher3" name="platform_packages_apps_Launcher3" remote="grapheneos" revision="14" />
+  <project path="vendor/Lawnchair" name="vendor_lawnchair" remote="cawilliamson" revision="14" />
 
   <!-- mulch -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
