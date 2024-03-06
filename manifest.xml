@@ -33,6 +33,7 @@
 
   <!-- lineageos: launcher -->
   <remove-project name="packages_apps_Launcher3" />
+  <project path="external/lineage-sdk" name="android_lineage-sdk" remote="lineageos" revision="lineage-21.0" />
   <project path="packages/apps/Trebuchet" name="android_packages_apps_Trebuchet" remote="lineageos" revision="lineage-21.0" />
 
   <!-- mulch -->
