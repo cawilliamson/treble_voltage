@@ -1,0 +1,26 @@
+From cb89cea42d61a7cde5e1d91e22cb9036c1cd5d5b Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Wed, 6 Mar 2024 20:19:45 +0000
+Subject: [PATCH] Add Trebuchet launcher
+
+---
+ config/common.mk | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/config/common.mk b/config/common.mk
+index e7d936c..310d45a 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -188,6 +188,10 @@ PRODUCT_PACKAGES += \
+ PRODUCT_PACKAGES += \
+     Apps
+ 
++# Trebuchet
++PRODUCT_PACKAGES += \
++    Trebuchet
++
+ # RRO
+ include vendor/voltage/config/rro_overlays.mk
+ 
+-- 
+2.43.1
