@@ -36,6 +36,6 @@ index 700ac69..448cae0 100644
 -    ],
  }
  
- cc_library_headers {
+ cc_defaults {
 -- 
 2.42.0
