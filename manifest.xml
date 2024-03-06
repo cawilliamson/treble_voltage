@@ -31,11 +31,6 @@
   <remove-project name="LineageOS/android_packages_apps_Aperture" />
   <project path="external/Camera" name="platform_external_Camera" remote="grapheneos" revision="14" />
 
-  <!-- lineageos: launcher -->
-  <remove-project name="packages_apps_Launcher3" />
-  <project path="external/lineage-sdk" name="android_lineage-sdk" remote="lineageos" revision="lineage-21.0" />
-  <project path="packages/apps/Trebuchet" name="android_packages_apps_Trebuchet" remote="lineageos" revision="lineage-21.0" />
-
   <!-- mulch -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
   <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_arm" />
