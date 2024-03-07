@@ -1,0 +1,199 @@
+From ad4b2db397e882a75398c6f342ad1ba0de65b66f Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Thu, 7 Mar 2024 21:46:38 +0000
+Subject: [PATCH 3/3] Revert "SystemUI: Add API for runtime taskbar config"
+
+---
+ core/java/android/provider/Settings.java      |  5 ----
+ .../shared/recents/ISystemUiProxy.aidl        |  3 --
+ .../NavigationBarController.java              | 30 ++++++-------------
+ .../recents/OverviewProxyService.java         | 13 --------
+ .../NavigationBarControllerTest.java          |  2 +-
+ 5 files changed, 10 insertions(+), 43 deletions(-)
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index 09bf55741cee..6c2de551f471 100644
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -6566,11 +6566,6 @@ public final class Settings {
+          */
+         public static final String ZEN_ALLOW_LIGHTS = "allow_lights";
+ 
+-        /**
+-         * @hide
+-         */
+-        public static final String ENABLE_TASKBAR = "enable_taskbar";
+-
+         /**
+          * Whether to show or hide alert slider notifications on supported devices
+          * @hide
+diff --git a/packages/SystemUI/shared/src/com/android/systemui/shared/recents/ISystemUiProxy.aidl b/packages/SystemUI/shared/src/com/android/systemui/shared/recents/ISystemUiProxy.aidl
+index d07ba6ab645b..dc34ef754825 100644
+--- a/packages/SystemUI/shared/src/com/android/systemui/shared/recents/ISystemUiProxy.aidl
++++ b/packages/SystemUI/shared/src/com/android/systemui/shared/recents/ISystemUiProxy.aidl
+@@ -109,9 +109,6 @@ interface ISystemUiProxy {
+     /** Sets home rotation enabled. */
+     oneway void setHomeRotationEnabled(boolean enabled) = 45;
+ 
+-    /** Notifies when taskbar is enabled or disabled */
+-    oneway void setTaskbarEnabled(boolean enabled) = 500;
+-
+     /** Notifies when taskbar status updated */
+     oneway void notifyTaskbarStatus(boolean visible, boolean stashed) = 47;
+ 
+diff --git a/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java b/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java
+index b20c09815fa5..580facdda7d7 100644
+--- a/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java
++++ b/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java
+@@ -21,6 +21,7 @@ import static android.provider.Settings.Secure.ACCESSIBILITY_BUTTON_MODE_GESTURE
+ import static android.provider.Settings.Secure.ACCESSIBILITY_BUTTON_MODE_NAVIGATION_BAR;
+ 
+ import static com.android.systemui.navigationbar.gestural.EdgeBackGestureHandler.DEBUG_MISSING_GESTURE_TAG;
++import static com.android.systemui.shared.recents.utilities.Utilities.isLargeScreen;
+ 
+ import android.content.Context;
+ import android.content.pm.ActivityInfo;
+@@ -77,7 +78,6 @@ public class NavigationBarController implements
+         Callbacks,
+         ConfigurationController.ConfigurationListener,
+         NavigationModeController.ModeChangedListener,
+-        OverviewProxyService.OverviewProxyListener,
+         Dumpable {
+ 
+     private static final String TAG = NavigationBarController.class.getSimpleName();
+@@ -92,7 +92,7 @@ public class NavigationBarController implements
+     private final TaskbarDelegate mTaskbarDelegate;
+     private final NavBarHelper mNavBarHelper;
+     private int mNavMode;
+-    @VisibleForTesting boolean mTaskbarShowing;
++    @VisibleForTesting boolean mIsLargeScreen;
+ 
+     /** A displayId - nav bar maps. */
+     @VisibleForTesting
+@@ -140,15 +140,16 @@ public class NavigationBarController implements
+                 navBarHelper, navigationModeController, sysUiFlagsContainer,
+                 dumpManager, autoHideController, lightBarController, pipOptional,
+                 backAnimation.orElse(null), taskStackChangeListeners);
+-        overviewProxyService.addCallback(this);
++        mIsLargeScreen = isLargeScreen(mContext);
+         dumpManager.registerDumpable(this);
+     }
+ 
+     @Override
+     public void onConfigChanged(Configuration newConfig) {
+-        boolean oldShouldShowTaskbar = shouldShowTaskbar();
++        boolean isOldConfigLargeScreen = mIsLargeScreen;
++        mIsLargeScreen = isLargeScreen(mContext);
+         boolean willApplyConfig = mConfigChanges.applyNewConfig(mContext.getResources());
+-        boolean largeScreenChanged = shouldShowTaskbar() != oldShouldShowTaskbar;
++        boolean largeScreenChanged = mIsLargeScreen != isOldConfigLargeScreen;
+         // TODO(b/243765256): Disable this logging once b/243765256 is fixed.
+         Log.i(DEBUG_MISSING_GESTURE_TAG, "NavbarController: newConfig=" + newConfig
+                 + " mTaskbarDelegate initialized=" + mTaskbarDelegate.isInitialized()
+@@ -197,16 +198,6 @@ public class NavigationBarController implements
+         });
+     }
+ 
+-    @Override
+-    public void onTaskbarEnabled(boolean enabled) {
+-        boolean oldShouldShowTaskbar = shouldShowTaskbar();
+-        mTaskbarShowing = enabled;
+-        boolean largeScreenChanged = shouldShowTaskbar() != oldShouldShowTaskbar;
+-        if (largeScreenChanged) {
+-            updateNavbarForTaskbar();
+-        }
+-    }
+-
+     private void updateAccessibilityButtonModeIfNeeded() {
+         final int mode = mSecureSettings.getIntForUser(
+                 Settings.Secure.ACCESSIBILITY_BUTTON_MODE,
+@@ -259,7 +250,7 @@ public class NavigationBarController implements
+     /** @return {@code true} if taskbar is enabled, false otherwise */
+     private boolean initializeTaskbarIfNecessary() {
+         // Enable for large screens or (phone AND flag is set); assuming phone = !mIsLargeScreen
+-        boolean taskbarEnabled = (shouldShowTaskbar() || mFeatureFlags.isEnabled(
++        boolean taskbarEnabled = (mIsLargeScreen || mFeatureFlags.isEnabled(
+                 Flags.HIDE_NAVBAR_WINDOW)) && shouldCreateNavBarAndTaskBar(mContext.getDisplayId());
+ 
+         if (taskbarEnabled) {
+@@ -287,6 +278,7 @@ public class NavigationBarController implements
+     @Override
+     public void onDisplayReady(int displayId) {
+         Display display = mDisplayManager.getDisplay(displayId);
++        mIsLargeScreen = isLargeScreen(mContext);
+         createNavigationBar(display, null /* savedState */, null /* result */);
+     }
+ 
+@@ -483,10 +475,6 @@ public class NavigationBarController implements
+         }
+     }
+ 
+-    private boolean shouldShowTaskbar() {
+-        return mTaskbarShowing;
+-    }
+-
+     /** @return {@link NavigationBar} on the default display. */
+     @Nullable
+     public NavigationBar getDefaultNavigationBar() {
+@@ -495,7 +483,7 @@ public class NavigationBarController implements
+ 
+     @Override
+     public void dump(@NonNull PrintWriter pw, @NonNull String[] args) {
+-        pw.println("mTaskbarShowing=" + mTaskbarShowing);
++        pw.println("mIsLargeScreen=" + mIsLargeScreen);
+         pw.println("mNavMode=" + mNavMode);
+         for (int i = 0; i < mNavigationBars.size(); i++) {
+             if (i > 0) {
+diff --git a/packages/SystemUI/src/com/android/systemui/recents/OverviewProxyService.java b/packages/SystemUI/src/com/android/systemui/recents/OverviewProxyService.java
+index a585472e9c2b..3a64a6a989f2 100644
+--- a/packages/SystemUI/src/com/android/systemui/recents/OverviewProxyService.java
++++ b/packages/SystemUI/src/com/android/systemui/recents/OverviewProxyService.java
+@@ -274,12 +274,6 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
+                     mHandler.post(() -> notifyHomeRotationEnabled(enabled)));
+         }
+ 
+-        @Override
+-        public void setTaskbarEnabled(boolean enabled) {
+-            verifyCallerAndClearCallingIdentityPostMain("setTaskbarEnabled", () ->
+-                    onTaskbarEnabled(enabled));
+-        }
+-
+         @Override
+         public void notifyTaskbarStatus(boolean visible, boolean stashed) {
+             verifyCallerAndClearCallingIdentityPostMain("notifyTaskbarStatus", () ->
+@@ -878,12 +872,6 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
+         }
+     }
+ 
+-    private void onTaskbarEnabled(boolean enabled) {
+-        for (int i = mConnectionCallbacks.size() - 1; i >= 0; --i) {
+-            mConnectionCallbacks.get(i).onTaskbarEnabled(enabled);
+-        }
+-    }
+-
+     private void onTaskbarStatusUpdated(boolean visible, boolean stashed) {
+         for (int i = mConnectionCallbacks.size() - 1; i >= 0; --i) {
+             mConnectionCallbacks.get(i).onTaskbarStatusUpdated(visible, stashed);
+@@ -1070,7 +1058,6 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
+         /** Notify the recents app (overview) is started by 3-button navigation. */
+         default void onToggleRecentApps() {}
+         default void onHomeRotationEnabled(boolean enabled) {}
+-        default void onTaskbarEnabled(boolean enabled) {}
+         default void onTaskbarStatusUpdated(boolean visible, boolean stashed) {}
+         default void onTaskbarAutohideSuspend(boolean suspend) {}
+         default void onAssistantProgress(@FloatRange(from = 0.0, to = 1.0) float progress) {}
+diff --git a/packages/SystemUI/tests/src/com/android/systemui/navigationbar/NavigationBarControllerTest.java b/packages/SystemUI/tests/src/com/android/systemui/navigationbar/NavigationBarControllerTest.java
+index 877aa45a9d8f..89405c109224 100644
+--- a/packages/SystemUI/tests/src/com/android/systemui/navigationbar/NavigationBarControllerTest.java
++++ b/packages/SystemUI/tests/src/com/android/systemui/navigationbar/NavigationBarControllerTest.java
+@@ -142,7 +142,7 @@ public class NavigationBarControllerTest extends SysuiTestCase {
+     @Test
+     public void testCreateNavigationBarsIncludeDefaultTrue() {
+         // Large screens may be using taskbar and the logic is different
+-        mNavigationBarController.mTaskbarShowing = false;
++        mNavigationBarController.mIsLargeScreen = false;
+         doNothing().when(mNavigationBarController).createNavigationBar(any(), any(), any());
+ 
+         mNavigationBarController.createNavigationBars(true, null);
+-- 
+2.43.1

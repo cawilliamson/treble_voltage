@@ -1,7 +1,7 @@
 From 576b0c8a937b87e83049614c8f60eb63a4dcdccc Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Wed, 24 Jan 2024 01:24:48 +0000
-Subject: [PATCH 2/2] Switch to pool.ntp.org
+Subject: [PATCH 2/3] Switch to pool.ntp.org
 
 ---
  core/res/res/values/config.xml | 2 +-
