@@ -1,7 +1,7 @@
 From 345530045ac8deea81182196620e371c29887dbc Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Thu, 7 Mar 2024 23:24:55 +0000
-Subject: [PATCH] Adapt taskbar code from Lineage to Voltage
+Subject: [PATCH 1/1] Adapt taskbar code from Lineage to Voltage
 
 ---
  .../com/android/launcher3/taskbar/TaskbarManager.java  | 10 +++++-----
