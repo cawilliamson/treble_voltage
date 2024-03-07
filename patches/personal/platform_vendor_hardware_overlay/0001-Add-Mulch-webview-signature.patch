@@ -1,7 +1,7 @@
 From c571dad105784e7b8394c082ba6767f2fc56649e Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Tue, 16 Jan 2024 18:29:55 +0000
-Subject: [PATCH] Add Mulch webview signature
+Subject: [PATCH 1/2] Add Mulch webview signature
 
 ---
  HighPriorityMisc/res/xml/config_webview_packages.xml | 3 +++

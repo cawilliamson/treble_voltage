@@ -1,7 +1,7 @@
 From 5b213010c65c8fed617206f0af935df63ea5eec1 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Sat, 27 Jan 2024 23:00:01 +0000
-Subject: [PATCH] set ccache directory to build dir
+Subject: [PATCH 3/3] set ccache directory to build dir
 
 ---
  envsetup.sh | 2 +-

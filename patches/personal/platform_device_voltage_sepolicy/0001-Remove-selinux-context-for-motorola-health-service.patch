@@ -1,7 +1,7 @@
 From 7a1819ed718d030a0804144ea693a60d0ad77b28 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Mon, 22 Jan 2024 15:06:31 +0000
-Subject: [PATCH] Remove selinux context for motorola health service
+Subject: [PATCH 1/1] Remove selinux context for motorola health service
 
 ---
  common/dynamic/hwservice_contexts | 1 -

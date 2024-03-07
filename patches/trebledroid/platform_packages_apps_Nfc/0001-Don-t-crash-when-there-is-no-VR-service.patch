@@ -1,7 +1,7 @@
 From 979358640c18f464b9ab0254734c7c2d7b91789c Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Fri, 20 Oct 2023 13:02:43 -0400
-Subject: [PATCH] Don't crash when there is no VR service
+Subject: [PATCH 1/1] Don't crash when there is no VR service
 
 Change-Id: I02d672f9a2688df7b1abf16377634fdcf4132511
 ---

@@ -1,7 +1,7 @@
 From c504fef50c79e49c121d256471b4a567fc36e6c4 Mon Sep 17 00:00:00 2001
 From: ahnet-69 <syedmusicrealise@gmail.com>
 Date: Sun, 24 Dec 2023 03:22:02 +0500
-Subject: [PATCH] Remove redefinations of libprotobuf
+Subject: [PATCH 1/1] Remove redefinations of libprotobuf
 
 Change-Id: I82c9d2ef808d309e9a80338957adfb147ca1b67f
 ---

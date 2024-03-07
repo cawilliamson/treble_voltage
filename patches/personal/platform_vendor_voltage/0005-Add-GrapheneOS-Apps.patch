@@ -1,7 +1,7 @@
 From f5edaa7ed2740249a7ad52b16de1edc3442c6543 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Tue, 13 Feb 2024 09:27:42 +0000
-Subject: [PATCH] Add GrapheneOS Apps
+Subject: [PATCH 5/7] Add GrapheneOS Apps
 
 ---
  config/common.mk | 4 ++++

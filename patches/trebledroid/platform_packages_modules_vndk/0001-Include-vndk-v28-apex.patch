@@ -1,7 +1,7 @@
 From 5e4d928f55dda5b8b3f6ba56f8f8e20fd0b514ea Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Fri, 6 Oct 2023 05:18:39 -0400
-Subject: [PATCH] Include vndk v28 apex
+Subject: [PATCH 1/1] Include vndk v28 apex
 
 Change-Id: I5689074542f13e136e5bc1292afec2a8288f9e1c
 ---

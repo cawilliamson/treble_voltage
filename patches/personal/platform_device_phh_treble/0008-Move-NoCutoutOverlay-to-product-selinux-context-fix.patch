@@ -1,7 +1,7 @@
 From 05d4507b42b48be14158a4a1e9e865a0a117c73f Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Mon, 22 Jan 2024 18:04:03 +0000
-Subject: [PATCH] Move NoCutoutOverlay to /product - selinux context fix
+Subject: [PATCH 8/10] Move NoCutoutOverlay to /product - selinux context fix
 
 ---
  overlay/packages/apps/overlays/NoCutoutOverlay/Android.mk | 2 ++

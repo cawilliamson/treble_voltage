@@ -1,7 +1,7 @@
 From cd3a315b5c25f0236bc8b9b4b2bb6bfb309c8a44 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Tue, 16 Jan 2024 18:34:12 +0000
-Subject: [PATCH] Add Mulch webview signature
+Subject: [PATCH 2/7] Add Mulch webview signature
 
 ---
  .../base/packages/SystemUI/res/xml/config_webview_packages.xml | 3 +++

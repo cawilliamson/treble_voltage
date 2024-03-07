@@ -1,7 +1,7 @@
 From a417e8f397d7632c2cbd7d7f2d0783fbe455e2f5 Mon Sep 17 00:00:00 2001
 From: ahnet-69 <syedmusicrealise@gmail.com>
 Date: Mon, 11 Sep 2023 20:03:39 +0500
-Subject: [PATCH] Add Maintainer Overlay
+Subject: [PATCH 2/10] Add Maintainer Overlay
 
 ---
  .../Settings/res/values/voltage_strings.xml   | 19 +++++++++++++++++++

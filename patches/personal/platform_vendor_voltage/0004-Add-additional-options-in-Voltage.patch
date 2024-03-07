@@ -1,7 +1,7 @@
 From 9a673ec1311460a0f44358f232b18fd3ad14219d Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Thu, 8 Feb 2024 21:35:29 +0000
-Subject: [PATCH] Add additional options in VoltageOS
+Subject: [PATCH 4/7] Add additional options in VoltageOS
 
 ---
  .../Settings/res/values/voltage_config.xml    | 26 +++++++++++++++++++

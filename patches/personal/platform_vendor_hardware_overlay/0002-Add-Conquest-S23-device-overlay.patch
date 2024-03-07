@@ -1,7 +1,7 @@
 From 79e2adad4b77b2275b4bf15c4f8820674cb0fd4d Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Wed, 7 Feb 2024 10:20:29 +0000
-Subject: [PATCH] Add Conquest S23 device overlay
+Subject: [PATCH 2/2] Add Conquest S23 device overlay
 
 ---
  CONQUEST/S23/Android.mk                |   8 ++

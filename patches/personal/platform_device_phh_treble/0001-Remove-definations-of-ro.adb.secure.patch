@@ -1,7 +1,7 @@
 From 3da5b943fa3813034532b2da6ed78359b0f70405 Mon Sep 17 00:00:00 2001
 From: ahnet-69 <syedmusicrealise@gmail.com>
 Date: Sun, 24 Dec 2023 11:49:10 +0500
-Subject: [PATCH] Remove definations of ro.adb.secure
+Subject: [PATCH 1/10] Remove definations of ro.adb.secure
 
 ---
  base.mk    |  1 -

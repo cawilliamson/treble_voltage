@@ -1,7 +1,7 @@
 From 604b38628f5d1a562c251115bcb1393fef168100 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Wed, 20 Oct 2021 09:39:47 -0400
-Subject: [PATCH] Try to fallback mCallingSid to getpidcon
+Subject: [PATCH 1/1] Try to fallback mCallingSid to getpidcon
 
 This is needed because old vendors (before April 2019 ~) don't support
 reporting SELinux context of the caller.
