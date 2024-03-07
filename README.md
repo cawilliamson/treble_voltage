@@ -19,11 +19,17 @@ Now we want to fetch the VoltageOS manifest files:
 repo init -u https://github.com/VoltageOS/manifest.git -b 14
 ```
 
-## Clone the Manifest
+## Copy our manifest
 Copy our own manifest which is needed for the GSI portion of the build:
 ```bash
 mkdir -p .repo/local_manifests
 cp manifest.xml .repo/local_manifests/
+```
+
+## Setup the git-lfs hook
+In order to setup git-lfs to sync you need to run the following:
+```bash
+git lfs install
 ```
 
 ## Sync the repository
@@ -32,15 +38,35 @@ Sync ALL necessary sources to build the ROM:
 repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 ```
 
-### Apply the patches
+## Sync all git-lfs objects
+In order to sync the git-lfs objects as swiftly as possible run the following:
+```bash
+grep -l 'merge=lfs' $( find $PWD -name .gitattributes ) /dev/null | while IFS= read -r line; do
+  dir=$(dirname $line)
+  echo $dir
+  ( cd $dir ; git lfs pull )
+done
+```
+
+## Apply the patches
 Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
 ```bash
 ./patches/apply.sh . trebledroid
 ./patches/apply.sh . personal
 ```
 
-## Adapting for VoltageOS
-Clone this repository and then copy Voltage.mk to device/phh/treble in the ROM folder. Then run the following commands:
+## Build the TrebleApp
+In order to build our patched TrebleApp you need to run the following:
+```bash
+. build/envsetup.sh
+pushd treble_app/
+bash build.sh release
+cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
+popd
+```
+
+## Generate base ROM config
+In order to generate the base ROM config run the following commands:
 ```bash
 pushd  device/phh/treble
 cp -v ../../../Voltage.mk .
@@ -48,32 +74,23 @@ bash generate.sh Voltage
 popd
 ```
 
-### Turn On Caching
-You can speed up subsequent builds by adding these lines to your `~/.bashrc` OR `~/.zshrc` file:
-```bash
-export USE_CCACHE=1
-export CCACHE_COMPRESS=1
-export CCACHE_MAXSIZE=50G # 50 GB
-```
-
 ## Compilation
-In the ROM folder, run this for building a non-gapps build:
-
+In the ROM folder, run this for building an arm64 standard build (needed even if you want a vndklite build):
 ```bash
 . build/envsetup.sh
-ccache -M 50G -F 0
 lunch treble_arm64_bvN-userdebug
 make systemimage -j$(nproc --all)
 ```
 
-## Compression
-After compiling the GSI, you can run this to reduce the `system.img` file size:
-> Warning<br>
-> You will need to decompress the output file to flash the `system.img`. In other words, you cannot flash this file directly.
-
+## Convert standard build to vndklite build (optional)
+Run the following commands if you require a vndklite build:
 ```bash
-cd out/target/product/tdgsi_arm64_ab
-xz -9 -T0 -v -z system.img
+pushd treble_adapter/
+cp -v ../out/target/product/tdgsi_arm64_ab/system.img standard_system_arm64.img
+sudo bash-adapter.sh 64 standard_system_arm64.img
+sudo mv s.img s_arm64.img
+sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64.img
+popd
 ```
 
 ## Troubleshooting
