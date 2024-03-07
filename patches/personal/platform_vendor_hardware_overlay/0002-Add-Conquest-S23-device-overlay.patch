@@ -46,7 +46,7 @@ index 0000000..5941b1a
 @@ -0,0 +1,8 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<resources>
-+    <!-- Disable auto refresh rate to allow auto scaling to work -->
++    <!-- Disable default refresh rate to allow auto scaling to work -->
 +    <integer name="config_defaultRefreshRate">0</integer>
 +
 +    <!-- Define max refresh rate for auto scaling -->
