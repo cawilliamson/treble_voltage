@@ -17,7 +17,7 @@ index e7d936c..310d45a 100644
  
 +# Trebuchet
 +PRODUCT_PACKAGES += \
-+    Trebuchet
++    TrebuchetQuickStep
 +
  # RRO
  include vendor/voltage/config/rro_overlays.mk
