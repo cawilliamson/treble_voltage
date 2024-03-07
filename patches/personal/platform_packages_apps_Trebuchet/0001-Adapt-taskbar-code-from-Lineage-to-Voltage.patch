@@ -1,0 +1,71 @@
+From 345530045ac8deea81182196620e371c29887dbc Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Thu, 7 Mar 2024 23:24:55 +0000
+Subject: [PATCH] Adapt taskbar code from Lineage to Voltage
+
+---
+ .../com/android/launcher3/taskbar/TaskbarManager.java  | 10 +++++-----
+ src/com/android/launcher3/DeviceProfile.java           |  6 +++---
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/quickstep/src/com/android/launcher3/taskbar/TaskbarManager.java b/quickstep/src/com/android/launcher3/taskbar/TaskbarManager.java
+index 7b44e71702..cebd0d31a0 100644
+--- a/quickstep/src/com/android/launcher3/taskbar/TaskbarManager.java
++++ b/quickstep/src/com/android/launcher3/taskbar/TaskbarManager.java
+@@ -69,7 +69,7 @@ import com.android.systemui.shared.system.QuickStepContract;
+ import com.android.systemui.unfold.UnfoldTransitionProgressProvider;
+ import com.android.systemui.unfold.util.ScopedUnfoldTransitionProgressProvider;
+ 
+-import lineageos.providers.LineageSettings;
++import android.provider.Settings;
+ 
+ import java.io.PrintWriter;
+ import java.util.StringJoiner;
+@@ -106,8 +106,8 @@ public class TaskbarManager {
+     private static final Uri NAV_BAR_KIDS_MODE = Settings.Secure.getUriFor(
+             Settings.Secure.NAV_BAR_KIDS_MODE);
+ 
+-    private static final Uri ENABLE_TASKBAR_URI = LineageSettings.System.getUriFor(
+-            LineageSettings.System.ENABLE_TASKBAR);
++    private static final Uri ENABLE_TASKBAR_URI = Settings.System.getUriFor(
++            Settings.System.ENABLE_TASKBAR);
+ 
+     private final Context mContext;
+     private final TaskbarNavButtonController mNavButtonController;
+@@ -275,8 +275,8 @@ public class TaskbarManager {
+         mEnableTaskBarListener = c -> {
+             // Create the illusion of this taking effect immediately
+             // Also needed because TaskbarManager inits before SystemUiProxy on start
+-            boolean enabled = LineageSettings.System.getInt(mContext.getContentResolver(),
+-                    LineageSettings.System.ENABLE_TASKBAR, 0) == 1;
++            boolean enabled = Settings.System.getInt(mContext.getContentResolver(),
++                    Settings.System.ENABLE_TASKBAR, 0) == 1;
+             SystemUiProxy.INSTANCE.get(mContext).setTaskbarEnabled(enabled);
+ 
+             // Restart launcher
+diff --git a/src/com/android/launcher3/DeviceProfile.java b/src/com/android/launcher3/DeviceProfile.java
+index b673d0f8a9..e5b2f62c2c 100644
+--- a/src/com/android/launcher3/DeviceProfile.java
++++ b/src/com/android/launcher3/DeviceProfile.java
+@@ -68,7 +68,7 @@ import com.android.launcher3.util.IconSizeSteps;
+ import com.android.launcher3.util.ResourceHelper;
+ import com.android.launcher3.util.WindowBounds;
+ 
+-import lineageos.providers.LineageSettings;
++import android.provider.Settings;
+ 
+ import java.io.PrintWriter;
+ import java.util.Locale;
+@@ -331,8 +331,8 @@ public class DeviceProfile {
+         isTablet = info.isTablet(windowBounds);
+         isPhone = !isTablet;
+         isTwoPanels = isTablet && isMultiDisplay;
+-        boolean isTaskBarEnabled = LineageSettings.System.getInt(context.getContentResolver(),
+-                LineageSettings.System.ENABLE_TASKBAR, isTablet ? 1 : 0) == 1;
++        boolean isTaskBarEnabled = Settings.System.getInt(context.getContentResolver(),
++                Settings.System.ENABLE_TASKBAR, isTablet ? 1 : 0) == 1;
+         isTaskbarPresent = isTaskBarEnabled && ApiWrapper.TASKBAR_DRAWN_IN_PROCESS;
+ 
+         // Some more constants.
+-- 
+2.43.1
