@@ -6,6 +6,7 @@
   <remote name="calyxos" fetch="https://github.com/CalyxOS/" />
   <remote name="divested-mobile" fetch="https://gitlab.com/divested-mobile/" />
   <remote name="grapheneos" fetch="https://github.com/GrapheneOS/" />
+  <remote name="lineageos" fetch="https://github.com/LineageOS/" />
   <remote name="phhusson" fetch="https://github.com/phhusson/" />
   <remote name="ponces" fetch="https://github.com/ponces/" />
   <remote name="trebledroid" fetch="https://github.com/TrebleDroid/" />
@@ -29,6 +30,10 @@
   <!-- grapheneos: camera -->
   <remove-project name="LineageOS/android_packages_apps_Aperture" />
   <project path="external/Camera" name="platform_external_Camera" remote="grapheneos" revision="14" />
+
+  <!-- lineageos: trebuchet -->
+  <remove-project name="packages_apps_Launcher3" />
+  <project path="packages/apps/Trebuchet" name="android_packages_apps_Trebuchet" remote="lineageos" revision="lineage-21.0" />
 
   <!-- mulch -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />

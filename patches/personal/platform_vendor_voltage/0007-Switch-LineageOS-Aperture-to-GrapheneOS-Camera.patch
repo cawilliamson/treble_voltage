@@ -1,7 +1,7 @@
 From 5ef5a8094058b19a31e48d7fad581d55020e9959 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Mon, 19 Feb 2024 16:52:41 +0000
-Subject: [PATCH 7/7] Switch LineageOS Aperture to GrapheneOS Camera
+Subject: [PATCH 7/8] Switch LineageOS Aperture to GrapheneOS Camera
 
 ---
  config/common_full.mk | 2 +-

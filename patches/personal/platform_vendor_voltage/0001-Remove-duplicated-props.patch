@@ -1,7 +1,7 @@
 From 57bbe46aac2e83863ce71e371808a2fed5145257 Mon Sep 17 00:00:00 2001
 From: ahnet-69 <syedmusicrealise@gmail.com>
 Date: Sun, 24 Dec 2023 11:45:59 +0500
-Subject: [PATCH 1/7] Remove duplicated props
+Subject: [PATCH 1/8] Remove duplicated props
 
 ---
  config/common.mk  | 7 +------
