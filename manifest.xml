@@ -6,7 +6,6 @@
   <remote name="calyxos" fetch="https://github.com/CalyxOS/" />
   <remote name="divested-mobile" fetch="https://gitlab.com/divested-mobile/" />
   <remote name="grapheneos" fetch="https://github.com/GrapheneOS/" />
-  <remote name="lineageos" fetch="https://github.com/LineageOS/" />
   <remote name="phhusson" fetch="https://github.com/phhusson/" />
   <remote name="ponces" fetch="https://github.com/ponces/" />
   <remote name="trebledroid" fetch="https://github.com/TrebleDroid/" />
