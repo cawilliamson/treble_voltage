@@ -11,3 +11,8 @@ repos:
   rev: v0.0.18
   hooks:
   - id: shellcheck
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.28.0
+  hooks:
+  - id: check-github-workflows
+    args: ["--verbose"]
