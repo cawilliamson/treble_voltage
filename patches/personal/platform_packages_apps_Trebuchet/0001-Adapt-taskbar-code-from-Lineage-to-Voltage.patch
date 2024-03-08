@@ -1,13 +1,28 @@
-From 345530045ac8deea81182196620e371c29887dbc Mon Sep 17 00:00:00 2001
+From d014aaf8c3908460771585bc84258f427f6245ec Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
-Date: Thu, 7 Mar 2024 23:24:55 +0000
+Date: Fri, 8 Mar 2024 06:24:22 +0000
 Subject: [PATCH 1/1] Adapt taskbar code from Lineage to Voltage
 
 ---
+ Android.bp                                             |  3 +--
  .../com/android/launcher3/taskbar/TaskbarManager.java  | 10 +++++-----
  src/com/android/launcher3/DeviceProfile.java           |  6 +++---
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ 3 files changed, 9 insertions(+), 10 deletions(-)
 
+diff --git a/Android.bp b/Android.bp
+index efec9d78b3..32ae1cad6e 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -181,8 +181,7 @@ android_library {
+     static_libs: [
+         "Launcher3ResLib",
+         "launcher-testing-shared",
+-        "animationlib",
+-        "org.lineageos.platform"
++        "animationlib"
+     ],
+     sdk_version: "current",
+     min_sdk_version: min_launcher3_sdk_version,
 diff --git a/quickstep/src/com/android/launcher3/taskbar/TaskbarManager.java b/quickstep/src/com/android/launcher3/taskbar/TaskbarManager.java
 index 7b44e71702..cebd0d31a0 100644
 --- a/quickstep/src/com/android/launcher3/taskbar/TaskbarManager.java
