@@ -66,7 +66,7 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make vndk-test-sepolicy -j"$(nproc --all)"
-    - name: build standard gapps arm64 image
+    - name: build standard vanilla arm64 image
       run: |
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
