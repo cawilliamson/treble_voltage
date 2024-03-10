@@ -46,8 +46,8 @@ jobs:
         ./patches/apply.sh . personal
     - name: generate base rom config
       run: |
-        cp -v ../../../Voltage.mk .
-        bash generate.sh Voltage
+        cp -v ../../../voltage.mk .
+        bash generate.sh voltage
       working-directory: device/phh/treble
     - name: build treble app
       run: |
