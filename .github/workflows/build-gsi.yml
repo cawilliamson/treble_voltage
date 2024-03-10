@@ -84,28 +84,28 @@ jobs:
         lunch treble_a64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_a64_ab/system.img out/target/product/tdgsi_a64_ab/system_vanilla.img
-    - name: create vndklite gapps arm64 image
+    - name: adapt vndklite gapps arm64 image
       run: |
         cp -v ../out/target/product/tdgsi_arm64_ab/system_gapps.img standard_system_gapps_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_gapps_arm64.img
         sudo mv s.img s_arm64_gapps.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64_gapps.img
       working-directory: treble_adapter
-    - name: create vndklite vanilla arm64 image
+    - name: adapt vndklite vanilla arm64 image
       run: |
         cp -v ../out/target/product/tdgsi_arm64_ab/system_vanilla.img standard_system_vanilla_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_vanilla_arm64.img
         sudo mv s.img s_arm64_vanilla.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64_vanilla.img
       working-directory: treble_adapter
-    - name: create vndklite gapps arm32_binder64 image
+    - name: adapt vndklite gapps arm32_binder64 image
       run: |
         cp -v ../out/target/product/tdgsi_a64_ab/system_gapps.img standard_system_gapps_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_gapps_arm32_binder64.img
         sudo mv s.img s_arm32_binder64_gapps.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm32_binder64_gapps.img
       working-directory: treble_adapter
-    - name: create vndklite vanilla arm32_binder64 image
+    - name: adapt vndklite vanilla arm32_binder64 image
       run: |
         cp -v ../out/target/product/tdgsi_a64_ab/system_vanilla.img standard_system_vanilla_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_vanilla_arm32_binder64.img
