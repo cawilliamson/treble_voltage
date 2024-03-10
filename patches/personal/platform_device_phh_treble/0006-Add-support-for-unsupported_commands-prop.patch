@@ -1,7 +1,7 @@
 From adf37e5667eb6853d65de797a0da2e1387eb8b92 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Thu, 22 Feb 2024 19:09:09 +0000
-Subject: [PATCH 6/10] Add support for unsupported_commands prop
+Subject: [PATCH 6/11] Add support for unsupported_commands prop
 
 ---
  vndk.rc | 3 +++

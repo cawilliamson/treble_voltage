@@ -1,7 +1,7 @@
 From f1c3ec0891b3f786df5efb53a712c17e9ac14744 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Tue, 6 Feb 2024 18:45:02 +0000
-Subject: [PATCH 9/10] Disable face unlock on a64 due to missing libs
+Subject: [PATCH 9/11] Disable face unlock on a64 due to missing libs
 
 ---
  tdgsi_a64_ab/BoardConfig.mk | 2 ++
