@@ -98,7 +98,7 @@ jobs:
         cp -v ../tmp/system_gapps_arm64.img standard_system_gapps_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_gapps_arm64.img
         sudo mv s.img ../tmp/s_gapps_arm64_vndklite.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_arm64_gapps_vndklite.img
+        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_gapps_arm64_vndklite.img
       working-directory: treble_adapter
     - name: adapt vndklite vanilla arm32_binder64 image
       run: |
