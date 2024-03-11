@@ -62,7 +62,7 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bgN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/target/product/tdgsi_arm64_ab/system_gapps.img
+        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/system_gapps_arm64.img
     - name: run vndk sepolicy tests (as early as possible)
       run: |
         . build/envsetup.sh
@@ -73,76 +73,86 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/target/product/tdgsi_arm64_ab/system_vanilla.img
+        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/system_vanilla_arm64.img
     - name: build standard gapps arm32_binder64 image
       run: |
         . build/envsetup.sh
         lunch treble_a64_bgN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_a64_ab/system.img tmp/target/product/tdgsi_a64_ab/system_gapps.img
+        mv -v out/target/product/tdgsi_a64_ab/system.img tmp/system_gapps_a64.img
     - name: build standard vanilla arm32_binder64 image
       run: |
         . build/envsetup.sh
         lunch treble_a64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_a64_ab/system.img tmp/target/product/tdgsi_a64_ab/system_vanilla.img
+        mv -v out/target/product/tdgsi_a64_ab/system.img tmp/system_vanilla_a64.img
     - name: adapt vndklite gapps arm64 image
       run: |
-        cp -v ../tmp/target/product/tdgsi_arm64_ab/system_gapps.img standard_system_gapps_arm64.img
+        cp -v ../tmp/system_gapps_a64.img standard_system_gapps_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_gapps_arm64.img
         sudo mv s.img s_arm64_gapps.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64_gapps.img
+        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_arm64_gapps.img
       working-directory: treble_adapter
     - name: adapt vndklite vanilla arm64 image
       run: |
-        cp -v ../tmp/target/product/tdgsi_arm64_ab/system_vanilla.img standard_system_vanilla_arm64.img
+        cp -v ../tmp/system_vanilla_arm64.img standard_system_vanilla_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_vanilla_arm64.img
         sudo mv s.img s_arm64_vanilla.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64_vanilla.img
+        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_arm64_vanilla.img
       working-directory: treble_adapter
     - name: adapt vndklite gapps arm32_binder64 image
       run: |
-        cp -v ../tmp/target/product/tdgsi_a64_ab/system_gapps.img standard_system_gapps_arm32_binder64.img
+        cp -v ../tmp/system_gapps_a64.img standard_system_gapps_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_gapps_arm32_binder64.img
         sudo mv s.img s_arm32_binder64_gapps.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm32_binder64_gapps.img
+        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_arm32_binder64_gapps.img
       working-directory: treble_adapter
     - name: adapt vndklite vanilla arm32_binder64 image
       run: |
-        cp -v ../tmp/target/product/tdgsi_a64_ab/system_vanilla.img standard_system_vanilla_arm32_binder64.img
+        cp -v ../tmp/system_vanilla_a64.img standard_system_vanilla_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_vanilla_arm32_binder64.img
         sudo mv s.img s_arm32_binder64_vanilla.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm32_binder64_vanilla.img
+        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_arm32_binder64_vanilla.img
       working-directory: treble_adapter
     - name: rename image files
       run: |
         buildDate=$(date +%Y%m%d)
-        cp -v tmp/target/product/tdgsi_arm64_ab/system_gapps.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v tmp/target/product/tdgsi_arm64_ab/system_vanilla.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v tmp/target/product/tdgsi_a64_ab/system_gapps.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v tmp/target/product/tdgsi_a64_ab/system_vanilla.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v treble_adapter/s_arm64_gapps.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v treble_adapter/s_arm64_vanilla.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v treble_adapter/s_arm32_binder64_gapps.img "${ROM_NAME}"-gapps-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v treble_adapter/s_arm32_binder64_vanilla.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v system_gapps_arm64.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v system_vanilla_arm64.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v system_gapps_a64.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v system_vanilla_a64.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v s_arm64_gapps.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v s_arm64_vanilla.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v s_arm32_binder64_gapps.img "${ROM_NAME}"-gapps-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v s_arm32_binder64_vanilla.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+      working-directory: tmp
     - name: compress all images with xz
       run: find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \;
+      working-directory: tmp
     - name: upload gapps arm64 standard image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-gapps-arm64-ab-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
+      working-directory: tmp
     - name: upload vanilla arm64 standard image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-vanilla-arm64-ab-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
+      working-directory: tmp
     - name: upload gapps arm64 vndklite image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-gapps-arm64-ab-vndklite-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
+      working-directory: tmp
     - name: upload vanilla arm64 vndklite image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-vanilla-arm64-ab-vndklite-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
+      working-directory: tmp
     - name: upload gapps arm32_binder64 standard image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-gapps-arm32_binder64-ab-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
+      working-directory: tmp
     - name: upload vanilla arm32_binder64 standard image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-vanilla-arm32_binder64-ab-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
+      working-directory: tmp
     - name: upload gapps arm32_binder64 vndklite image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-gapps-arm32_binder64-ab-vndklite-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
+      working-directory: tmp
     - name: upload vanilla arm32_binder64 vndklite image to temp.sh
       run: find . -maxdepth 1 -name "${ROM_NAME}-vanilla-arm32_binder64-ab-vndklite-${ROM_VERSION}-*-UNOFFICIAL.img.xz" -exec curl -F "file=@{}" https://temp.sh/upload \;
+      working-directory: tmp
     - name: cleanup work directory
       uses: eviden-actions/clean-self-hosted-runner@v1
       if: ${{ always() }} # Run even if previous steps in the job fail or are canceled
