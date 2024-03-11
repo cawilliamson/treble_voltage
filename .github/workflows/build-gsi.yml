@@ -29,7 +29,7 @@ jobs:
     - name: perform full sources sync (with auto retry)
       uses: nick-fields/retry@v3
       with:
-        command: repo sync -c -j8 --force-sync --no-clone-bundle --no-tags # set to 8 cores to slow down sync and avoid github-actions timeouts
+        command: repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
         max_attempts: 3
         retry_on: error
         timeout_minutes: 20
@@ -55,12 +55,14 @@ jobs:
         cd treble_app/
         bash build.sh release
         cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
+    - name: create temporary output directory
+      run: mkdir -p tmp/
     - name: build standard gapps arm64 image
       run: |
         . build/envsetup.sh
         lunch treble_arm64_bgN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_arm64_ab/system.img out/target/product/tdgsi_arm64_ab/system_gapps.img
+        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/target/product/tdgsi_arm64_ab/system_gapps.img
     - name: run vndk sepolicy tests (as early as possible)
       run: |
         . build/envsetup.sh
@@ -71,43 +73,43 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_arm64_ab/system.img out/target/product/tdgsi_arm64_ab/system_vanilla.img
+        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/target/product/tdgsi_arm64_ab/system_vanilla.img
     - name: build standard gapps arm32_binder64 image
       run: |
         . build/envsetup.sh
         lunch treble_a64_bgN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_a64_ab/system.img out/target/product/tdgsi_a64_ab/system_gapps.img
+        mv -v out/target/product/tdgsi_a64_ab/system.img tmp/target/product/tdgsi_a64_ab/system_gapps.img
     - name: build standard vanilla arm32_binder64 image
       run: |
         . build/envsetup.sh
         lunch treble_a64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_a64_ab/system.img out/target/product/tdgsi_a64_ab/system_vanilla.img
+        mv -v out/target/product/tdgsi_a64_ab/system.img tmp/target/product/tdgsi_a64_ab/system_vanilla.img
     - name: adapt vndklite gapps arm64 image
       run: |
-        cp -v ../out/target/product/tdgsi_arm64_ab/system_gapps.img standard_system_gapps_arm64.img
+        cp -v ../tmp/target/product/tdgsi_arm64_ab/system_gapps.img standard_system_gapps_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_gapps_arm64.img
         sudo mv s.img s_arm64_gapps.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64_gapps.img
       working-directory: treble_adapter
     - name: adapt vndklite vanilla arm64 image
       run: |
-        cp -v ../out/target/product/tdgsi_arm64_ab/system_vanilla.img standard_system_vanilla_arm64.img
+        cp -v ../tmp/target/product/tdgsi_arm64_ab/system_vanilla.img standard_system_vanilla_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_vanilla_arm64.img
         sudo mv s.img s_arm64_vanilla.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64_vanilla.img
       working-directory: treble_adapter
     - name: adapt vndklite gapps arm32_binder64 image
       run: |
-        cp -v ../out/target/product/tdgsi_a64_ab/system_gapps.img standard_system_gapps_arm32_binder64.img
+        cp -v ../tmp/target/product/tdgsi_a64_ab/system_gapps.img standard_system_gapps_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_gapps_arm32_binder64.img
         sudo mv s.img s_arm32_binder64_gapps.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm32_binder64_gapps.img
       working-directory: treble_adapter
     - name: adapt vndklite vanilla arm32_binder64 image
       run: |
-        cp -v ../out/target/product/tdgsi_a64_ab/system_vanilla.img standard_system_vanilla_arm32_binder64.img
+        cp -v ../tmp/target/product/tdgsi_a64_ab/system_vanilla.img standard_system_vanilla_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_vanilla_arm32_binder64.img
         sudo mv s.img s_arm32_binder64_vanilla.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm32_binder64_vanilla.img
@@ -115,10 +117,10 @@ jobs:
     - name: rename image files
       run: |
         buildDate=$(date +%Y%m%d)
-        cp -v out/target/product/tdgsi_arm64_ab/system_gapps.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v out/target/product/tdgsi_arm64_ab/system_vanilla.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v out/target/product/tdgsi_a64_ab/system_gapps.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        cp -v out/target/product/tdgsi_a64_ab/system_vanilla.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        cp -v tmp/target/product/tdgsi_arm64_ab/system_gapps.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        cp -v tmp/target/product/tdgsi_arm64_ab/system_vanilla.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        cp -v tmp/target/product/tdgsi_a64_ab/system_gapps.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        cp -v tmp/target/product/tdgsi_a64_ab/system_vanilla.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         cp -v treble_adapter/s_arm64_gapps.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         cp -v treble_adapter/s_arm64_vanilla.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         cp -v treble_adapter/s_arm32_binder64_gapps.img "${ROM_NAME}"-gapps-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
