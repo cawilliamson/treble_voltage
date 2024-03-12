@@ -15,4 +15,3 @@ repos:
   rev: 0.28.0
   hooks:
   - id: check-github-workflows
-    args: ["--verbose"]
