@@ -1,0 +1,48 @@
+From f43611fcc4f32823b32a4375dad0c17c69fd44a7 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Tue, 12 Mar 2024 08:05:21 +0000
+Subject: [PATCH 11/11] Import arch-specific vendor gapps
+
+---
+ generate.sh | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/generate.sh b/generate.sh
+index 461eff1..c4b46de 100644
+--- a/generate.sh
++++ b/generate.sh
+@@ -22,11 +22,17 @@ for part in a ab;do
+ 				apps_script=""
+ 				apps_name=""
+ 				extra_packages=""
+-                vndk="vndk.mk"
+-		optional_base=""
++                		vndk="vndk.mk"
++				optional_base=""
++
++				baseArch="$arch"
++                                if [ "$arch" = "a64" ];then
++                                        baseArch="arm"
++                                fi
++
+ 				if [ "$apps" == "gapps" ];then
+ 					apps_suffix="g"
+-					apps_script='$(call inherit-product, device/phh/treble/gapps.mk)'
++					apps_script="$(call inherit-product, vendor/gapps/${baseArch}/${baseArch}-vendor.mk"
+ 					apps_name="with GApps"
+ 				fi
+ 				if [ "$apps" == "gapps-go" ];then
+@@ -66,11 +72,6 @@ for part in a ab;do
+ 
+ 				target="treble_${arch}_${part_suffix}${apps_suffix}${su_suffix}"
+ 
+-				baseArch="$arch"
+-				if [ "$arch" = "a64" ];then
+-					baseArch="arm"
+-				fi
+-
+ 				zygote=32
+ 				if [ "$arch" = "arm64" ];then
+ 					zygote=64_32
+-- 
+2.43.1
