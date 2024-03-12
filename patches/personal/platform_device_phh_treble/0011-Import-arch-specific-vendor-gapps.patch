@@ -28,7 +28,7 @@ index 461eff1..c4b46de 100644
  				if [ "$apps" == "gapps" ];then
  					apps_suffix="g"
 -					apps_script='$(call inherit-product, device/phh/treble/gapps.mk)'
-+					apps_script="$(call inherit-product, vendor/gapps/${baseArch}/${baseArch}-vendor.mk"
++					apps_script="$(call inherit-product, vendor/gapps/${baseArch}/${baseArch}-vendor.mk)"
  					apps_name="with GApps"
  				fi
  				if [ "$apps" == "gapps-go" ];then
