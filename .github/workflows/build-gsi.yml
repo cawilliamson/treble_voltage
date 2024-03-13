@@ -135,7 +135,7 @@ jobs:
         buildDate=$(cat cachedBuildDate.txt)
         webDir="/var/www/html/${ROM_VERSION}-${buildDate}"
         mkdir -p "${webDir}"
-        cp -v *.img "${webDir}/"
+        cp -v *.img.xz "${webDir}/"
       working-directory: tmp
     - name: cleanup work directory
       uses: eviden-actions/clean-self-hosted-runner@v1
