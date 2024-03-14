@@ -5,6 +5,8 @@ set -e
 patches="$(readlink -f -- "$1")"
 tree="$2"
 
+echo "Applying ${tree} patches:"
+
 for project in $(cd "$patches"/patches/"$tree"; echo *); do
     p="$(tr _ / <<<"$project" |sed -e 's;platform/;;g')"
     [ "$p" == build ] && p=build/make
