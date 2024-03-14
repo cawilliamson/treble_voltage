@@ -1,0 +1,25 @@
+From 086e3ebc8ab512af67437d2676cfe304c0208951 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Thu, 14 Mar 2024 19:58:26 +0000
+Subject: [PATCH 1/1] Revert "common: Label bluetooth.hci.disabled_commands"
+
+---
+ common/private/property_contexts | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/common/private/property_contexts b/common/private/property_contexts
+index 61d33bb..1893d32 100644
+--- a/common/private/property_contexts
++++ b/common/private/property_contexts
+@@ -3,9 +3,6 @@ vendor.camera.aux.packageexcludelist   u:object_r:vendor_persist_camera_prop:s0
+ vendor.camera.aux.packagelist          u:object_r:vendor_persist_camera_prop:s0
+ vendor.camera.skip_unconfigure.packagelist  u:object_r:vendor_persist_camera_prop:s0
+ 
+-# Bluetooth
+-bluetooth.hci.disabled_commands        u:object_r:bluetooth_config_prop:s0
+-
+ # Radio
+ ro.telephony.use_old_mnc_mcc_format    u:object_r:telephony_config_prop:s0
+ 
+-- 
+2.43.2

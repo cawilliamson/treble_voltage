@@ -42,6 +42,7 @@ jobs:
         done
     - name: apply patches
       run: |
+        ./patches/apply.sh . pre
         ./patches/apply.sh . trebledroid
         ./patches/apply.sh . personal
     - name: generate base rom config

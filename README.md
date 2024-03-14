@@ -51,6 +51,7 @@ done
 ## Apply the patches
 Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
 ```bash
+./patches/apply.sh . pre
 ./patches/apply.sh . trebledroid
 ./patches/apply.sh . personal
 ```
