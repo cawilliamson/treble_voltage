@@ -1,7 +1,7 @@
 From e037b571fd4e2bcaab02760fa7438fe996ad78b5 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Sun, 21 Jan 2024 10:43:26 +0000
-Subject: [PATCH 7/11] Set builds to read-only
+Subject: [PATCH 6/11] Set builds to read-only
 
 ---
  board-base.mk | 2 ++

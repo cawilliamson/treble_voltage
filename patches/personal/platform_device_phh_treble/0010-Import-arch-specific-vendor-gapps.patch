@@ -1,7 +1,7 @@
 From c14767f96c798982d6a92f5f2c39f3db4d53a5cf Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Thu, 14 Mar 2024 20:22:37 +0000
-Subject: [PATCH 11/11] Import arch-specific vendor gapps
+Subject: [PATCH 10/11] Import arch-specific vendor gapps
 
 ---
  generate.sh | 17 +++++++++--------

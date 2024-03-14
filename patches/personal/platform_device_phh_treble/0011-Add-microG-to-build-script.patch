@@ -1,0 +1,36 @@
+From ea343ad8a1e2f8b6deaf2bda440aaa0a294b9b41 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Thu, 14 Mar 2024 20:57:00 +0000
+Subject: [PATCH 11/11] Add microG to build script
+
+---
+ generate.sh | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/generate.sh b/generate.sh
+index ac59bbb..74595e6 100644
+--- a/generate.sh
++++ b/generate.sh
+@@ -15,7 +15,7 @@ fi
+ echo 'PRODUCT_MAKEFILES := \' > AndroidProducts.mk
+ 
+ for part in a ab;do
+-	for apps in vanilla gapps foss gapps-go;do
++	for apps in vanilla gapps microg foss gapps-go;do
+ 		for arch in arm64 arm a64;do
+ 			for su in yes no;do
+ 				apps_suffix=""
+@@ -40,6 +40,11 @@ for part in a ab;do
+ 					apps_script='$(call inherit-product, device/phh/treble/gapps-go.mk)'
+ 					apps_name="Go"
+ 				fi
++				if [ "$apps" == "microg" ];then
++					apps_suffix="m"
++					apps_script='$(call inherit-product vendor/partner_gms/products/gms.mk)'
++					apps_name="with microG"
++				fi
+ 				if [ "$apps" == "foss" ];then
+ 					apps_suffix="f"
+ 					apps_script='$(call inherit-product, vendor/foss/foss.mk)'
+-- 
+2.43.2

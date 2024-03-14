@@ -5,6 +5,7 @@
   <remote name="calyxos" fetch="https://github.com/CalyxOS/" />
   <remote name="divested-mobile" fetch="https://gitlab.com/divested-mobile/" />
   <remote name="grapheneos" fetch="https://github.com/GrapheneOS/" />
+  <remote name="lineageos4microg" fetch="https://github.com/lineageos4microg/" />
   <remote name="lineageos" fetch="https://github.com/LineageOS/" />
   <remote name="lmodroid" fetch="https://github.com/LMODroid/" />
   <remote name="mindthegapps" fetch="https://gitlab.com/MindTheGapps/" />
@@ -13,16 +14,16 @@
   <remote name="trebledroid" fetch="https://github.com/TrebleDroid/" />
 
   <!-- andycgyan: qcrilam -->
-  <project path="packages/apps/QcRilAm" name="android_packages_apps_QcRilAm" remote="andycgyan" revision="master" />
+  <project path="packages/apps/QcRilAm" name="android_packages_apps_QcRilAm" remote="andycgyan" revision="master" clone-depth="1" />
 
   <!-- aosp: vndk-v28 -->
-  <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" clone-depth="1" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" />
+  <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" clone-depth="1" />
 
   <!-- calyxos: aurora store extension -->
-  <project path="packages/apps/AuroraStorePrivilegedExtension" name="platform_packages_apps_AuroraStorePrivilegedExtension" remote="calyxos" revision="android14" />
+  <project path="packages/apps/AuroraStorePrivilegedExtension" name="platform_packages_apps_AuroraStorePrivilegedExtension" remote="calyxos" revision="android14" clone-depth="1" />
 
   <!-- calyxos: f-droid extension -->
-  <project path="packages/apps/F-DroidPrivilegedExtension" name="platform_packages_apps_F-DroidPrivilegedExtension" remote="calyxos" revision="android14" />
+  <project path="packages/apps/F-DroidPrivilegedExtension" name="platform_packages_apps_F-DroidPrivilegedExtension" remote="calyxos" revision="android14" clone-depth="1" />
 
   <!-- divested mobile: mulch webview -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
@@ -37,40 +38,43 @@
 
   <!-- grapheneos: camera -->
   <remove-project name="LineageOS/android_packages_apps_Aperture" />
-  <project path="external/Camera" name="platform_external_Camera" remote="grapheneos" revision="14" />
+  <project path="external/Camera" name="platform_external_Camera" remote="grapheneos" revision="14" clone-depth="1" />
+
+  <!-- lineageos4microg: microg -->
+  <project path="vendor/partner_gms" name="android_vendor_partner_gms" remote="lineageos4microg" revision="master" clone-depth="1" />
 
   <!-- lineageos: trebuchet -->
   <remove-project name="packages_apps_Launcher3" />
-  <project path="packages/apps/Trebuchet" name="android_packages_apps_Trebuchet" remote="lineageos" revision="lineage-21.0" />
+  <project path="packages/apps/Trebuchet" name="android_packages_apps_Trebuchet" remote="lineageos" revision="lineage-21.0" clone-depth="1" />
 
   <!-- lmodroid: openeuicc -->
-  <project path="packages/apps/OpenEUICC" name="platform_packages_apps_OpenEUICC" remote="lmodroid" revision="fourteen" />
+  <project path="packages/apps/OpenEUICC" name="platform_packages_apps_OpenEUICC" remote="lmodroid" revision="fourteen" clone-depth="1" />
 
   <!-- mindthegapps: gapps -->
   <project path="vendor/gapps" name="vendor_gapps" remote="mindthegapps" revision="upsilon" clone-depth="1" />
 
   <!-- phhusson: lptools  -->
-  <project path="vendor/lptools" name="vendor_lptools" remote="phhusson" revision="master" />
+  <project path="vendor/lptools" name="vendor_lptools" remote="phhusson" revision="master" clone-depth="1" />
 
   <!-- phhusson: magisk vendor -->
-  <project path="vendor/magisk" name="vendor_magisk" remote="phhusson" revision="android-10.0" />
+  <project path="vendor/magisk" name="vendor_magisk" remote="phhusson" revision="android-10.0" clone-depth="1" />
 
   <!-- phhusson: vndk tests -->
-  <project path="vendor/vndk-tests" name="vendor_vndk-tests" remote="phhusson" revision="master" />
+  <project path="vendor/vndk-tests" name="vendor_vndk-tests" remote="phhusson" revision="master" clone-depth="1" />
 
   <!-- ponces: treble_adapter -->
-  <project name="treble_adapter" path="treble_adapter" remote="ponces" revision="master" />
-  <project name="vendor_vndk" path="treble_adapter/vendor_vndk" remote="phhusson" revision="android-10.0" />
+  <project name="treble_adapter" path="treble_adapter" remote="ponces" revision="master" clone-depth="1" />
+  <project name="vendor_vndk" path="treble_adapter/vendor_vndk" remote="phhusson" revision="android-10.0" clone-depth="1" />
 
   <!-- trebledroid: device  -->
-  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-14.0" />
+  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-14.0" clone-depth="1" />
 
   <!-- trebledroid: treble app -->
-  <project path="treble_app" name="treble_app" remote="trebledroid" revision="master" />
+  <project path="treble_app" name="treble_app" remote="trebledroid" revision="master" clone-depth="1" />
 
   <!-- trebledroid: hardware overlay -->
-  <project path="vendor/hardware_overlay" name="vendor_hardware_overlay" remote="trebledroid" revision="pie" />
+  <project path="vendor/hardware_overlay" name="vendor_hardware_overlay" remote="trebledroid" revision="pie" clone-depth="1" />
 
   <!-- trebledroid: vendor interfaces -->
-  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="android-14.0" />
+  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="android-14.0" clone-depth="1" />
 </manifest>

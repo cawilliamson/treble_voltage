@@ -1,7 +1,7 @@
 From 74fcbe90c22103b4592632b963d30263932eccf9 Mon Sep 17 00:00:00 2001
 From: ChonDoit <thphantomblog@gmail.com>
 Date: Fri, 7 Jul 2023 01:29:15 +0000
-Subject: [PATCH 10/11] Move TrebleApp allow-in-power-save to sysconfig
+Subject: [PATCH 9/11] Move TrebleApp allow-in-power-save to sysconfig
 
 Isn't parsed as permissions anymore, now belongs to <config>
 ---
