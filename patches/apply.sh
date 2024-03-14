@@ -12,6 +12,7 @@ for project in $(cd "$patches"/patches/"$tree"; echo *); do
     [ "$p" == build ] && p=build/make
     [ "$p" == treble/app ] && p=treble_app
     [ "$p" == vendor/hardware/overlay ] && p=vendor/hardware_overlay
+    [ "$p" == vendor/partner/gms ] && p=vendor/partner_gms
     pushd "$p" &>/dev/null
     for patch in "$patches"/patches/"$tree"/"$project"/*.patch; do
         git am "$patch" || exit
