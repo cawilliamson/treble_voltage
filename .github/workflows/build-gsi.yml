@@ -69,6 +69,12 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make vndk-test-sepolicy -j"$(nproc --all)"
+    - name: build standard microg arm64 image
+      run: |
+        . build/envsetup.sh
+        lunch treble_arm64_bmN-userdebug
+        make systemimage -j"$(nproc --all)"
+        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/system_microg_arm64.img
     - name: build standard gapps arm64 image
       run: |
         . build/envsetup.sh
@@ -81,6 +87,12 @@ jobs:
         lunch treble_a64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_a64_ab/system.img tmp/system_vanilla_arm32_binder64.img
+    - name: build standard microg arm32_binder64 image
+      run: |
+        . build/envsetup.sh
+        lunch treble_a64_bmN-userdebug
+        make systemimage -j"$(nproc --all)"
+        mv -v out/target/product/tdgsi_a64_ab/system.img tmp/system_microg_arm32_binder64.img
     - name: build standard gapps arm32_binder64 image
       run: |
         . build/envsetup.sh
@@ -93,6 +105,13 @@ jobs:
         sudo bash lite-adapter.sh 64 standard_system_vanilla_arm64.img
         sudo mv s.img ../tmp/s_vanilla_arm64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_vanilla_arm64_vndklite.img
+      working-directory: treble_adapter
+    - name: adapt vndklite microg arm64 image
+      run: |
+        cp -v ../tmp/system_microg_arm64.img standard_system_microg_arm64.img
+        sudo bash lite-adapter.sh 64 standard_system_microg_arm64.img
+        sudo mv s.img ../tmp/s_microg_arm64_vndklite.img
+        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_microg_arm64_vndklite.img
       working-directory: treble_adapter
     - name: adapt vndklite gapps arm64 image
       run: |
@@ -108,6 +127,13 @@ jobs:
         sudo mv s.img ../tmp/s_vanilla_arm32_binder64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_vanilla_arm32_binder64_vndklite.img
       working-directory: treble_adapter
+    - name: adapt microg vanilla arm32_binder64 image
+      run: |
+        cp -v ../tmp/system_microg_arm32_binder64.img standard_system_microg_arm32_binder64.img
+        sudo bash lite-adapter.sh 32 standard_system_microg_arm32_binder64.img
+        sudo mv s.img ../tmp/s_microg_arm32_binder64_vndklite.img
+        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../tmp/s_microg_arm32_binder64_vndklite.img
+      working-directory: treble_adapter
     - name: adapt vndklite gapps arm32_binder64 image
       run: |
         cp -v ../tmp/system_gapps_arm32_binder64.img standard_system_gapps_arm32_binder64.img
@@ -119,13 +145,21 @@ jobs:
       run: |
         buildDate=$(date +%Y%m%d)
         echo "${buildDate}" > cachedBuildDate.txt
+        # arm64 - standard
         mv -v system_vanilla_arm64.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v system_microg_arm64.img "${ROM_NAME}"-microg-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_gapps_arm64.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        # arm32_binder64 - standard
         mv -v system_vanilla_arm32_binder64.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v system_microg_arm32_binder64.img "${ROM_NAME}"-microg-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_gapps_arm32_binder64.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        # arm64 - vndklite
         mv -v s_vanilla_arm64_vndklite.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v s_microg_arm64_vndklite.img "${ROM_NAME}"-microg-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v s_gapps_arm64_vndklite.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        # arm32_binder64 - vndklite
         mv -v s_vanilla_arm32_binder64_vndklite.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+        mv -v s_microg_arm32_binder64_vndklite.img "${ROM_NAME}"-microg-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v s_gapps_arm32_binder64_vndklite.img "${ROM_NAME}"-gapps-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
       working-directory: tmp
     - name: compress all images with xz
@@ -136,7 +170,7 @@ jobs:
         buildDate=$(cat cachedBuildDate.txt)
         webDir="/var/www/html/${ROM_VERSION}-${buildDate}"
         mkdir -p "${webDir}"
-        cp -v *.img.xz "${webDir}/"
+        cp -fv *.img.xz "${webDir}/"
       working-directory: tmp
     - name: cleanup work directory
       uses: eviden-actions/clean-self-hosted-runner@v1
