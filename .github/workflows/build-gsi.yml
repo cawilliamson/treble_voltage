@@ -56,8 +56,10 @@ jobs:
         cd treble_app/
         bash build.sh release
         cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
-    - name: create temporary output directory
-      run: mkdir -p tmp/
+    - name: create tmp directory and build date
+      run: |
+        mkdir -p tmp/
+        echo "$(date +%Y%m%d)" > tmp/cachedBuildDate.txt
     - name: build standard vanilla arm64 image
       run: |
         . build/envsetup.sh
@@ -143,8 +145,7 @@ jobs:
       working-directory: treble_adapter
     - name: rename image files
       run: |
-        buildDate=$(date +%Y%m%d)
-        echo "${buildDate}" > cachedBuildDate.txt
+        buildDate=$(cat cachedBuildDate.txt)
         # arm64 - standard
         mv -v system_vanilla_arm64.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_microg_arm64.img "${ROM_NAME}"-microg-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
