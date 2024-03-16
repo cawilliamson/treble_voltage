@@ -66,8 +66,8 @@
   <project name="treble_adapter" path="treble_adapter" remote="ponces" revision="master" clone-depth="1" />
   <project name="vendor_vndk" path="treble_adapter/vendor_vndk" remote="phhusson" revision="android-10.0" clone-depth="1" />
 
-  <!-- trebledroid: device  -->
-  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-14.0" clone-depth="1" />
+  <!-- trebledroid: device (FIXME: pin to pre-v29 revision temporarily) -->
+  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="34fd66aa36c5aefe71ab6b686332888e36494054" clone-depth="1" />
 
   <!-- trebledroid: treble app -->
   <project path="treble_app" name="treble_app" remote="trebledroid" revision="master" clone-depth="1" />
