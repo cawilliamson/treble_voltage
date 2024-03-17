@@ -1,0 +1,68 @@
+From 452049a6e0a06439bc5f3744af82c76659ee81a8 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Sun, 17 Mar 2024 08:03:06 +0000
+Subject: [PATCH 1/1] Adapt microG to allow building alongside other gapps sources
+
+---
+ FDroidPrivilegedExtension/Android.mk | 20 --------------------
+ GmsCore/Android.mk                   |  2 +-
+ products/gms.mk                      |  3 +--
+ 3 files changed, 2 insertions(+), 23 deletions(-)
+ delete mode 100644 FDroidPrivilegedExtension/Android.mk
+
+diff --git a/FDroidPrivilegedExtension/Android.mk b/FDroidPrivilegedExtension/Android.mk
+deleted file mode 100644
+index 3c0cd63..0000000
+--- a/FDroidPrivilegedExtension/Android.mk
++++ /dev/null
+@@ -1,20 +0,0 @@
+-LOCAL_PATH := $(call my-dir)
+-
+-include $(CLEAR_VARS)
+-LOCAL_MODULE := privapp-permissions-org.fdroid.fdroid.privileged.xml
+-LOCAL_MODULE_CLASS := ETC
+-LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT_ETC)/permissions
+-LOCAL_SRC_FILES := $(LOCAL_MODULE)
+-include $(BUILD_PREBUILT)
+-
+-include $(CLEAR_VARS)
+-LOCAL_MODULE := FDroidPrivilegedExtension
+-LOCAL_SRC_FILES := FDroidPrivilegedExtension.apk
+-LOCAL_MODULE_CLASS := APPS
+-LOCAL_PRIVILEGED_MODULE := true
+-LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
+-LOCAL_CERTIFICATE := PRESIGNED
+-LOCAL_REQUIRED_MODULES := privapp-permissions-org.fdroid.fdroid.privileged.xml
+-LOCAL_PRODUCT_MODULE := true
+-include $(BUILD_PREBUILT)
+-
+diff --git a/GmsCore/Android.mk b/GmsCore/Android.mk
+index 34bc76e..02c05ba 100644
+--- a/GmsCore/Android.mk
++++ b/GmsCore/Android.mk
+@@ -22,7 +22,7 @@ LOCAL_SRC_FILES := $(LOCAL_MODULE)
+ include $(BUILD_PREBUILT)
+ 
+ include $(CLEAR_VARS)
+-LOCAL_MODULE := GmsCore
++LOCAL_MODULE := MicroGmsCore
+ LOCAL_SRC_FILES := GmsCore.apk
+ LOCAL_MODULE_CLASS := APPS
+ LOCAL_PRIVILEGED_MODULE := true
+diff --git a/products/gms.mk b/products/gms.mk
+index dfbd889..01e5371 100644
+--- a/products/gms.mk
++++ b/products/gms.mk
+@@ -1,9 +1,8 @@
+ PRODUCT_PACKAGES += \
+-	GmsCore \
++	MicroGmsCore \
+ 	GsfProxy \
+ 	FakeStore \
+ 	IchnaeaNlpBackend \
+ 	NominatimGeocoderBackend \
+ 	FDroid \
+-	FDroidPrivilegedExtension \
+ 	additional_repos.xml
+-- 
+2.43.2
