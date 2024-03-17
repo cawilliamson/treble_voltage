@@ -5,6 +5,7 @@ Subject: [PATCH 11/11] Add microG to build script
 
 ---
  generate.sh | 7 ++++++-
+ microg.mk   | 2 ++
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/generate.sh b/generate.sh
@@ -26,11 +27,19 @@ index ac59bbb..74595e6 100644
  				fi
 +				if [ "$apps" == "microg" ];then
 +					apps_suffix="m"
-+					apps_script='$(call inherit-product vendor/partner_gms/products/gms.mk)'
++					apps_script='$(call inherit-product, device/phh/treble/microg.mk)'
 +					apps_name="with microG"
 +				fi
  				if [ "$apps" == "foss" ];then
  					apps_suffix="f"
  					apps_script='$(call inherit-product, vendor/foss/foss.mk)'
--- 
+diff --git a/microg.mk b/microg.mk
+new file mode 100644
+index 0000000..bfc283f
+--- /dev/null
++++ b/microg.mk
+@@ -0,0 +1,2 @@
++WITH_MICROG := yes
++-include vendor/partner_gms/products/gms.mk
+--
 2.43.2
