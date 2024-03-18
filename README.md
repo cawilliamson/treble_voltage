@@ -1,8 +1,7 @@
 <p align="center">
   <img src="https://avatars.githubusercontent.com/u/81792437?s=200&v=4">
+  <img src="https://github.com/cawilliamson/treble_voltage/actions/workflows/build-gsi.yml/badge.svg">
 </p>
-
-[![Build GSI](https://github.com/cawilliamson/treble_voltage/actions/workflows/build-gsi.yml/badge.svg)](https://github.com/cawilliamson/treble_voltage/actions/workflows/build-gsi.yml)
 
 ### Building
 You'll need to get familiar with [Git and Repo](https://source.android.com/source/using-repo.html) as well as [How to build a GSI](https://github.com/phhusson/treble_experimentations/wiki/How-to-build-a-GSI%3F).
