@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/81792437?s=200&v=4">
+  <img src="https://avatars.githubusercontent.com/u/81792437?s=200&v=4"><br>
   <img src="https://github.com/cawilliamson/treble_voltage/actions/workflows/build-gsi.yml/badge.svg">
 </p>
 
