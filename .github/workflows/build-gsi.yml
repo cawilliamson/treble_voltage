@@ -35,6 +35,7 @@ jobs:
         timeout_minutes: 20
     - name: fetch all git-lfs objects
       run: |
+        # loop through any directory containing git-lfs objects and fetch them
         grep -l 'merge=lfs' $( find $PWD -name .gitattributes ) /dev/null | while IFS= read -r line; do
           dir=$(dirname $line)
           echo $dir
@@ -42,8 +43,13 @@ jobs:
         done
     - name: apply patches
       run: |
+        # apply pre-patches
         ./patches/apply.sh . pre
+
+        # apply trebledroid patches
         ./patches/apply.sh . trebledroid
+
+        # apply personal patches
         ./patches/apply.sh . personal
     - name: generate base rom config
       run: |
@@ -56,10 +62,17 @@ jobs:
         cd treble_app/
         bash build.sh release
         cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
-    - name: create tmp directory and build date
+    - name: setup tmp directory and stash gapps variants
       run: |
+        # create tmp directory
         mkdir -p tmp/
+
+        # generate build timestamp and use for entire build
         echo "$(date +%Y%m%d)" > tmp/cachedBuildDate.txt
+
+        # move gapps variants post-patching to tmp dir to avoid build cross-contamination
+        mv -v vendor/gapps tmp/
+        mv -v vendor/partner_gms tmp/
     - name: build standard vanilla arm64 image
       run: |
         . build/envsetup.sh
@@ -73,16 +86,28 @@ jobs:
         make vndk-test-sepolicy -j"$(nproc --all)"
     - name: build standard microg arm64 image
       run: |
+        # copy microg to correct folder for build
+        cp -Rfv tmp/partner_gms vendor/
+
         . build/envsetup.sh
         lunch treble_arm64_bmN-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/system_microg_arm64.img
+
+        # remove microg folder to avoid contaminating next build
+        rm -Rfv vendor/partner_gms
     - name: build standard gapps arm64 image
       run: |
+        # copy gapps to correct folder for build
+        cp -Rfv tmp/gapps vendor/
+
         . build/envsetup.sh
         lunch treble_arm64_bgN-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/system_gapps_arm64.img
+
+        # remove gapps folder to avoid contaminating next build
+        rm -Rfv vendor/gapps
     - name: build standard vanilla arm32_binder64 image
       run: |
         . build/envsetup.sh
@@ -91,16 +116,28 @@ jobs:
         mv -v out/target/product/tdgsi_a64_ab/system.img tmp/system_vanilla_arm32_binder64.img
     - name: build standard microg arm32_binder64 image
       run: |
+        # copy microg to correct folder for build
+        cp -Rfv tmp/partner_gms vendor/
+
         . build/envsetup.sh
         lunch treble_a64_bmN-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_a64_ab/system.img tmp/system_microg_arm32_binder64.img
+
+         # remove microg folder to avoid contaminating next build
+        rm -Rfv vendor/partner_gms
     - name: build standard gapps arm32_binder64 image
       run: |
+        # copy gapps to correct folder for build
+        cp -Rfv tmp/gapps vendor/
+
         . build/envsetup.sh
         lunch treble_a64_bgN-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_a64_ab/system.img tmp/system_gapps_arm32_binder64.img
+
+        # remove gapps folder to avoid contaminating next build
+        rm -Rfv vendor/gapps
     - name: adapt vndklite vanilla arm64 image
       run: |
         cp -v ../tmp/system_vanilla_arm64.img standard_system_vanilla_arm64.img
@@ -150,14 +187,17 @@ jobs:
         mv -v system_vanilla_arm64.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_microg_arm64.img "${ROM_NAME}"-microg-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_gapps_arm64.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+
         # arm32_binder64 - standard
         mv -v system_vanilla_arm32_binder64.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_microg_arm32_binder64.img "${ROM_NAME}"-microg-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_gapps_arm32_binder64.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+
         # arm64 - vndklite
         mv -v s_vanilla_arm64_vndklite.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v s_microg_arm64_vndklite.img "${ROM_NAME}"-microg-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v s_gapps_arm64_vndklite.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+
         # arm32_binder64 - vndklite
         mv -v s_vanilla_arm32_binder64_vndklite.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v s_microg_arm32_binder64_vndklite.img "${ROM_NAME}"-microg-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
