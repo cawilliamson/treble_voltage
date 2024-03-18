@@ -1,7 +1,7 @@
 From 382e0aa115e602ffe525744415a2e03823da5e38 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Wed, 14 Feb 2024 22:44:39 +0000
-Subject: [PATCH 6/8] Add privileged extensions for aurora and fdroid
+Subject: [PATCH 6/6] Add privileged extensions for aurora and fdroid
 
 ---
  config/common.mk | 5 +++++
