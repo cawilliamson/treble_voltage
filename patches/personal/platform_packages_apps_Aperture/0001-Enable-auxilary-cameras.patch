@@ -1,0 +1,25 @@
+From f75a9f85f373f70748de6146ff12a68ddd63c863 Mon Sep 17 00:00:00 2001
+From: ChonDoit <thphantomblog@gmail.com>
+Date: Mon, 24 Apr 2023 16:55:33 +0000
+Subject: [PATCH 1/1] Enable Auxiliary Cameras
+
+Change-Id: I2bff41fcba4761666bbd0f4468a06ba89abfc033
+---
+ app/src/main/res/values/config.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/app/src/main/res/values/config.xml b/app/src/main/res/values/config.xml
+index 39d9698..f044d7f 100644
+--- a/app/src/main/res/values/config.xml
++++ b/app/src/main/res/values/config.xml
+@@ -5,7 +5,7 @@
+ -->
+ <resources>
+     <!-- Enable auxiliary cameras selector. -->
+-    <bool name="config_enableAuxCameras">false</bool>
++    <bool name="config_enableAuxCameras">true</bool>
+ 
+     <!-- List of ID of auxiliary cameras that must be ignored by the app. -->
+     <string-array name="config_ignoredAuxCameraIds">
+-- 
+2.34.1
