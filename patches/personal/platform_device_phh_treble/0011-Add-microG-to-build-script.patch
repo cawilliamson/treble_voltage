@@ -39,7 +39,7 @@ index 0000000..bfc283f
 --- /dev/null
 +++ b/microg.mk
 @@ -0,0 +1,2 @@
-+WITH_MICROG := yes
++WITH_MICROG := true
 +-include vendor/partner_gms/products/gms.mk
 --
 2.43.2
