@@ -52,10 +52,10 @@ jobs:
     - name: apply patches
       run: |
         # apply pre-patches
-        ../patches/apply.sh . pre
+        ../../patches/apply.sh . pre
 
         # apply trebledroid patches
-        ../patches/apply.sh . trebledroid
+        ../../patches/apply.sh . trebledroid
 
         # apply personal patches
         ../patches/apply.sh . personal
