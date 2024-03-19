@@ -62,7 +62,7 @@ jobs:
       working-directory: src
     - name: generate base rom config
       run: |
-        cp -v ../../../voltage.mk .
+        cp -v ../../../../voltage.mk .
         bash generate.sh voltage
       working-directory: src/device/phh/treble
     - name: build treble app
