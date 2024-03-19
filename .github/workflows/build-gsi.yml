@@ -35,8 +35,9 @@ jobs:
       uses: nick-fields/retry@v3
       with:
         command: |
-          cd src/
-          repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+          pushd src
+            repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+          popd
         max_attempts: 3
         retry_on: error
         timeout_minutes: 20
@@ -88,7 +89,7 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/system_vanilla_arm64.img
+        mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_vanilla_arm64.img
       working-directory: src
     - name: run vndk sepolicy tests (after first build)
       run: |
@@ -104,7 +105,7 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bmN-userdebug
         make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_arm64_ab/system.img tmp/system_microg_arm64.img
+        mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_microg_arm64.img
 
         # remove microg folder to avoid contaminating next build
         rm -Rfv vendor/partner_gms
