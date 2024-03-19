@@ -21,8 +21,9 @@ jobs:
     - name: clone rom manifest
       run: |
         mkdir -p src/
-        cd src/
-        repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1
+        pushd src/
+          repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1
+        popd
     - name: copy manifest config
       run: |
         mkdir -p .repo/local_manifests
@@ -35,7 +36,7 @@ jobs:
       uses: nick-fields/retry@v3
       with:
         command: |
-          pushd src
+          pushd src/
             repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
           popd
         max_attempts: 3
@@ -61,6 +62,17 @@ jobs:
         # apply personal patches
         ../patches/apply.sh . personal
       working-directory: src
+    - name: setup tmp directory and stash gapps variants
+      run: |
+        # create tmp directory
+        mkdir -p tmp/
+
+        # generate build timestamp and use for entire build
+        echo "$(date +%Y%m%d)" > tmp/cachedBuildDate.txt
+
+        # move gapps variants post-patching to tmp dir to avoid build cross-contamination
+        mv -v src/vendor/gapps tmp/
+        mv -v src/vendor/partner_gms tmp/
     - name: generate base rom config
       run: |
         cp -v ../../../../voltage.mk .
@@ -73,17 +85,6 @@ jobs:
         bash build.sh release
         cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
       working-directory: src
-    - name: setup tmp directory and stash gapps variants
-      run: |
-        # create tmp directory
-        mkdir -p tmp/
-
-        # generate build timestamp and use for entire build
-        echo "$(date +%Y%m%d)" > tmp/cachedBuildDate.txt
-
-        # move gapps variants post-patching to tmp dir to avoid build cross-contamination
-        mv -v src/vendor/gapps tmp/
-        mv -v src/vendor/partner_gms tmp/
     - name: build standard vanilla arm64 image
       run: |
         . build/envsetup.sh
