@@ -17,6 +17,8 @@ cd treble_voltage/
 ## Initalise the Treble VoltageOS repo
 Now we want to fetch the VoltageOS manifest files:
 ```bash
+mkdir -p src/
+cd src/
 repo init -u https://github.com/VoltageOS/manifest.git -b 14
 ```
 
@@ -24,7 +26,7 @@ repo init -u https://github.com/VoltageOS/manifest.git -b 14
 Copy our own manifest which is needed for the GSI portion of the build:
 ```bash
 mkdir -p .repo/local_manifests
-cp manifest.xml .repo/local_manifests/
+cp ../manifest.xml .repo/local_manifests/
 ```
 
 ## Setup the git-lfs hook
@@ -52,9 +54,9 @@ done
 ## Apply the patches
 Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
 ```bash
-./patches/apply.sh . pre
-./patches/apply.sh . trebledroid
-./patches/apply.sh . personal
+../patches/apply.sh . pre
+../patches/apply.sh . trebledroid
+../patches/apply.sh . personal
 ```
 
 ## Build the TrebleApp
