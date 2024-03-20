@@ -131,6 +131,7 @@ jobs:
         lunch treble_a64_bvN-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_vanilla_arm32_binder64.img
+      working-directory: src
     - name: build standard microg arm32_binder64 image
       run: |
         # copy microg to correct folder for build
