@@ -67,6 +67,6 @@
   <!-- trebledroid: hardware overlay -->
   <project path="vendor/hardware_overlay" name="vendor_hardware_overlay" remote="trebledroid" revision="pie" clone-depth="1" />
 
-  <!-- trebledroid: vendor interfaces -->
-  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="android-14.0" clone-depth="1" />
+  <!-- trebledroid: vendor interfaces (FIXME: pin to pre-march patches until Voltage catches up) -->
+  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="0d747cd6f32b99d9980f2239eca5c1528de352cb" clone-depth="1" />
 </manifest>

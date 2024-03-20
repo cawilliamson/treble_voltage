@@ -81,9 +81,10 @@ jobs:
     - name: build treble app
       run: |
         . build/envsetup.sh
-        cd treble_app/
-        bash build.sh release
-        cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
+        pushd treble_app/
+          bash build.sh release
+          cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
+        popd
       working-directory: src
     - name: build standard vanilla arm64 image
       run: |
