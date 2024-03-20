@@ -160,7 +160,7 @@ jobs:
       working-directory: src
     - name: adapt vndklite vanilla arm64 image
       run: |
-        cp -v ../tmp/system_vanilla_arm64.img standard_system_vanilla_arm64.img
+        cp -v ../../tmp/system_vanilla_arm64.img standard_system_vanilla_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_vanilla_arm64.img
         sudo mv s.img ../tmp/s_vanilla_arm64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_vanilla_arm64_vndklite.img
