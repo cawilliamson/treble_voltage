@@ -41,7 +41,7 @@
 
   <!-- lineageos: workarounds (FIXME: Remove temp workarounds when v29 merged) -->
   <remove-project name="LineageOS/android_external_cronet" />
-  <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="b1948e432cafb030712b5f710ac6bbe2b5f8d9bd" clone-depth="1" />
+  <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="efee3bc222cacdd69113ff969f4c98907c99e7a4" clone-depth="1" />
   <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
   <project path="external/wpa_supplicant_8" name="android_external_wpa_supplicant_8" remote="lineageos" revision="8dc1f8e9ff2eb555b4e4bdf90b2643a74594be78" clone-depth="1" />
 
