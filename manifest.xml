@@ -43,7 +43,7 @@
   <remove-project name="LineageOS/android_external_cronet" />
   <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="b1948e432cafb030712b5f710ac6bbe2b5f8d9bd" clone-depth="1" />
   <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
-  <project path="external/wpa_supplicant_8" name="android_external_wpa_supplicant_8" remote="lineageos" revision="e84613e844a897c2395a281f6cf211147e624af3" clone-depth="1" />
+  <project path="external/wpa_supplicant_8" name="android_external_wpa_supplicant_8" remote="lineageos" revision="8dc1f8e9ff2eb555b4e4bdf90b2643a74594be78" clone-depth="1" />
 
   <!-- lmodroid: openeuicc -->
   <project path="packages/apps/OpenEUICC" name="platform_packages_apps_OpenEUICC" remote="lmodroid" revision="fourteen" clone-depth="1" />
