@@ -5,11 +5,15 @@
 
   <!-- lineageos: cronet (pin to pre-v29) -->
   <remove-project name="LineageOS/android_external_cronet" />
-  <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="b1948e432cafb030712b5f710ac6bbe2b5f8d9bd" clone-depth="1" />
+  <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="efee3bc222cacdd69113ff969f4c98907c99e7a4" clone-depth="1" />
+
+  <!-- lineageos: hardware-oplus (pin to pre-v29) -->
+  <remove-remove name="LineageOS/android_hardware_oplus" />
+  <project path="hardware/oplus" name="android_hardware_oplus" remote="lineageos" revision="61e39d5c4817bb8382ce98e0c4ede3569d7a2e2c" clone-depth="1" />
 
   <!-- lineageos: libcxx (pin to pre-v29) -->
   <remove-project name="LineageOS/android_external_libcxx" />
-  <project path="" name="android_external_libcxx" remote="lineageos" revision="e87406be27e83b14a99853b0813bddabd53a67be" clone-depth="1" />
+  <project path="" name="android_external_libcxx" remote="lineageos" revision="236c564de2c291ff4684d25fb499322f5eee32ed" clone-depth="1" />
 
   <!-- lineageos: wpa supplicant 8 (pin to pre-v29) -->
   <remove-project name="LineageOS/android_external_wpa_supplicant_8" />

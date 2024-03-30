@@ -27,7 +27,7 @@ jobs:
     - name: copy manifest config
       run: |
         mkdir -p .repo/local_manifests
-        cp -v ../*.xml .repo/local_manifests/
+        cp -v ../configs/*.xml .repo/local_manifests/
       working-directory: src
     - name: setup git-lfs hook
       run: git lfs install

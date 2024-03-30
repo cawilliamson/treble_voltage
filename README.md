@@ -26,7 +26,7 @@ repo init -u https://github.com/VoltageOS/manifest.git -b 14
 Copy our own manifest which is needed for the GSI portion of the build:
 ```bash
 mkdir -p .repo/local_manifests
-cp -v ../*.xml .repo/local_manifests/
+cp -v ../configs/*.xml .repo/local_manifests/
 ```
 
 ## Setup the git-lfs hook
