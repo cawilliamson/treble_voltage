@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <!-- lineageos: remove kernel build dependencies -->
-  <remove-project name="LineageOS/android_kernel_configs" />
-  <remove-project name="LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9" />
-  <remove-project name="LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9" />
-  <remove-project name="LineageOS/android_prebuilts_gcc_linux-x86_x86_x86_64-linux-android-4.9" />
-  <remove-project name="LineageOS/android_prebuilts_tools-lineage" />
-</manifest>
