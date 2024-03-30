@@ -22,7 +22,7 @@ jobs:
       run: |
         mkdir -p src/
         pushd src/
-          repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1
+          repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1 --git-lfs
         popd
     - name: copy manifest config
       run: |
