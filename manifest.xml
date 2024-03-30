@@ -39,14 +39,6 @@
   <!-- lineageos4microg: microg -->
   <project path="vendor/partner_gms" name="android_vendor_partner_gms" remote="lineageos4microg" revision="master" clone-depth="1" />
 
-  <!-- lineageos: workarounds (FIXME: Remove temp workarounds when v29 merged) -->
-  <remove-project name="LineageOS/android_external_cronet" />
-  <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="b1948e432cafb030712b5f710ac6bbe2b5f8d9bd" clone-depth="1" />
-  <remove-project name="LineageOS/android_external_libcxx" />
-  <project path="" name="android_external_libcxx" remote="lineageos" revision="e87406be27e83b14a99853b0813bddabd53a67be" clone-depth="1" />
-  <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
-  <project path="external/wpa_supplicant_8" name="android_external_wpa_supplicant_8" remote="lineageos" revision="8dc1f8e9ff2eb555b4e4bdf90b2643a74594be78" clone-depth="1" />
-
   <!-- lmodroid: openeuicc -->
   <project path="packages/apps/OpenEUICC" name="platform_packages_apps_OpenEUICC" remote="lmodroid" revision="fourteen" clone-depth="1" />
 
@@ -66,15 +58,9 @@
   <project name="treble_adapter" path="treble_adapter" remote="ponces" revision="master" clone-depth="1" />
   <project name="vendor_vndk" path="treble_adapter/vendor_vndk" remote="phhusson" revision="android-10.0" clone-depth="1" />
 
-  <!-- trebledroid: device (FIXME: pin to pre-v29 revision temporarily) -->
-  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="34fd66aa36c5aefe71ab6b686332888e36494054" clone-depth="1" />
-
   <!-- trebledroid: hardware overlay -->
   <project path="vendor/hardware_overlay" name="vendor_hardware_overlay" remote="trebledroid" revision="pie" clone-depth="1" />
 
   <!-- trebledroid: treble app -->
   <project path="treble_app" name="treble_app" remote="trebledroid" revision="master" clone-depth="1" />
-
-  <!-- trebledroid: vendor interfaces (FIXME: pin to pre-march patches until Voltage catches up) -->
-  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="0d747cd6f32b99d9980f2239eca5c1528de352cb" clone-depth="1" />
 </manifest>
