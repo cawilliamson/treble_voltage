@@ -9,7 +9,7 @@
 
   <!-- lineageos: libcxx (pin to pre-v29) -->
   <remove-project name="LineageOS/android_external_libcxx" />
-  <project path="" name="android_external_libcxx" remote="lineageos" revision="96fba031d7a1b96302008346fde96f1594c57e16" clone-depth="1" />
+  <project path="external/libcxx" name="android_external_libcxx" remote="lineageos" revision="lineage-20.0" clone-depth="1" />
 
   <!-- lineageos: wpa supplicant 8 (pin to pre-v29) -->
   <remove-project name="LineageOS/android_external_wpa_supplicant_8" />
