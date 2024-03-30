@@ -7,10 +7,6 @@
   <remove-project name="LineageOS/android_external_cronet" />
   <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="efee3bc222cacdd69113ff969f4c98907c99e7a4" clone-depth="1" />
 
-  <!-- lineageos: hardware-oplus (pin to pre-v29) -->
-  <remove-remove name="LineageOS/android_hardware_oplus" />
-  <project path="hardware/oplus" name="android_hardware_oplus" remote="lineageos" revision="61e39d5c4817bb8382ce98e0c4ede3569d7a2e2c" clone-depth="1" />
-
   <!-- lineageos: libcxx (pin to pre-v29) -->
   <remove-project name="LineageOS/android_external_libcxx" />
   <project path="" name="android_external_libcxx" remote="lineageos" revision="236c564de2c291ff4684d25fb499322f5eee32ed" clone-depth="1" />
