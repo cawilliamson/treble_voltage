@@ -73,7 +73,7 @@ popd
 In order to generate the base ROM config run the following commands:
 ```bash
 pushd  device/phh/treble
-cp -v ../../../voltage.mk .
+cp -v ../../../configs/voltage.mk .
 bash generate.sh voltage
 popd
 ```
