@@ -3,9 +3,9 @@
   <remote name="lineageos" fetch="https://github.com/LineageOS/" />
   <remote name="trebledroid" fetch="https://github.com/TrebleDroid/" />
 
-  <!-- lineageos: cronet (pin to pre-v29) -->
+  <!-- lineageos: cronet (pin to pre-v29 & pre "memtag_globals") -->
   <remove-project name="LineageOS/android_external_cronet" />
-  <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="efee3bc222cacdd69113ff969f4c98907c99e7a4" clone-depth="1" />
+  <project path="external/cronet" name="android_external_cronet" remote="lineageos" revision="c87b1ca4f76b9987efdc1008b7ecc577b82a54e0" clone-depth="1" />
 
   <!-- lineageos: libcxx (pin to pre-v29) -->
   <remove-project name="LineageOS/android_external_libcxx" />
