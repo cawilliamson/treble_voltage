@@ -19,7 +19,7 @@ Now we want to fetch the VoltageOS manifest files:
 ```bash
 mkdir -p src/
 cd src/
-repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1 --git-lfs
+repo init -u https://github.com/VoltageOS-staging/manifest.git -b 14 --depth=1 --git-lfs
 ```
 
 ## Copy our manifest
