@@ -89,14 +89,14 @@ jobs:
     - name: build standard vanilla arm64 image
       run: |
         . build/envsetup.sh
-        lunch treble_arm64_bvN-userdebug
+        lunch treble_arm64_bvN-ap1a-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_vanilla_arm64.img
       working-directory: src
     - name: run vndk sepolicy tests (after first build)
       run: |
         . build/envsetup.sh
-        lunch treble_arm64_bvN-userdebug
+        lunch treble_arm64_bvN-ap1a-userdebug
         make vndk-test-sepolicy -j"$(nproc --all)"
       working-directory: src
     - name: build standard microg arm64 image
@@ -105,7 +105,7 @@ jobs:
         cp -Rfv ../tmp/partner_gms vendor/
 
         . build/envsetup.sh
-        lunch treble_arm64_bmN-userdebug
+        lunch treble_arm64_bmN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_microg_arm64.img
 
@@ -118,7 +118,7 @@ jobs:
         cp -Rfv ../tmp/gapps vendor/
 
         . build/envsetup.sh
-        lunch treble_arm64_bgN-userdebug
+        lunch treble_arm64_bgN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_gapps_arm64.img
 
@@ -128,7 +128,7 @@ jobs:
     - name: build standard vanilla arm32_binder64 image
       run: |
         . build/envsetup.sh
-        lunch treble_a64_bvN-userdebug
+        lunch treble_a64_bvN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_vanilla_arm32_binder64.img
       working-directory: src
@@ -138,7 +138,7 @@ jobs:
         cp -Rfv ../tmp/partner_gms vendor/
 
         . build/envsetup.sh
-        lunch treble_a64_bmN-userdebug
+        lunch treble_a64_bmN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_microg_arm32_binder64.img
 
@@ -151,7 +151,7 @@ jobs:
         cp -Rfv ../tmp/gapps vendor/
 
         . build/envsetup.sh
-        lunch treble_a64_bgN-userdebug
+        lunch treble_a64_bgN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_gapps_arm32_binder64.img
 

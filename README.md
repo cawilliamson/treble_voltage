@@ -72,7 +72,7 @@ popd
 ## Generate base ROM config
 In order to generate the base ROM config run the following commands:
 ```bash
-pushd  device/phh/treble
+pushd device/phh/treble
 cp -v ../../../configs/voltage.mk .
 bash generate.sh voltage
 popd
@@ -82,7 +82,7 @@ popd
 In the ROM folder, run this for building an arm64 standard build (needed even if you want a vndklite build):
 ```bash
 . build/envsetup.sh
-lunch treble_arm64_bvN-userdebug
+lunch treble_arm64_bvN-ap1a-userdebug
 make systemimage -j$(nproc --all)
 ```
 
