@@ -57,9 +57,15 @@
   <project name="treble_adapter" path="treble_adapter" remote="ponces" revision="master" clone-depth="1" />
   <project name="vendor_vndk" path="treble_adapter/vendor_vndk" remote="phhusson" revision="android-10.0" clone-depth="1" />
 
+  <!-- trebledroid: device -->
+  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-14.0" clone-depth="1" />
+
   <!-- trebledroid: hardware overlay -->
   <project path="vendor/hardware_overlay" name="vendor_hardware_overlay" remote="trebledroid" revision="pie" clone-depth="1" />
 
   <!-- trebledroid: treble app -->
   <project path="treble_app" name="treble_app" remote="trebledroid" revision="master" clone-depth="1" />
+
+  <!-- trebledroid: vendor interfaces (pin to pre-v29) -->
+  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="android-14.0" clone-depth="1" />
 </manifest>
