@@ -5,21 +5,21 @@ Subject: [PATCH 2/3] product: Exclude AOSP apn list on custom builds
 
 Change-Id: I76c8d5ef67de73d4558d350a87a9bc317aaad792
 ---
- target/product/aosp_product.mk        | 5 -----
- 1 files changed, 5 deletions(-)
+ target/product/aosp_product.mk | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/target/product/aosp_product.mk b/target/product/aosp_product.mk
-index a4c3a91145..1dd0102171 100644
+index d980c69..84da8c5 100644
 --- a/target/product/aosp_product.mk
 +++ b/target/product/aosp_product.mk
-@@ -24,8 +24,3 @@ PRODUCT_PACKAGES += \
-     messaging \
+@@ -25,8 +25,3 @@ PRODUCT_PACKAGES += \
      PhotoTable \
      preinstalled-packages-platform-aosp-product.xml \
+     ThemePicker \
 -
 -# Telephony:
 -#   Provide a APN configuration to GSI product
 -PRODUCT_COPY_FILES += \
 -    device/sample/etc/apns-full-conf.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/apns-conf.xml
--- 
+--
 2.34.1

@@ -1,20 +1,20 @@
-From 7e6a9ed0bce8027ea6b6cd43cbbf13a9026872ab Mon Sep 17 00:00:00 2001
+From b36339eaa7cab43ec0c5eaa523ed75e42ca10c8e Mon Sep 17 00:00:00 2001
 From: Peter Cai <peter@typeblog.net>
 Date: Wed, 1 Jun 2022 16:56:20 -0400
-Subject: [PATCH 06/56] Implement a persistent property to override the default
+Subject: [PATCH 06/51] Implement a persistent property to override the default
  primary camera (0)
 
 Change-Id: I49b45d00bf71d7932591b3516d49a680e1b6568b
 ---
  core/java/android/hardware/Camera.java                | 5 +++++
- core/java/android/hardware/camera2/CameraManager.java | 9 +++++++++
- 2 files changed, 15 insertions(+)
+ core/java/android/hardware/camera2/CameraManager.java | 8 ++++++++
+ 2 files changed, 13 insertions(+)
 
 diff --git a/core/java/android/hardware/Camera.java b/core/java/android/hardware/Camera.java
-index ccc39b6080d7..a21bfdce6f05 100644
+index 6c1c4713..f923dd00 100644
 --- a/core/java/android/hardware/Camera.java
 +++ b/core/java/android/hardware/Camera.java
-@@ -409,6 +410,11 @@ public class Camera {
+@@ -476,6 +476,11 @@ public class Camera {
       * @see #open(int)
       */
      public static Camera open() {
@@ -27,10 +27,10 @@ index ccc39b6080d7..a21bfdce6f05 100644
          CameraInfo cameraInfo = new CameraInfo();
          for (int i = 0; i < numberOfCameras; i++) {
 diff --git a/core/java/android/hardware/camera2/CameraManager.java b/core/java/android/hardware/camera2/CameraManager.java
-index c80124c4c2ec..b13979d2359b 100644
+index 0144812a..400e9981 100644
 --- a/core/java/android/hardware/camera2/CameraManager.java
 +++ b/core/java/android/hardware/camera2/CameraManager.java
-@@ -2077,6 +2077,15 @@ public final class CameraManager {
+@@ -2239,6 +2239,14 @@ public final class CameraManager {
                          }
                      }});
  
@@ -42,7 +42,6 @@ index c80124c4c2ec..b13979d2359b 100644
 +                cameraIds[0] = cameraIds[altPrimaryCamera];
 +                cameraIds[altPrimaryCamera] = origPrimary;
 +            }
-+
          }
  
          public static boolean cameraStatusesContains(CameraStatus[] cameraStatuses, String id) {

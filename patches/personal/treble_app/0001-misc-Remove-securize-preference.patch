@@ -9,10 +9,10 @@ Subject: [PATCH 1/1] misc: Remove securize preference
  2 files changed, 35 deletions(-)
 
 diff --git a/app/src/main/java/me/phh/treble/app/MiscSettings.kt b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-index dc2e0e3..80530b1 100644
+index e3b5312..5fe481f 100644
 --- a/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 +++ b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-@@ -49,39 +49,6 @@ class MiscSettingsFragment : SettingsFragment() {
+@@ -56,39 +56,6 @@ class MiscSettingsFragment : SettingsFragment() {
      override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
          super.onCreatePreferences(savedInstanceState, rootKey)
  
@@ -53,17 +53,17 @@ index dc2e0e3..80530b1 100644
          removeTelephonyPref!!.setOnPreferenceClickListener {
  
 diff --git a/app/src/main/res/xml/pref_misc.xml b/app/src/main/res/xml/pref_misc.xml
-index 4210106..9176674 100644
+index 7923e93..aecb6ec 100644
 --- a/app/src/main/res/xml/pref_misc.xml
 +++ b/app/src/main/res/xml/pref_misc.xml
-@@ -161,8 +161,6 @@
- 		    android:entryValues="@array/pref_misc_fod_color_values"
- 		    android:key="key_misc_fod_color"
+@@ -193,8 +193,6 @@
+             android:entryValues="@array/pref_misc_fod_color_values"
+             android:key="key_misc_fod_color"
              android:title="Under-display fp color" />
--		<Preference android:title="Securize"
+-        <Preference android:title="Securize"
 -            android:key="key_misc_securize" />
- 	</PreferenceCategory>
+     </PreferenceCategory>
      <PreferenceCategory android:title="Debugging">
          <Preference android:title="Debug Sensors">
--- 
+--
 2.34.1

@@ -1,18 +1,18 @@
-From 853658ee088211f36dc2aad6a6b1693bf9595a51 Mon Sep 17 00:00:00 2001
+From 34fc24102978184eba88717083db434ba75c4e33 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sun, 25 Oct 2020 23:57:26 +0100
-Subject: [PATCH 15/56] Re-implement fnmatch-like behaviour for RRO java-side
+Subject: [PATCH 15/51] Re-implement fnmatch-like behaviour for RRO java-side
 
 T: Also apply to FrameworkParsingPackageUtils (@PeterCxy)
 
 Change-Id: Id38292a9a1453aa87b8401c1fdb390fa4e63c7d1
 ---
- core/java/android/content/pm/PackageParser.java     | 13 +++++++++++--
- .../pm/parsing/FrameworkParsingPackageUtils.java    | 22 +++++++++----------
- 2 files changed, 22 insertions(+), 13 deletions(-)
+ .../android/content/pm/PackageParser.java     | 13 +++++++++--
+ .../parsing/FrameworkParsingPackageUtils.java | 23 ++++++++++---------
+ 2 files changed, 23 insertions(+), 13 deletions(-)
 
 diff --git a/core/java/android/content/pm/PackageParser.java b/core/java/android/content/pm/PackageParser.java
-index 048289f56a0c..85c82b1572e5 100644
+index af059e15..a4f72ec8 100644
 --- a/core/java/android/content/pm/PackageParser.java
 +++ b/core/java/android/content/pm/PackageParser.java
 @@ -2545,8 +2545,17 @@ public class PackageParser {
@@ -36,12 +36,14 @@ index 048289f56a0c..85c82b1572e5 100644
          }
          return true;
 diff --git a/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java b/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
-index 3e1c5bb3d7ec..8182e9e0c771 100644
+index fc06dd8d..b6c65af2 100644
 --- a/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
 +++ b/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
-@@ -214,17 +214,17 @@ public class FrameworkParsingPackageUtils {
+@@ -213,18 +213,19 @@ public class FrameworkParsingPackageUtils {
+             return false;
          }
          for (int i = 0; i < propNames.length; i++) {
++            // Check property value: make sure it is both set and equal to expected value
              final String currValue = SystemProperties.get(propNames[i]);
 -            // 1. Make sure prop is set.
 -            if (currValue == null) {
