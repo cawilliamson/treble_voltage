@@ -66,6 +66,6 @@
   <!-- trebledroid: treble app -->
   <project path="treble_app" name="treble_app" remote="trebledroid" revision="master" clone-depth="1" />
 
-  <!-- trebledroid: vendor interfaces (pin to pre-v29) -->
+  <!-- trebledroid: vendor interface -->
   <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="android-14.0" clone-depth="1" />
 </manifest>
