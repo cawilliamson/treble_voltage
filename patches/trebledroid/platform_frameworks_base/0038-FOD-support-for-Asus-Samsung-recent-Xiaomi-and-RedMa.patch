@@ -538,10 +538,10 @@ index 3401df3d..87520611 100644
      javac_shard_size: 50,
      javacflags: [
 diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
-index 5279073c..3adb1824 100644
+index 2fdba410c92d..13e7aff02a15 100644
 --- a/services/core/java/com/android/server/biometrics/AuthService.java
 +++ b/services/core/java/com/android/server/biometrics/AuthService.java
-@@ -80,6 +80,25 @@ import java.util.ArrayList;
+@@ -78,6 +78,25 @@ import java.util.ArrayList;
  import java.util.Arrays;
  import java.util.List;
  
@@ -567,7 +567,7 @@ index 5279073c..3adb1824 100644
  /**
   * System service that provides an interface for authenticating with biometrics and
   * PIN/pattern/password to BiometricPrompt and lock screen.
-@@ -98,6 +117,11 @@ public class AuthService extends SystemService {
+@@ -96,6 +115,11 @@ public class AuthService extends SystemService {
      @VisibleForTesting
      final IAuthService.Stub mImpl;
  
@@ -579,7 +579,7 @@ index 5279073c..3adb1824 100644
      /**
       * Class for injecting dependencies into AuthService.
       * TODO(b/141025588): Replace with a dependency injection framework (e.g. Guice, Dagger).
-@@ -704,11 +728,11 @@ public class AuthService extends SystemService {
+@@ -702,11 +726,11 @@ public class AuthService extends SystemService {
              final int firstApiLevel = SystemProperties.getInt(SYSPROP_FIRST_API_LEVEL, 0);
              final int apiLevel = SystemProperties.getInt(SYSPROP_API_LEVEL, firstApiLevel);
              String[] configStrings = mInjector.getConfiguration(getContext());
@@ -593,7 +593,7 @@ index 5279073c..3adb1824 100644
                  configStrings = generateRSdkCompatibleConfiguration();
              }
              hidlConfigs = new SensorConfig[configStrings.length];
-@@ -723,6 +747,102 @@ public class AuthService extends SystemService {
+@@ -721,6 +745,102 @@ public class AuthService extends SystemService {
          registerAuthenticators(hidlConfigs);
  
          mInjector.publishBinderService(this, mImpl);
@@ -696,12 +696,12 @@ index 5279073c..3adb1824 100644
      }
  
      /**
-@@ -846,18 +966,123 @@ public class AuthService extends SystemService {
+@@ -844,14 +964,119 @@ public class AuthService extends SystemService {
                  ? modality : (modality & ~BiometricAuthenticator.TYPE_CREDENTIAL);
      }
  
-+    private int[] dynamicUdfpsProps() {
-+        DisplayManager mDM = (DisplayManager) getContext().getSystemService(Context.DISPLAY_SERVICE);
++    static public int[] dynamicUdfpsProps(Context ctxt) {
++        DisplayManager mDM = (DisplayManager) ctxt.getSystemService(Context.DISPLAY_SERVICE);
 +        Point displayRealSize = new Point();
 +        DisplayMetrics displayMetrics = new DisplayMetrics();
 +        mDM.getDisplay(0).getRealSize(displayRealSize);
@@ -801,15 +801,11 @@ index 5279073c..3adb1824 100644
 +        int[] udfpsProps = getContext().getResources().getIntArray(
                  com.android.internal.R.array.config_udfps_sensor_props);
  
-         // Non-empty workaroundLocations indicates that the sensor is SFPS.
-         final List<SensorLocationInternal> workaroundLocations =
-                 getWorkaroundSensorProps(getContext());
- 
 -        final boolean isUdfps = !ArrayUtils.isEmpty(udfpsProps);
 +        boolean isUdfps = !ArrayUtils.isEmpty(udfpsProps);
 +        if(!isUdfps) {
 +            try {
-+                udfpsProps = dynamicUdfpsProps();
++                udfpsProps = dynamicUdfpsProps(getContext());
 +            } catch(Throwable t) {
 +                Slog.e("PHH-Enroll", "Failed generating UDFPS props");
 +            }
@@ -822,12 +818,12 @@ index 5279073c..3adb1824 100644
  
          // config_is_powerbutton_fps indicates whether device has a power button fingerprint sensor.
          final boolean isPowerbuttonFps = getContext().getResources().getBoolean(
-@@ -925,4 +1150,57 @@ public class AuthService extends SystemService {
+@@ -913,4 +1138,67 @@ public class AuthService extends SystemService {
                  componentInfo, resetLockoutRequiresHardwareAuthToken,
                  resetLockoutRequiresChallenge);
      }
 +
-+    private static boolean samsungHasCmd(String cmd) {
++   private static boolean samsungHasCmd(String cmd) {
 +        try {
 +            File f = new File("/sys/devices/virtual/sec/tsp/cmd_list");
 +            if(!f.exists()) return false;
@@ -866,6 +862,16 @@ index 5279073c..3adb1824 100644
 +            writer.close();
 +        } catch(Exception e) {
 +            android.util.Log.d("PHH", "Failed writing to " + path + ": " + value);
++        }
++    }
++
++    private static void writeFile(File file, String value) {
++        try {
++            PrintWriter writer = new PrintWriter(file, "UTF-8");
++            writer.println(value);
++            writer.close();
++        } catch(Exception e) {
++            android.util.Log.d("PHH", "Failed writing to " + file + ": " + value);
 +        }
 +    }
 +
