@@ -1,4 +1,4 @@
-From a00f4366ad94152b98b99b3e4357e1ad9d807e5d Mon Sep 17 00:00:00 2001
+From f908f25dde7b5e7de2c26f3d74ccc4428c981094 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sun, 18 Dec 2022 18:20:40 -0500
 Subject: [PATCH 38/51] FOD support for Asus, Samsung recent Xiaomi and
@@ -8,6 +8,7 @@ Thanks Asus for providing a free device to make this support
 And thanks @davigamer987 for donating enough to get a Samsung FOD device
 to make this
 
+14QPR2 note: Forced legacy/pre-"UdfpsRefactor"
 Thanks @jgudec for Xiaomi support
 Thanks @boydaihungst for Redmagic 6 support
 
@@ -15,6 +16,12 @@ Co-authored-by: jgudec <jakov.gudec@gmail.com>
 Co-authored-by: Huy Hoang
 Change-Id: Ibd0f9ea8fba584a38c060fd9271549a5e106b4eb
 
+Also include commits:
+fix(fod): Extra Dim overlap fod overlay
+Fix Xiaomi custom vendors implementing fingerprint properly
+Also override UDFPS infos on AIDL fingerprints -- needed for FP on S24
+Try catch the Xiaomi calls
+Typo in observing Samsung brightness
 ---
  packages/SystemUI/Android.bp                  |   4 +
  .../systemui/biometrics/UdfpsController.java  |  79 ++++-
@@ -889,7 +896,7 @@ index 83b306b0..28b45a59 100644
                  return providers;
              });
 diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-index 07a69d9e..efdf799a 100644
+index 07a69d9e..279ca9e6 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 @@ -37,6 +37,7 @@ import android.hardware.biometrics.common.ComponentInfo;
@@ -912,7 +919,7 @@ index 07a69d9e..efdf799a 100644
 +
 +            android.util.Log.e("PHH-Enroll", "Got fp props -- pre");
 +            for(SensorLocation loc: locations) {
-+                android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp>
++                android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
 +            }
 +            if (locations.length == 1 && locations[0].sensorLocationX == 0) {
 +                int[] otherValues = com.android.server.biometrics.AuthService.dynamicUdfpsProps(context);
@@ -927,7 +934,7 @@ index 07a69d9e..efdf799a 100644
 +
 +            android.util.Log.e("PHH-Enroll", "Got fp props -- post");
 +            for(SensorLocation loc: locations) {
-+                android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp>
++                android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
 +            }
  
              final List<ComponentInfoInternal> componentInfo = new ArrayList<>();
@@ -942,4 +949,4 @@ index 07a69d9e..efdf799a 100644
                                                              location.display,
                                                              location.sensorLocationX,
 --
-2.42.0
+2.34.1
