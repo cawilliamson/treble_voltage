@@ -57,7 +57,7 @@ index 22898a65..37b7b2c0 100644
                          }
  
 +                        if (!triedSamsungHal) {
-++                           triedSamsungHal = true;
++                            triedSamsungHal = true;
 +                            try {
 +                                samsungSysinput = ISehSysInputDev.getService();
 +                            } catch(Throwable t) {}
