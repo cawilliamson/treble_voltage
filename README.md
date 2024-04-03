@@ -29,26 +29,10 @@ mkdir -p .repo/local_manifests
 cp -v ../configs/*.xml .repo/local_manifests/
 ```
 
-## Setup the git-lfs hook
-In order to setup git-lfs to sync you need to run the following:
-```bash
-git lfs install
-```
-
 ## Sync the repository
 Sync ALL necessary sources to build the ROM:
 ```bash
 repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-```
-
-## Sync all git-lfs objects
-In order to sync the git-lfs objects as swiftly as possible run the following:
-```bash
-grep -l 'merge=lfs' $( find $PWD -name .gitattributes ) /dev/null | while IFS= read -r line; do
-  dir=$(dirname $line)
-  echo $dir
-  ( cd $dir ; git lfs pull )
-done
 ```
 
 ## Apply the patches
