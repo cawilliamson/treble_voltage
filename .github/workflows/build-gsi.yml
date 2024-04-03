@@ -41,7 +41,7 @@ jobs:
           popd
         max_attempts: 3
         retry_on: error
-        timeout_minutes: 20
+        timeout_minutes: 40
     - name: fetch all git-lfs objects
       run: |
         # loop through any directory containing git-lfs objects and fetch them
