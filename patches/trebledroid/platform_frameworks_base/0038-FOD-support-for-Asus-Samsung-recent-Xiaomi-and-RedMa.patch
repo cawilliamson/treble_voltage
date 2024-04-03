@@ -144,11 +144,11 @@ index 65668b56..ad066a20 100644
              for (Callback cb : mCallbacks) {
                  cb.onFingerUp();
              }
-diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
-index dae6d08f..59852103 100644
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt b/packages/SystemUI/src/com/android/systemui/bio>
+index dae6d08f..8d9bc576 100644
 --- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
 +++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
-@@ -141,7 +141,8 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+@@ -141,7 +141,9 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
          gravity = android.view.Gravity.TOP or android.view.Gravity.LEFT
          layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
          flags = (Utils.FINGERPRINT_OVERLAY_LAYOUT_PARAM_FLAGS or
@@ -159,7 +159,7 @@ index dae6d08f..59852103 100644
          privateFlags = WindowManager.LayoutParams.PRIVATE_FLAG_TRUSTED_OVERLAY
          // Avoid announcing window title.
          accessibilityTitle = " "
-@@ -226,6 +227,9 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+@@ -226,6 +228,9 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
                  }
                  getTouchOverlay()?.apply {
                      touchExplorationEnabled = accessibilityManager.isTouchExplorationEnabled
