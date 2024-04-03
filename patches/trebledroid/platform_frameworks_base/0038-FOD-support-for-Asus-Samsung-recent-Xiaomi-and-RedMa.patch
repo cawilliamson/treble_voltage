@@ -18,7 +18,7 @@ Change-Id: Ibd0f9ea8fba584a38c060fd9271549a5e106b4eb
 ---
  packages/SystemUI/Android.bp                  |   4 +
  .../systemui/biometrics/UdfpsController.java  |  59 ++++
- .../biometrics/UdfpsControllerOverlay.kt      |   6 +-
+ .../biometrics/UdfpsControllerOverlay.kt      |   7 +-
  .../android/systemui/biometrics/UdfpsView.kt  | 219 ++++++++++++++
  services/core/Android.bp                      |   5 +
  .../server/biometrics/AuthService.java        | 286 +++++++++++++++++-
@@ -155,6 +155,7 @@ index dae6d08f..59852103 100644
 -                WindowManager.LayoutParams.FLAG_SPLIT_TOUCH)
 +                WindowManager.LayoutParams.FLAG_SPLIT_TOUCH) or
 +                WindowManager.LayoutParams.FLAG_DIM_BEHIND
++        dimAmount = 0.0f
          privateFlags = WindowManager.LayoutParams.PRIVATE_FLAG_TRUSTED_OVERLAY
          // Avoid announcing window title.
          accessibilityTitle = " "
