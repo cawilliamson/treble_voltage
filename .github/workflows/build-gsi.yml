@@ -29,9 +29,6 @@ jobs:
         mkdir -p .repo/local_manifests
         cp -v ../configs/*.xml .repo/local_manifests/
       working-directory: src
-    - name: setup git-lfs hook
-      run: git lfs install
-      working-directory: src
     - name: perform full sources sync (with auto retry)
       uses: nick-fields/retry@v3
       with:
@@ -42,15 +39,6 @@ jobs:
         max_attempts: 3
         retry_on: error
         timeout_minutes: 40
-    - name: fetch all git-lfs objects
-      run: |
-        # loop through any directory containing git-lfs objects and fetch them
-        grep -l 'merge=lfs' $( find $PWD -name .gitattributes ) /dev/null | while IFS= read -r line; do
-          dir=$(dirname $line)
-          echo $dir
-          ( cd $dir ; git lfs pull )
-        done
-      working-directory: src
     - name: apply patches
       run: |
         # apply pre-patches
