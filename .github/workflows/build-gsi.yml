@@ -151,42 +151,42 @@ jobs:
       run: |
         cp -v ../../tmp/system_vanilla_arm64.img standard_system_vanilla_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_vanilla_arm64.img
-        sudo mv s.img ../tmp/s_vanilla_arm64_vndklite.img
+        sudo mv s.img ../../tmp/s_vanilla_arm64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_vanilla_arm64_vndklite.img
       working-directory: src/treble_adapter
     - name: adapt vndklite microg arm64 image
       run: |
         cp -v ../../tmp/system_microg_arm64.img standard_system_microg_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_microg_arm64.img
-        sudo mv s.img ../tmp/s_microg_arm64_vndklite.img
+        sudo mv s.img ../../tmp/s_microg_arm64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_microg_arm64_vndklite.img
       working-directory: src/treble_adapter
     - name: adapt vndklite gapps arm64 image
       run: |
         cp -v ../../tmp/system_gapps_arm64.img standard_system_gapps_arm64.img
         sudo bash lite-adapter.sh 64 standard_system_gapps_arm64.img
-        sudo mv s.img ../tmp/s_gapps_arm64_vndklite.img
+        sudo mv s.img ../../tmp/s_gapps_arm64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_gapps_arm64_vndklite.img
       working-directory: src/treble_adapter
     - name: adapt vndklite vanilla arm32_binder64 image
       run: |
         cp -v ../../tmp/system_vanilla_arm32_binder64.img standard_system_vanilla_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_vanilla_arm32_binder64.img
-        sudo mv s.img ../tmp/s_vanilla_arm32_binder64_vndklite.img
+        sudo mv s.img ../../tmp/s_vanilla_arm32_binder64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_vanilla_arm32_binder64_vndklite.img
       working-directory: src/treble_adapter
     - name: adapt microg vanilla arm32_binder64 image
       run: |
         cp -v ../../tmp/system_microg_arm32_binder64.img standard_system_microg_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_microg_arm32_binder64.img
-        sudo mv s.img ../tmp/s_microg_arm32_binder64_vndklite.img
+        sudo mv s.img ../../tmp/s_microg_arm32_binder64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_microg_arm32_binder64_vndklite.img
       working-directory: src/treble_adapter
     - name: adapt vndklite gapps arm32_binder64 image
       run: |
         cp -v ../../tmp/system_gapps_arm32_binder64.img standard_system_gapps_arm32_binder64.img
         sudo bash lite-adapter.sh 32 standard_system_gapps_arm32_binder64.img
-        sudo mv s.img ../tmp/s_gapps_arm32_binder64_vndklite.img
+        sudo mv s.img ../../tmp/s_gapps_arm32_binder64_vndklite.img
         sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_gapps_arm32_binder64_vndklite.img
       working-directory: src/treble_adapter
     - name: rename image files
