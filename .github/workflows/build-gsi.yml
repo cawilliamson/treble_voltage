@@ -86,7 +86,6 @@ jobs:
         . build/envsetup.sh
         lunch treble_arm64_bvN-ap1a-userdebug
         make vndk-test-sepolicy -j"$(nproc --all)"
-      continue-on-error: true # using this while building from staging
       working-directory: src
     - name: build standard microg arm64 image
       run: |
