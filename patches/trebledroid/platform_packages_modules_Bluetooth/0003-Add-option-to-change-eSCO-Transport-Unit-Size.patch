@@ -41,4 +41,4 @@ index 684450a80b..5bf31289bc 100644
      if (codec == ESCO_CODEC_SWB_Q0 || codec == ESCO_CODEC_SWB_Q1 ||
          codec == ESCO_CODEC_SWB_Q2 || codec == ESCO_CODEC_SWB_Q3) {
 -- 
-2.25.1
+2.34.1

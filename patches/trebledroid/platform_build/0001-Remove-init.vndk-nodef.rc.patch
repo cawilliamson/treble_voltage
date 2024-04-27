@@ -71,4 +71,4 @@ index c94940cfbd..3699a06043 100644
  # Overlay the GSI specific SystemUI setting
  PRODUCT_PACKAGES += gsi_overlay_systemui
 -- 
-2.25.1
+2.34.1

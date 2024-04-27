@@ -26,4 +26,4 @@ index c1795f5c32..345016efd6 100644
      if (halV1_0 == nullptr) {
          ALOGV("Vibrator HAL service not available.");
 -- 
-2.25.1
+2.34.1

@@ -112,4 +112,4 @@ index 275bbb067e..885e34f188 100644
      hal_transport_ = BluetoothAudioHalTransport::AIDL;
      return;
 -- 
-2.25.1
+2.34.1

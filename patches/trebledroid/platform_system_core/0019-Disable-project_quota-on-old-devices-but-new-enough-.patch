@@ -1,7 +1,7 @@
 From 14291211bca68a335c7e78c8185eeaddee31dea2 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Fri, 6 Oct 2023 19:01:27 -0400
-Subject: [PATCH 19/25] Disable project_quota on old devices but new enough to
+Subject: [PATCH 19/24] Disable project_quota on old devices but new enough to
  have encryption (they do keep quota support)
 
 ---
@@ -28,4 +28,4 @@ index 9448b9711..20469b772 100644
          LERROR << "Unable to " << (want_quota ? "enable" : "disable") << " quotas on " << blk_device
                 << " because " TUNE2FS_BIN " is missing";
 -- 
-2.25.1
+2.34.1

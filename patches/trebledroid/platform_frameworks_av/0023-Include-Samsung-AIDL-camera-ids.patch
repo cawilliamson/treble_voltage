@@ -1,7 +1,7 @@
 From f3ef47c293f03715731ed9a74f41d5bb3c079f82 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Wed, 7 Feb 2024 05:06:32 -0500
-Subject: [PATCH 23/25] Include Samsung AIDL camera ids
+Subject: [PATCH 23/24] Include Samsung AIDL camera ids
 
 ---
  services/camera/libcameraservice/Android.bp   |  1 +
@@ -60,4 +60,4 @@ index d773af3e9a..99ddcc129b 100644
          uint16_t major, minor;
          std::string type, id;
 -- 
-2.25.1
+2.34.1

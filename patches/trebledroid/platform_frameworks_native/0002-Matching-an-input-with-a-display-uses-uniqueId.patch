@@ -31,4 +31,4 @@ index fb32f96482..23c0123ab0 100644
                  const std::unordered_map<std::string, uint8_t>& ports =
                          readerConfig.portAssociations;
 -- 
-2.25.1
+2.34.1

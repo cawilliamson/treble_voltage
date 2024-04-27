@@ -1,7 +1,7 @@
 From 1174c244ae1acc819b9faf77eb2e4555efc0d637 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Wed, 14 Dec 2022 17:21:00 -0500
-Subject: [PATCH 30/51] Call Samsung's ISehSysInputDev to report screen state
+Subject: [PATCH 30/50] Call Samsung's ISehSysInputDev to report screen state
  to touchscreen driver
 
 This fixes touchscreen not waking up on Galaxy F23
@@ -11,19 +11,19 @@ This fixes touchscreen not waking up on Galaxy F23
  2 files changed, 32 insertions(+)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index 7b2f337c..af915b90 100644
+index f5a80d80f271..575da5d97d0c 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
-@@ -205,6 +205,7 @@ java_library_static {
+@@ -204,6 +204,7 @@ java_library_static {
+         "com_android_wm_shell_flags_lib",
          "com.android.server.utils_aconfig-java",
          "service-jobscheduler-deviceidle.flags-aconfig-java",
-         "vendor.aospa.biometrics.face",
 +        "vendor.samsung.hardware.sysinput-V1.2-java", // HIDL
      ],
      javac_shard_size: 50,
      javacflags: [
 diff --git a/services/core/java/com/android/server/display/LocalDisplayAdapter.java b/services/core/java/com/android/server/display/LocalDisplayAdapter.java
-index 22898a65..37b7b2c0 100644
+index 22898a65c5de..f9dbd91e6b5a 100644
 --- a/services/core/java/com/android/server/display/LocalDisplayAdapter.java
 +++ b/services/core/java/com/android/server/display/LocalDisplayAdapter.java
 @@ -35,6 +35,7 @@ import android.os.Trace;
@@ -47,7 +47,7 @@ index 22898a65..37b7b2c0 100644
          private float mActiveRenderFrameRate;
          private DisplayEventReceiver.FrameRateOverride[] mFrameRateOverrides =
                  new DisplayEventReceiver.FrameRateOverride[0];
-+       private boolean triedSamsungHal = false;
++        private boolean triedSamsungHal = false;
 +        private ISehSysInputDev samsungSysinput = null;
  
          LocalDisplayDevice(IBinder displayToken, long physicalDisplayId,
@@ -95,5 +95,5 @@ index 22898a65..37b7b2c0 100644
                          setCommittedState(state);
  
                          // If we're entering a suspended (but not OFF) power state and we
---
-2.25.1
+-- 
+2.34.1

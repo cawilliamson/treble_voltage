@@ -28,4 +28,4 @@ index 16ea602bc4f..262afbcbb31 100644
              UsbPortStatus portStatus = intent.getExtras()
                      .getParcelable(UsbManager.EXTRA_PORT_STATUS);
 -- 
-2.25.1
+2.34.1

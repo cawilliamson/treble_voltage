@@ -1,7 +1,7 @@
 From 215e209a48c17495c86fd37db72c61f593c35a10 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Fri, 6 Oct 2023 10:57:13 -0400
-Subject: [PATCH 36/51] Catch NPE in SystemUI
+Subject: [PATCH 36/50] Catch NPE in SystemUI
 
 No idea why it triggers, but it crashes SystemUI on boot for my TV
 device
@@ -27,4 +27,4 @@ index d7a1906f68e4..2a2f13466025 100644
          Trace.endSection();
      }
 -- 
-2.25.1
+2.34.1

@@ -52,4 +52,4 @@ index 645c74e868..ffc2b149fe 100644
        auto v98 = LeGetVendorCapabilitiesComplete098View::Create(v96);
        if (!v98.IsValid()) {
 -- 
-2.25.1
+2.34.1

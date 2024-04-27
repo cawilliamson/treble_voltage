@@ -25,4 +25,4 @@ index 4e8e9760f0..1b2ee8f862 100644
      echo "ro.$(1).build.date.utc=`$(DATE_FROM_FILE) +%s`" >> $(2);\
      # Allow optional assignments for ARC forward-declarations (b/249168657)
 -- 
-2.25.1
+2.34.1

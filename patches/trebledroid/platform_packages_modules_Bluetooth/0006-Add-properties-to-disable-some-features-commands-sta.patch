@@ -127,4 +127,4 @@ index be068bdbd3..645c74e868 100644
  
    void le_read_connect_list_size_handler(CommandCompleteView view) {
 -- 
-2.25.1
+2.34.1
