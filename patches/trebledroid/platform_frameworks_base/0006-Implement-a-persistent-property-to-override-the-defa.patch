@@ -6,22 +6,14 @@ Subject: [PATCH 06/50] Implement a persistent property to override the default
 
 Change-Id: I49b45d00bf71d7932591b3516d49a680e1b6568b
 ---
- core/java/android/hardware/Camera.java                | 6 ++++++
+ core/java/android/hardware/Camera.java                | 5 ++++++
  core/java/android/hardware/camera2/CameraManager.java | 9 +++++++++
- 2 files changed, 15 insertions(+)
+ 2 files changed, 14 insertions(+)
 
 diff --git a/core/java/android/hardware/Camera.java b/core/java/android/hardware/Camera.java
 index 039644387715..26ba0ca39ab9 100644
 --- a/core/java/android/hardware/Camera.java
 +++ b/core/java/android/hardware/Camera.java
-@@ -41,6 +41,7 @@ import android.os.Message;
- import android.os.Process;
- import android.os.RemoteException;
- import android.os.ServiceManager;
-+import android.os.SystemProperties;
- import android.text.TextUtils;
- import android.util.Log;
- import android.view.Surface;
 @@ -404,6 +405,11 @@ public class Camera {
       * @see #open(int)
       */

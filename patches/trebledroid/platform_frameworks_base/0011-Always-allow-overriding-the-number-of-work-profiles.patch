@@ -16,7 +16,7 @@ index c48eccf2aac5..071d4a75ebcd 100644
       */
      private static int getMaxUsersOfTypePerParent(UserTypeDetails userTypeDetails) {
          final int defaultMax = userTypeDetails.getMaxAllowedPerParent();
--        if (!Build.IS_DEBUGGABLE) {
+-        if (!Build.IS_ENG) {
 -            return defaultMax;
 -        } else {
 -            if (userTypeDetails.isManagedProfile()) {

@@ -1,18 +1,18 @@
 From 34fc24102978184eba88717083db434ba75c4e33 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sun, 25 Oct 2020 23:57:26 +0100
-Subject: [PATCH 15/50] Re-implement fnmatch-like behaviour for RRO java-side
+Subject: [PATCH 15/51] Re-implement fnmatch-like behaviour for RRO java-side
 
 T: Also apply to FrameworkParsingPackageUtils (@PeterCxy)
 
 Change-Id: Id38292a9a1453aa87b8401c1fdb390fa4e63c7d1
 ---
- core/java/android/content/pm/PackageParser.java     | 13 +++++++++++--
- .../pm/parsing/FrameworkParsingPackageUtils.java    | 13 +++++++++++--
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ .../android/content/pm/PackageParser.java     | 13 +++++++++--
+ .../parsing/FrameworkParsingPackageUtils.java | 23 ++++++++++---------
+ 2 files changed, 23 insertions(+), 13 deletions(-)
 
 diff --git a/core/java/android/content/pm/PackageParser.java b/core/java/android/content/pm/PackageParser.java
-index 4b579e7db9f8..3bee878e2fc8 100644
+index af059e15..a4f72ec8 100644
 --- a/core/java/android/content/pm/PackageParser.java
 +++ b/core/java/android/content/pm/PackageParser.java
 @@ -2545,8 +2545,17 @@ public class PackageParser {
@@ -36,14 +36,25 @@ index 4b579e7db9f8..3bee878e2fc8 100644
          }
          return true;
 diff --git a/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java b/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
-index 153dd9a93490..4eacc197b4e9 100644
+index fc06dd8d..b6c65af2 100644
 --- a/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
 +++ b/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
-@@ -215,8 +215,17 @@ public class FrameworkParsingPackageUtils {
+@@ -213,18 +213,19 @@ public class FrameworkParsingPackageUtils {
+             return false;
+         }
          for (int i = 0; i < propNames.length; i++) {
-             // Check property value: make sure it is both set and equal to expected value
++            // Check property value: make sure it is both set and equal to expected value
              final String currValue = SystemProperties.get(propNames[i]);
--            if (!TextUtils.equals(currValue, propValues[i])) {
+-            // 1. Make sure prop is set.
+-            if (currValue == null) {
+-                return false;
+-            }
+-            // 2. Check next prop if expected value is a wildcard.
+-            if ("*".equals(propValues[i])) {
+-                continue;
+-            }
+-            // 3. Check if prop is equal to expected value.
+-            if (!currValue.equals(propValues[i])) {
 -                return false;
 +            final String value = propValues[i];
 +            if(value.startsWith("+")) {
@@ -59,5 +70,5 @@ index 153dd9a93490..4eacc197b4e9 100644
              }
          }
          return true;
--- 
+--
 2.34.1

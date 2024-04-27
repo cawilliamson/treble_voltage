@@ -17,6 +17,9 @@ PRODUCT_PACKAGE_OVERLAYS += \
 
 # Packages
 PRODUCT_PACKAGES += \
+  Apps \
+  AuroraStorePrivilegedExtension \
+  F-DroidPrivilegedExtension \
   OpenEUICC
 
 # SELinux

@@ -12,14 +12,14 @@ diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprin
 index d3cecd0e34c7..91f515161146 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/Fingerprint21.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/Fingerprint21.java
-@@ -1004,6 +1004,8 @@ public class Fingerprint21 implements IHwBinder.DeathRecipient, ServiceProvider
+@@ -1009,6 +1009,8 @@ public class Fingerprint21 implements IHwBinder.DeathRecipient, ServiceProvider
  
      private void scheduleInternalCleanup(int userId,
              @Nullable ClientMonitorCallback callback) {
-+	final boolean mNocleanup = android.os.SystemProperties.getBoolean("persist.sys.phh.fingerprint.nocleanup", false);
-+	if(mNocleanup) return;
++        final boolean mNocleanup = android.os.SystemProperties.getBoolean("persist.sys.phh.fingerprint.nocleanup", false);
++        if(mNocleanup) return;
+             if (mCleanup) {  
          mHandler.post(() -> {
              scheduleUpdateActiveUserWithoutHandler(userId);
- 
 -- 
 2.34.1
