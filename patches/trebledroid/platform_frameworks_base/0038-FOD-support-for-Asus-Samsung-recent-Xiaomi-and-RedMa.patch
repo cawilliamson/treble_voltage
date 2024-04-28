@@ -119,7 +119,7 @@ index a8964382..db0653d7 100644
 +                Log.d(TAG, "processCmd: no iIfaaDaemon!");
 +                return null;
 +            }
-+            ArrayList<Byte> resultList = iIfaaDaemon.processCmd(cmd, param1, param2, sendList, len>
++            ArrayList<Byte> resultList = iIfaaDaemon.processCmd(cmd, param1, param2, sendList, length);
 +            int n = resultList.size();
 +            Log.d(TAG, "FingerprintService result length n = " + n);
 +            if (n == 0) {
