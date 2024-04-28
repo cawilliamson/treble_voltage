@@ -217,7 +217,7 @@ jobs:
     - name: copy all files to web directory
       run: |
         buildDate=$(cat cachedBuildDate.txt)
-        webDir="/var/www/html/${ROM_VERSION}-${buildDate}"
+        webDir="/var/www/html/${ROM_NAME}-${ROM_VERSION}-${buildDate}"
         mkdir -p "${webDir}"
         cp -fv *.img.xz "${webDir}/"
       working-directory: tmp
