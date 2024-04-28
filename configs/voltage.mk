@@ -1,5 +1,4 @@
 $(call inherit-product, vendor/voltage/config/common_full_phone.mk)
-$(call inherit-product, vendor/voltage/config/BoardConfigSoong.mk)
 $(call inherit-product, vendor/voltage/config/BoardConfigVoltage.mk)
 -include vendor/voltage/build/core/config.mk
 
