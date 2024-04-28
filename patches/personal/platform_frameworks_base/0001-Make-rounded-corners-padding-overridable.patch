@@ -1,12 +1,12 @@
-From 02dc9899739b938e3b90dfeea78080e3375a6867 Mon Sep 17 00:00:00 2001
+From 49ed03f1c1ee4a45ff57dc751108a489aa293af9 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
-Date: Sun, 28 Apr 2024 00:20:00 +0100
+Date: Sun, 28 Apr 2024 01:37:48 +0100
 Subject: [PATCH 1/2] Make rounded corners padding overridable
 
 ---
  .../src/com/android/systemui/shade/ShadeHeaderController.kt  | 5 ++++-
- .../statusbar/phone/StatusBarContentInsetsProvider.kt        | 4 +++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ .../statusbar/phone/StatusBarContentInsetsProvider.kt        | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/shade/ShadeHeaderController.kt b/packages/SystemUI/src/com/android/systemui/shade/ShadeHeaderController.kt
 index 411be77e..dafa344e 100644
@@ -32,10 +32,18 @@ index 411be77e..dafa344e 100644
          header.setPadding(padding, header.paddingTop, padding, header.paddingBottom)
          updateQQSPaddings()
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarContentInsetsProvider.kt b/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarContentInsetsProvider.kt
-index 877bd7c1..54eb75c0 100644
+index 877bd7c1..608848cf 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarContentInsetsProvider.kt
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarContentInsetsProvider.kt
-@@ -245,7 +245,9 @@ class StatusBarContentInsetsProvider @Inject constructor(
+@@ -22,6 +22,7 @@ import android.content.res.Resources
+ import android.graphics.Insets
+ import android.graphics.Point
+ import android.graphics.Rect
++import android.os.SystemProperties
+ import android.util.LruCache
+ import android.util.Pair
+ import android.view.DisplayCutout
+@@ -245,7 +246,9 @@ class StatusBarContentInsetsProvider @Inject constructor(
      ): Rect {
          val currentRotation = getExactRotation(context)
  
