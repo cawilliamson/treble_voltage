@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  DISABLE_RUNNER_CLEANUP: false # should ONLY be set to true for debugging
+  DISABLE_RUNNER_CLEANUP: true # should ONLY be set to true for debugging
   ROM_NAME: VoltageOS
   ROM_VERSION: 3.3
 
