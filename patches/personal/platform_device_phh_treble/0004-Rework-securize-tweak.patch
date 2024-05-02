@@ -93,7 +93,7 @@ index 5dc493f..9ea5f8b 100644
      resetprop_phh ro.boot.vbmeta.device_state locked
 @@ -781,24 +806,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
      resetprop_phh ro.build.type user
-     resetprop_phh ro.build.selinux 0
+     resetprop_phh --delete ro.build.selinux
  
 -    resetprop_phh ro.adb.secure 1
 -
