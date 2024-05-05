@@ -5,25 +5,24 @@ Subject: [PATCH 3/4] build: Always use release-keys
 
 Change-Id: Iff4d88d6bd4c7f4f6b9270dea24a2673c8535d9e
 ---
- core/sysprop.mk | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ core/sysprop.mk | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/core/sysprop.mk b/core/sysprop.mk
-index 1b2ee8f862..96c54e0de6 100644
+index 02c030d..2b3f992 100644
 --- a/core/sysprop.mk
 +++ b/core/sysprop.mk
-@@ -177,11 +177,7 @@ endif
+@@ -179,11 +179,7 @@ endif
  # non-default dev keys (usually private keys from a vendor directory).
  # Both of these tags will be removed and replaced with "release-keys"
  # when the target-files is signed in a post-build step.
--ifeq ($(DEFAULT_SYSTEM_DEV_CERTIFICATE),build/make/target/product/security/testkey)
+-ifeq ($(TARGET_BUILD_VARIANT),eng)
 -BUILD_KEYS := test-keys
 -else
--BUILD_KEYS := dev-keys
+ BUILD_KEYS := release-keys
 -endif
-+BUILD_KEYS := release-keys
  BUILD_VERSION_TAGS += $(BUILD_KEYS)
  BUILD_VERSION_TAGS := $(subst $(space),$(comma),$(sort $(BUILD_VERSION_TAGS)))
  
--- 
+--
 2.34.1
