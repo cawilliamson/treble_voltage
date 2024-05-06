@@ -1,7 +1,7 @@
 From 51a197e9e2f963962e40375f75e333b912388d44 Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Sat, 16 Oct 2021 00:12:03 +0530
-Subject: [PATCH 3/4] build: Always use release-keys
+Subject: [PATCH 1/4] build: Always use release-keys
 
 Change-Id: Iff4d88d6bd4c7f4f6b9270dea24a2673c8535d9e
 ---
