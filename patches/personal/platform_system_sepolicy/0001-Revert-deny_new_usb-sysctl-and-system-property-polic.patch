@@ -1,0 +1,690 @@
+From c0b09214bccdce1d638d0f99ac9586de22a6e6d2 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Sun, 28 Apr 2024 18:31:27 +0100
+Subject: [PATCH] Revert "deny_new_usb sysctl and system property policy"
+
+---
+ prebuilts/api/29.0/private/genfs_contexts       | 1 -
+ prebuilts/api/29.0/public/file.te               | 1 -
+ prebuilts/api/30.0/private/compat/29.0/29.0.cil | 2 --
+ prebuilts/api/30.0/private/genfs_contexts       | 1 -
+ prebuilts/api/30.0/public/file.te               | 1 -
+ prebuilts/api/31.0/private/compat/29.0/29.0.cil | 2 --
+ prebuilts/api/31.0/private/compat/30.0/30.0.cil | 2 --
+ prebuilts/api/31.0/private/genfs_contexts       | 1 -
+ prebuilts/api/31.0/public/file.te               | 1 -
+ prebuilts/api/32.0/private/compat/29.0/29.0.cil | 2 --
+ prebuilts/api/32.0/private/compat/30.0/30.0.cil | 2 --
+ prebuilts/api/32.0/private/compat/31.0/31.0.cil | 2 --
+ prebuilts/api/32.0/private/genfs_contexts       | 1 -
+ prebuilts/api/32.0/private/property_contexts    | 1 -
+ prebuilts/api/32.0/public/file.te               | 1 -
+ prebuilts/api/32.0/public/init.te               | 1 -
+ prebuilts/api/33.0/private/compat/29.0/29.0.cil | 2 --
+ prebuilts/api/33.0/private/compat/30.0/30.0.cil | 2 --
+ prebuilts/api/33.0/private/compat/31.0/31.0.cil | 2 --
+ prebuilts/api/33.0/private/compat/32.0/32.0.cil | 2 --
+ prebuilts/api/33.0/public/file.te               | 1 -
+ prebuilts/api/33.0/public/init.te               | 1 -
+ prebuilts/api/34.0/private/compat/29.0/29.0.cil | 2 --
+ prebuilts/api/34.0/private/compat/30.0/30.0.cil | 2 --
+ prebuilts/api/34.0/private/compat/31.0/31.0.cil | 2 --
+ prebuilts/api/34.0/private/compat/32.0/32.0.cil | 2 --
+ prebuilts/api/34.0/private/compat/33.0/33.0.cil | 2 --
+ prebuilts/api/34.0/private/genfs_contexts       | 1 -
+ prebuilts/api/34.0/private/property_contexts    | 1 -
+ prebuilts/api/34.0/public/file.te               | 1 -
+ prebuilts/api/34.0/public/init.te               | 1 -
+ private/compat/29.0/29.0.cil                    | 2 --
+ private/compat/30.0/30.0.cil                    | 2 --
+ private/compat/31.0/31.0.cil                    | 2 --
+ private/compat/32.0/32.0.cil                    | 2 --
+ private/compat/33.0/33.0.cil                    | 2 --
+ private/genfs_contexts                          | 1 -
+ private/property_contexts                       | 1 -
+ public/file.te                                  | 1 -
+ public/init.te                                  | 1 -
+ 40 files changed, 60 deletions(-)
+
+diff --git a/prebuilts/api/29.0/private/genfs_contexts b/prebuilts/api/29.0/private/genfs_contexts
+index 55b89d2..380d4a0 100644
+--- a/prebuilts/api/29.0/private/genfs_contexts
++++ b/prebuilts/api/29.0/private/genfs_contexts
+@@ -40,7 +40,6 @@ genfscon proc /sys/fs/suid_dumpable u:object_r:proc_security:s0
+ genfscon proc /sys/fs/verity/require_signatures u:object_r:proc_fs_verity:s0
+ genfscon proc /sys/kernel/core_pattern u:object_r:usermodehelper:s0
+ genfscon proc /sys/kernel/core_pipe_limit u:object_r:usermodehelper:s0
+-genfscon proc /sys/kernel/deny_new_usb u:object_r:proc_deny_new_usb:s0
+ genfscon proc /sys/kernel/domainname u:object_r:proc_hostname:s0
+ genfscon proc /sys/kernel/dmesg_restrict u:object_r:proc_security:s0
+ genfscon proc /sys/kernel/hostname u:object_r:proc_hostname:s0
+diff --git a/prebuilts/api/29.0/public/file.te b/prebuilts/api/29.0/public/file.te
+index 2b01e01..da990e3 100644
+--- a/prebuilts/api/29.0/public/file.te
++++ b/prebuilts/api/29.0/public/file.te
+@@ -20,7 +20,6 @@ type proc_asound, fs_type, proc_type;
+ type proc_buddyinfo, fs_type, proc_type;
+ type proc_cmdline, fs_type, proc_type;
+ type proc_cpuinfo, fs_type, proc_type;
+-type proc_deny_new_usb, fs_type, proc_type;
+ type proc_dirty, fs_type, proc_type;
+ type proc_diskstats, fs_type, proc_type;
+ type proc_extra_free_kbytes, fs_type, proc_type;
+diff --git a/prebuilts/api/30.0/private/compat/29.0/29.0.cil b/prebuilts/api/30.0/private/compat/29.0/29.0.cil
+index 03f98bb..5231498 100644
+--- a/prebuilts/api/30.0/private/compat/29.0/29.0.cil
++++ b/prebuilts/api/30.0/private/compat/29.0/29.0.cil
+@@ -594,7 +594,6 @@
+ (expandtypeattribute (proc_buddyinfo_29_0) true)
+ (expandtypeattribute (proc_cmdline_29_0) true)
+ (expandtypeattribute (proc_cpuinfo_29_0) true)
+-(expandtypeattribute (proc_deny_new_usb_29_0) true)
+ (expandtypeattribute (proc_dirty_29_0) true)
+ (expandtypeattribute (proc_diskstats_29_0) true)
+ (expandtypeattribute (proc_drop_caches_29_0) true)
+@@ -1574,7 +1573,6 @@
+ (typeattributeset proc_buddyinfo_29_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_29_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_29_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_29_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_29_0 (proc_dirty))
+ (typeattributeset proc_diskstats_29_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_29_0 (proc_drop_caches))
+diff --git a/prebuilts/api/30.0/private/genfs_contexts b/prebuilts/api/30.0/private/genfs_contexts
+index fef5641..89232bc 100644
+--- a/prebuilts/api/30.0/private/genfs_contexts
++++ b/prebuilts/api/30.0/private/genfs_contexts
+@@ -42,7 +42,6 @@ genfscon proc /sys/fs/suid_dumpable u:object_r:proc_security:s0
+ genfscon proc /sys/fs/verity/require_signatures u:object_r:proc_fs_verity:s0
+ genfscon proc /sys/kernel/core_pattern u:object_r:usermodehelper:s0
+ genfscon proc /sys/kernel/core_pipe_limit u:object_r:usermodehelper:s0
+-genfscon proc /sys/kernel/deny_new_usb u:object_r:proc_deny_new_usb:s0
+ genfscon proc /sys/kernel/domainname u:object_r:proc_hostname:s0
+ genfscon proc /sys/kernel/dmesg_restrict u:object_r:proc_security:s0
+ genfscon proc /sys/kernel/hostname u:object_r:proc_hostname:s0
+diff --git a/prebuilts/api/30.0/public/file.te b/prebuilts/api/30.0/public/file.te
+index 5750df1..91257e2 100644
+--- a/prebuilts/api/30.0/public/file.te
++++ b/prebuilts/api/30.0/public/file.te
+@@ -24,7 +24,6 @@ type proc_asound, fs_type, proc_type;
+ type proc_buddyinfo, fs_type, proc_type;
+ type proc_cmdline, fs_type, proc_type;
+ type proc_cpuinfo, fs_type, proc_type;
+-type proc_deny_new_usb, fs_type, proc_type;
+ type proc_dirty, fs_type, proc_type;
+ type proc_diskstats, fs_type, proc_type;
+ type proc_extra_free_kbytes, fs_type, proc_type;
+diff --git a/prebuilts/api/31.0/private/compat/29.0/29.0.cil b/prebuilts/api/31.0/private/compat/29.0/29.0.cil
+index 6052ff9..0fb0a1c 100644
+--- a/prebuilts/api/31.0/private/compat/29.0/29.0.cil
++++ b/prebuilts/api/31.0/private/compat/29.0/29.0.cil
+@@ -599,7 +599,6 @@
+ (expandtypeattribute (proc_buddyinfo_29_0) true)
+ (expandtypeattribute (proc_cmdline_29_0) true)
+ (expandtypeattribute (proc_cpuinfo_29_0) true)
+-(expandtypeattribute (proc_deny_new_usb_29_0) true)
+ (expandtypeattribute (proc_dirty_29_0) true)
+ (expandtypeattribute (proc_diskstats_29_0) true)
+ (expandtypeattribute (proc_drop_caches_29_0) true)
+@@ -1585,7 +1584,6 @@
+ (typeattributeset proc_buddyinfo_29_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_29_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_29_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_29_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_29_0 (proc_dirty))
+ (typeattributeset proc_diskstats_29_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_29_0 (proc_drop_caches))
+diff --git a/prebuilts/api/31.0/private/compat/30.0/30.0.cil b/prebuilts/api/31.0/private/compat/30.0/30.0.cil
+index e6bd5ce..9f40876 100644
+--- a/prebuilts/api/31.0/private/compat/30.0/30.0.cil
++++ b/prebuilts/api/31.0/private/compat/30.0/30.0.cil
+@@ -674,7 +674,6 @@
+ (expandtypeattribute (proc_buddyinfo_30_0) true)
+ (expandtypeattribute (proc_cmdline_30_0) true)
+ (expandtypeattribute (proc_cpuinfo_30_0) true)
+-(expandtypeattribute (proc_deny_new_usb_30_0) true)
+ (expandtypeattribute (proc_dirty_30_0) true)
+ (expandtypeattribute (proc_diskstats_30_0) true)
+ (expandtypeattribute (proc_drop_caches_30_0) true)
+@@ -1828,7 +1827,6 @@
+ (typeattributeset proc_buddyinfo_30_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_30_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_30_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_30_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_30_0 (proc_dirty))
+ (typeattributeset proc_diskstats_30_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_30_0 (proc_drop_caches))
+diff --git a/prebuilts/api/31.0/private/genfs_contexts b/prebuilts/api/31.0/private/genfs_contexts
+index 676edb0..13bfb46 100644
+--- a/prebuilts/api/31.0/private/genfs_contexts
++++ b/prebuilts/api/31.0/private/genfs_contexts
+@@ -45,7 +45,6 @@ genfscon proc /sys/fs/suid_dumpable u:object_r:proc_security:s0
+ genfscon proc /sys/fs/verity/require_signatures u:object_r:proc_fs_verity:s0
+ genfscon proc /sys/kernel/core_pattern u:object_r:usermodehelper:s0
+ genfscon proc /sys/kernel/core_pipe_limit u:object_r:usermodehelper:s0
+-genfscon proc /sys/kernel/deny_new_usb u:object_r:proc_deny_new_usb:s0
+ genfscon proc /sys/kernel/domainname u:object_r:proc_hostname:s0
+ genfscon proc /sys/kernel/dmesg_restrict u:object_r:proc_security:s0
+ genfscon proc /sys/kernel/hostname u:object_r:proc_hostname:s0
+diff --git a/prebuilts/api/31.0/public/file.te b/prebuilts/api/31.0/public/file.te
+index ecc9072..dc788ac 100644
+--- a/prebuilts/api/31.0/public/file.te
++++ b/prebuilts/api/31.0/public/file.te
+@@ -25,7 +25,6 @@ type proc_bootconfig, fs_type, proc_type;
+ type proc_buddyinfo, fs_type, proc_type;
+ type proc_cmdline, fs_type, proc_type;
+ type proc_cpuinfo, fs_type, proc_type;
+-type proc_deny_new_usb, fs_type, proc_type;
+ type proc_dirty, fs_type, proc_type;
+ type proc_diskstats, fs_type, proc_type;
+ type proc_extra_free_kbytes, fs_type, proc_type;
+diff --git a/prebuilts/api/32.0/private/compat/29.0/29.0.cil b/prebuilts/api/32.0/private/compat/29.0/29.0.cil
+index 6052ff9..0fb0a1c 100644
+--- a/prebuilts/api/32.0/private/compat/29.0/29.0.cil
++++ b/prebuilts/api/32.0/private/compat/29.0/29.0.cil
+@@ -599,7 +599,6 @@
+ (expandtypeattribute (proc_buddyinfo_29_0) true)
+ (expandtypeattribute (proc_cmdline_29_0) true)
+ (expandtypeattribute (proc_cpuinfo_29_0) true)
+-(expandtypeattribute (proc_deny_new_usb_29_0) true)
+ (expandtypeattribute (proc_dirty_29_0) true)
+ (expandtypeattribute (proc_diskstats_29_0) true)
+ (expandtypeattribute (proc_drop_caches_29_0) true)
+@@ -1585,7 +1584,6 @@
+ (typeattributeset proc_buddyinfo_29_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_29_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_29_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_29_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_29_0 (proc_dirty))
+ (typeattributeset proc_diskstats_29_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_29_0 (proc_drop_caches))
+diff --git a/prebuilts/api/32.0/private/compat/30.0/30.0.cil b/prebuilts/api/32.0/private/compat/30.0/30.0.cil
+index e6bd5ce..9f40876 100644
+--- a/prebuilts/api/32.0/private/compat/30.0/30.0.cil
++++ b/prebuilts/api/32.0/private/compat/30.0/30.0.cil
+@@ -674,7 +674,6 @@
+ (expandtypeattribute (proc_buddyinfo_30_0) true)
+ (expandtypeattribute (proc_cmdline_30_0) true)
+ (expandtypeattribute (proc_cpuinfo_30_0) true)
+-(expandtypeattribute (proc_deny_new_usb_30_0) true)
+ (expandtypeattribute (proc_dirty_30_0) true)
+ (expandtypeattribute (proc_diskstats_30_0) true)
+ (expandtypeattribute (proc_drop_caches_30_0) true)
+@@ -1828,7 +1827,6 @@
+ (typeattributeset proc_buddyinfo_30_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_30_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_30_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_30_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_30_0 (proc_dirty))
+ (typeattributeset proc_diskstats_30_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_30_0 (proc_drop_caches))
+diff --git a/prebuilts/api/32.0/private/compat/31.0/31.0.cil b/prebuilts/api/32.0/private/compat/31.0/31.0.cil
+index 9923125..009d8b2 100644
+--- a/prebuilts/api/32.0/private/compat/31.0/31.0.cil
++++ b/prebuilts/api/32.0/private/compat/31.0/31.0.cil
+@@ -732,7 +732,6 @@
+ (expandtypeattribute (proc_buddyinfo_31_0) true)
+ (expandtypeattribute (proc_cmdline_31_0) true)
+ (expandtypeattribute (proc_cpuinfo_31_0) true)
+-(expandtypeattribute (proc_deny_new_usb_31_0) true)
+ (expandtypeattribute (proc_dirty_31_0) true)
+ (expandtypeattribute (proc_diskstats_31_0) true)
+ (expandtypeattribute (proc_drop_caches_31_0) true)
+@@ -1968,7 +1967,6 @@
+ (typeattributeset proc_buddyinfo_31_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_31_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_31_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_31_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_31_0 (proc_dirty))
+ (typeattributeset proc_diskstats_31_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_31_0 (proc_drop_caches))
+diff --git a/prebuilts/api/32.0/private/genfs_contexts b/prebuilts/api/32.0/private/genfs_contexts
+index 676edb0..13bfb46 100644
+--- a/prebuilts/api/32.0/private/genfs_contexts
++++ b/prebuilts/api/32.0/private/genfs_contexts
+@@ -45,7 +45,6 @@ genfscon proc /sys/fs/suid_dumpable u:object_r:proc_security:s0
+ genfscon proc /sys/fs/verity/require_signatures u:object_r:proc_fs_verity:s0
+ genfscon proc /sys/kernel/core_pattern u:object_r:usermodehelper:s0
+ genfscon proc /sys/kernel/core_pipe_limit u:object_r:usermodehelper:s0
+-genfscon proc /sys/kernel/deny_new_usb u:object_r:proc_deny_new_usb:s0
+ genfscon proc /sys/kernel/domainname u:object_r:proc_hostname:s0
+ genfscon proc /sys/kernel/dmesg_restrict u:object_r:proc_security:s0
+ genfscon proc /sys/kernel/hostname u:object_r:proc_hostname:s0
+diff --git a/prebuilts/api/32.0/private/property_contexts b/prebuilts/api/32.0/private/property_contexts
+index cc284b5..f235b35 100644
+--- a/prebuilts/api/32.0/private/property_contexts
++++ b/prebuilts/api/32.0/private/property_contexts
+@@ -95,7 +95,6 @@ sys.boot.reason.last    u:object_r:last_boot_reason_prop:s0
+ pm.                     u:object_r:pm_prop:s0
+ test.sys.boot.reason    u:object_r:test_boot_reason_prop:s0
+ test.userspace_reboot.requested u:object_r:userspace_reboot_test_prop:s0
+-security.deny_new_usb   u:object_r:system_prop:s0
+ sys.lmk.                u:object_r:system_lmk_prop:s0
+ sys.trace.              u:object_r:system_trace_prop:s0
+ wrap.                   u:object_r:zygote_wrap_prop:s0 prefix string
+diff --git a/prebuilts/api/32.0/public/file.te b/prebuilts/api/32.0/public/file.te
+index ecc9072..dc788ac 100644
+--- a/prebuilts/api/32.0/public/file.te
++++ b/prebuilts/api/32.0/public/file.te
+@@ -25,7 +25,6 @@ type proc_bootconfig, fs_type, proc_type;
+ type proc_buddyinfo, fs_type, proc_type;
+ type proc_cmdline, fs_type, proc_type;
+ type proc_cpuinfo, fs_type, proc_type;
+-type proc_deny_new_usb, fs_type, proc_type;
+ type proc_dirty, fs_type, proc_type;
+ type proc_diskstats, fs_type, proc_type;
+ type proc_extra_free_kbytes, fs_type, proc_type;
+diff --git a/prebuilts/api/32.0/public/init.te b/prebuilts/api/32.0/public/init.te
+index 71b0ce8..ea5a979 100644
+--- a/prebuilts/api/32.0/public/init.te
++++ b/prebuilts/api/32.0/public/init.te
+@@ -370,7 +370,6 @@ allow init {
+ 
+ allow init {
+   proc_abi
+-  proc_deny_new_usb
+   proc_dirty
+   proc_hostname
+   proc_hung_task
+diff --git a/prebuilts/api/33.0/private/compat/29.0/29.0.cil b/prebuilts/api/33.0/private/compat/29.0/29.0.cil
+index 6052ff9..0fb0a1c 100644
+--- a/prebuilts/api/33.0/private/compat/29.0/29.0.cil
++++ b/prebuilts/api/33.0/private/compat/29.0/29.0.cil
+@@ -599,7 +599,6 @@
+ (expandtypeattribute (proc_buddyinfo_29_0) true)
+ (expandtypeattribute (proc_cmdline_29_0) true)
+ (expandtypeattribute (proc_cpuinfo_29_0) true)
+-(expandtypeattribute (proc_deny_new_usb_29_0) true)
+ (expandtypeattribute (proc_dirty_29_0) true)
+ (expandtypeattribute (proc_diskstats_29_0) true)
+ (expandtypeattribute (proc_drop_caches_29_0) true)
+@@ -1585,7 +1584,6 @@
+ (typeattributeset proc_buddyinfo_29_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_29_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_29_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_29_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_29_0 (proc_dirty))
+ (typeattributeset proc_diskstats_29_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_29_0 (proc_drop_caches))
+diff --git a/prebuilts/api/33.0/private/compat/30.0/30.0.cil b/prebuilts/api/33.0/private/compat/30.0/30.0.cil
+index e6bd5ce..9f40876 100644
+--- a/prebuilts/api/33.0/private/compat/30.0/30.0.cil
++++ b/prebuilts/api/33.0/private/compat/30.0/30.0.cil
+@@ -674,7 +674,6 @@
+ (expandtypeattribute (proc_buddyinfo_30_0) true)
+ (expandtypeattribute (proc_cmdline_30_0) true)
+ (expandtypeattribute (proc_cpuinfo_30_0) true)
+-(expandtypeattribute (proc_deny_new_usb_30_0) true)
+ (expandtypeattribute (proc_dirty_30_0) true)
+ (expandtypeattribute (proc_diskstats_30_0) true)
+ (expandtypeattribute (proc_drop_caches_30_0) true)
+@@ -1828,7 +1827,6 @@
+ (typeattributeset proc_buddyinfo_30_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_30_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_30_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_30_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_30_0 (proc_dirty))
+ (typeattributeset proc_diskstats_30_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_30_0 (proc_drop_caches))
+diff --git a/prebuilts/api/33.0/private/compat/31.0/31.0.cil b/prebuilts/api/33.0/private/compat/31.0/31.0.cil
+index 6a61899..ba6944e 100644
+--- a/prebuilts/api/33.0/private/compat/31.0/31.0.cil
++++ b/prebuilts/api/33.0/private/compat/31.0/31.0.cil
+@@ -743,7 +743,6 @@
+ (expandtypeattribute (proc_buddyinfo_31_0) true)
+ (expandtypeattribute (proc_cmdline_31_0) true)
+ (expandtypeattribute (proc_cpuinfo_31_0) true)
+-(expandtypeattribute (proc_deny_new_usb_31_0) true)
+ (expandtypeattribute (proc_dirty_31_0) true)
+ (expandtypeattribute (proc_diskstats_31_0) true)
+ (expandtypeattribute (proc_drop_caches_31_0) true)
+@@ -1983,7 +1982,6 @@
+ (typeattributeset proc_buddyinfo_31_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_31_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_31_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_31_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_31_0 (proc_dirty))
+ (typeattributeset proc_diskstats_31_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_31_0 (proc_drop_caches))
+diff --git a/prebuilts/api/33.0/private/compat/32.0/32.0.cil b/prebuilts/api/33.0/private/compat/32.0/32.0.cil
+index 7a7de8c..a99b628 100644
+--- a/prebuilts/api/33.0/private/compat/32.0/32.0.cil
++++ b/prebuilts/api/33.0/private/compat/32.0/32.0.cil
+@@ -744,7 +744,6 @@
+ (expandtypeattribute (proc_buddyinfo_32_0) true)
+ (expandtypeattribute (proc_cmdline_32_0) true)
+ (expandtypeattribute (proc_cpuinfo_32_0) true)
+-(expandtypeattribute (proc_deny_new_usb_32_0) true)
+ (expandtypeattribute (proc_dirty_32_0) true)
+ (expandtypeattribute (proc_diskstats_32_0) true)
+ (expandtypeattribute (proc_drop_caches_32_0) true)
+@@ -1981,7 +1980,6 @@
+ (typeattributeset proc_buddyinfo_32_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_32_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_32_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_32_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_32_0 (proc_dirty))
+ (typeattributeset proc_diskstats_32_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_32_0 (proc_drop_caches))
+diff --git a/prebuilts/api/33.0/public/file.te b/prebuilts/api/33.0/public/file.te
+index 21ecdcb..2bfa282 100644
+--- a/prebuilts/api/33.0/public/file.te
++++ b/prebuilts/api/33.0/public/file.te
+@@ -29,7 +29,6 @@ type proc_buddyinfo, fs_type, proc_type;
+ type proc_cmdline, fs_type, proc_type;
+ type proc_cpu_alignment, fs_type, proc_type;
+ type proc_cpuinfo, fs_type, proc_type;
+-type proc_deny_new_usb, fs_type, proc_type;
+ type proc_dirty, fs_type, proc_type;
+ type proc_diskstats, fs_type, proc_type;
+ type proc_extra_free_kbytes, fs_type, proc_type;
+diff --git a/prebuilts/api/33.0/public/init.te b/prebuilts/api/33.0/public/init.te
+index e351c2a..8dcdd33 100644
+--- a/prebuilts/api/33.0/public/init.te
++++ b/prebuilts/api/33.0/public/init.te
+@@ -381,7 +381,6 @@ allow init {
+   proc_abi
+   proc_bpf
+   proc_cpu_alignment
+-  proc_deny_new_usb
+   proc_dirty
+   proc_hostname
+   proc_hung_task
+diff --git a/prebuilts/api/34.0/private/compat/29.0/29.0.cil b/prebuilts/api/34.0/private/compat/29.0/29.0.cil
+index 0109664..7315687 100644
+--- a/prebuilts/api/34.0/private/compat/29.0/29.0.cil
++++ b/prebuilts/api/34.0/private/compat/29.0/29.0.cil
+@@ -600,7 +600,6 @@
+ (expandtypeattribute (proc_buddyinfo_29_0) true)
+ (expandtypeattribute (proc_cmdline_29_0) true)
+ (expandtypeattribute (proc_cpuinfo_29_0) true)
+-(expandtypeattribute (proc_deny_new_usb_29_0) true)
+ (expandtypeattribute (proc_dirty_29_0) true)
+ (expandtypeattribute (proc_diskstats_29_0) true)
+ (expandtypeattribute (proc_drop_caches_29_0) true)
+@@ -1587,7 +1586,6 @@
+ (typeattributeset proc_buddyinfo_29_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_29_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_29_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_29_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_29_0 (proc_dirty))
+ (typeattributeset proc_diskstats_29_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_29_0 (proc_drop_caches))
+diff --git a/prebuilts/api/34.0/private/compat/30.0/30.0.cil b/prebuilts/api/34.0/private/compat/30.0/30.0.cil
+index 0d78f29..83d83ff 100644
+--- a/prebuilts/api/34.0/private/compat/30.0/30.0.cil
++++ b/prebuilts/api/34.0/private/compat/30.0/30.0.cil
+@@ -675,7 +675,6 @@
+ (expandtypeattribute (proc_buddyinfo_30_0) true)
+ (expandtypeattribute (proc_cmdline_30_0) true)
+ (expandtypeattribute (proc_cpuinfo_30_0) true)
+-(expandtypeattribute (proc_deny_new_usb_30_0) true)
+ (expandtypeattribute (proc_dirty_30_0) true)
+ (expandtypeattribute (proc_diskstats_30_0) true)
+ (expandtypeattribute (proc_drop_caches_30_0) true)
+@@ -1830,7 +1829,6 @@
+ (typeattributeset proc_buddyinfo_30_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_30_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_30_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_30_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_30_0 (proc_dirty))
+ (typeattributeset proc_diskstats_30_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_30_0 (proc_drop_caches))
+diff --git a/prebuilts/api/34.0/private/compat/31.0/31.0.cil b/prebuilts/api/34.0/private/compat/31.0/31.0.cil
+index dcae8af..b0df314 100644
+--- a/prebuilts/api/34.0/private/compat/31.0/31.0.cil
++++ b/prebuilts/api/34.0/private/compat/31.0/31.0.cil
+@@ -744,7 +744,6 @@
+ (expandtypeattribute (proc_buddyinfo_31_0) true)
+ (expandtypeattribute (proc_cmdline_31_0) true)
+ (expandtypeattribute (proc_cpuinfo_31_0) true)
+-(expandtypeattribute (proc_deny_new_usb_31_0) true)
+ (expandtypeattribute (proc_dirty_31_0) true)
+ (expandtypeattribute (proc_diskstats_31_0) true)
+ (expandtypeattribute (proc_drop_caches_31_0) true)
+@@ -1985,7 +1984,6 @@
+ (typeattributeset proc_buddyinfo_31_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_31_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_31_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_31_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_31_0 (proc_dirty))
+ (typeattributeset proc_diskstats_31_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_31_0 (proc_drop_caches))
+diff --git a/prebuilts/api/34.0/private/compat/32.0/32.0.cil b/prebuilts/api/34.0/private/compat/32.0/32.0.cil
+index 8fb2b8e..171f0ad 100644
+--- a/prebuilts/api/34.0/private/compat/32.0/32.0.cil
++++ b/prebuilts/api/34.0/private/compat/32.0/32.0.cil
+@@ -745,7 +745,6 @@
+ (expandtypeattribute (proc_buddyinfo_32_0) true)
+ (expandtypeattribute (proc_cmdline_32_0) true)
+ (expandtypeattribute (proc_cpuinfo_32_0) true)
+-(expandtypeattribute (proc_deny_new_usb_32_0) true)
+ (expandtypeattribute (proc_dirty_32_0) true)
+ (expandtypeattribute (proc_diskstats_32_0) true)
+ (expandtypeattribute (proc_drop_caches_32_0) true)
+@@ -1985,7 +1984,6 @@
+ (typeattributeset proc_buddyinfo_32_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_32_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_32_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_32_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_32_0 (proc_dirty))
+ (typeattributeset proc_diskstats_32_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_32_0 (proc_drop_caches))
+diff --git a/prebuilts/api/34.0/private/compat/33.0/33.0.cil b/prebuilts/api/34.0/private/compat/33.0/33.0.cil
+index 6448985..8fa3985 100644
+--- a/prebuilts/api/34.0/private/compat/33.0/33.0.cil
++++ b/prebuilts/api/34.0/private/compat/33.0/33.0.cil
+@@ -811,7 +811,6 @@
+ (expandtypeattribute (proc_cmdline_33_0) true)
+ (expandtypeattribute (proc_cpu_alignment_33_0) true)
+ (expandtypeattribute (proc_cpuinfo_33_0) true)
+-(expandtypeattribute (proc_deny_new_usb_33_0) true)
+ (expandtypeattribute (proc_dirty_33_0) true)
+ (expandtypeattribute (proc_diskstats_33_0) true)
+ (expandtypeattribute (proc_drop_caches_33_0) true)
+@@ -2123,7 +2122,6 @@
+ (typeattributeset proc_cmdline_33_0 (proc_cmdline))
+ (typeattributeset proc_cpu_alignment_33_0 (proc_cpu_alignment))
+ (typeattributeset proc_cpuinfo_33_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_33_0 (proc_cpuinfo))
+ (typeattributeset proc_dirty_33_0 (proc_dirty))
+ (typeattributeset proc_diskstats_33_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_33_0 (proc_drop_caches))
+diff --git a/prebuilts/api/34.0/private/genfs_contexts b/prebuilts/api/34.0/private/genfs_contexts
+index 4849de6..c0a15f7 100644
+--- a/prebuilts/api/34.0/private/genfs_contexts
++++ b/prebuilts/api/34.0/private/genfs_contexts
+@@ -46,7 +46,6 @@ genfscon proc /sys/fs/suid_dumpable u:object_r:proc_security:s0
+ genfscon proc /sys/kernel/bpf_ u:object_r:proc_bpf:s0
+ genfscon proc /sys/kernel/core_pattern u:object_r:usermodehelper:s0
+ genfscon proc /sys/kernel/core_pipe_limit u:object_r:usermodehelper:s0
+-genfscon proc /sys/kernel/deny_new_usb u:object_r:proc_deny_new_usb:s0
+ genfscon proc /sys/kernel/domainname u:object_r:proc_hostname:s0
+ genfscon proc /sys/kernel/dmesg_restrict u:object_r:proc_security:s0
+ genfscon proc /sys/kernel/hostname u:object_r:proc_hostname:s0
+diff --git a/prebuilts/api/34.0/private/property_contexts b/prebuilts/api/34.0/private/property_contexts
+index 29ed7a5..63ee2cf 100644
+--- a/prebuilts/api/34.0/private/property_contexts
++++ b/prebuilts/api/34.0/private/property_contexts
+@@ -103,7 +103,6 @@ sys.boot.reason.last    u:object_r:last_boot_reason_prop:s0
+ pm.                     u:object_r:pm_prop:s0
+ test.sys.boot.reason    u:object_r:test_boot_reason_prop:s0
+ test.userspace_reboot.requested u:object_r:userspace_reboot_test_prop:s0
+-security.deny_new_usb   u:object_r:system_prop:s0
+ sys.lmk.                u:object_r:system_lmk_prop:s0
+ sys.trace.              u:object_r:system_trace_prop:s0
+ wrap.                   u:object_r:zygote_wrap_prop:s0 prefix string
+diff --git a/prebuilts/api/34.0/public/file.te b/prebuilts/api/34.0/public/file.te
+index d153991..0ce5c34 100644
+--- a/prebuilts/api/34.0/public/file.te
++++ b/prebuilts/api/34.0/public/file.te
+@@ -30,7 +30,6 @@ type proc_buddyinfo, fs_type, proc_type;
+ type proc_cmdline, fs_type, proc_type;
+ type proc_cpu_alignment, fs_type, proc_type;
+ type proc_cpuinfo, fs_type, proc_type;
+-type proc_deny_new_usb, fs_type, proc_type;
+ type proc_dirty, fs_type, proc_type;
+ type proc_diskstats, fs_type, proc_type;
+ type proc_extra_free_kbytes, fs_type, proc_type;
+diff --git a/prebuilts/api/34.0/public/init.te b/prebuilts/api/34.0/public/init.te
+index 83fcceb..a399b3a 100644
+--- a/prebuilts/api/34.0/public/init.te
++++ b/prebuilts/api/34.0/public/init.te
+@@ -399,7 +399,6 @@ allow init {
+ allow init {
+   proc_abi
+   proc_cpu_alignment
+-  proc_deny_new_usb
+   proc_dirty
+   proc_hostname
+   proc_hung_task
+diff --git a/private/compat/29.0/29.0.cil b/private/compat/29.0/29.0.cil
+index 110925f..408cf33 100644
+--- a/private/compat/29.0/29.0.cil
++++ b/private/compat/29.0/29.0.cil
+@@ -602,7 +602,6 @@
+ (expandtypeattribute (proc_buddyinfo_29_0) true)
+ (expandtypeattribute (proc_cmdline_29_0) true)
+ (expandtypeattribute (proc_cpuinfo_29_0) true)
+-(expandtypeattribute (proc_deny_new_usb_29_0) true)
+ (expandtypeattribute (proc_dirty_29_0) true)
+ (expandtypeattribute (proc_diskstats_29_0) true)
+ (expandtypeattribute (proc_drop_caches_29_0) true)
+@@ -1589,7 +1588,6 @@
+ (typeattributeset proc_buddyinfo_29_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_29_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_29_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_29_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_29_0 (proc_dirty))
+ (typeattributeset proc_diskstats_29_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_29_0 (proc_drop_caches))
+diff --git a/private/compat/30.0/30.0.cil b/private/compat/30.0/30.0.cil
+index 4c22f55..f95488c 100644
+--- a/private/compat/30.0/30.0.cil
++++ b/private/compat/30.0/30.0.cil
+@@ -691,7 +691,6 @@
+ (expandtypeattribute (proc_buddyinfo_30_0) true)
+ (expandtypeattribute (proc_cmdline_30_0) true)
+ (expandtypeattribute (proc_cpuinfo_30_0) true)
+-(expandtypeattribute (proc_deny_new_usb_30_0) true)
+ (expandtypeattribute (proc_dirty_30_0) true)
+ (expandtypeattribute (proc_diskstats_30_0) true)
+ (expandtypeattribute (proc_drop_caches_30_0) true)
+@@ -1846,7 +1845,6 @@
+ (typeattributeset proc_buddyinfo_30_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_30_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_30_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_30_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_30_0 (proc_dirty))
+ (typeattributeset proc_diskstats_30_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_30_0 (proc_drop_caches))
+diff --git a/private/compat/31.0/31.0.cil b/private/compat/31.0/31.0.cil
+index dcae8af..b0df314 100644
+--- a/private/compat/31.0/31.0.cil
++++ b/private/compat/31.0/31.0.cil
+@@ -744,7 +744,6 @@
+ (expandtypeattribute (proc_buddyinfo_31_0) true)
+ (expandtypeattribute (proc_cmdline_31_0) true)
+ (expandtypeattribute (proc_cpuinfo_31_0) true)
+-(expandtypeattribute (proc_deny_new_usb_31_0) true)
+ (expandtypeattribute (proc_dirty_31_0) true)
+ (expandtypeattribute (proc_diskstats_31_0) true)
+ (expandtypeattribute (proc_drop_caches_31_0) true)
+@@ -1985,7 +1984,6 @@
+ (typeattributeset proc_buddyinfo_31_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_31_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_31_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_31_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_31_0 (proc_dirty))
+ (typeattributeset proc_diskstats_31_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_31_0 (proc_drop_caches))
+diff --git a/private/compat/32.0/32.0.cil b/private/compat/32.0/32.0.cil
+index 8fb2b8e..171f0ad 100644
+--- a/private/compat/32.0/32.0.cil
++++ b/private/compat/32.0/32.0.cil
+@@ -745,7 +745,6 @@
+ (expandtypeattribute (proc_buddyinfo_32_0) true)
+ (expandtypeattribute (proc_cmdline_32_0) true)
+ (expandtypeattribute (proc_cpuinfo_32_0) true)
+-(expandtypeattribute (proc_deny_new_usb_32_0) true)
+ (expandtypeattribute (proc_dirty_32_0) true)
+ (expandtypeattribute (proc_diskstats_32_0) true)
+ (expandtypeattribute (proc_drop_caches_32_0) true)
+@@ -1985,7 +1984,6 @@
+ (typeattributeset proc_buddyinfo_32_0 (proc_buddyinfo))
+ (typeattributeset proc_cmdline_32_0 (proc_cmdline))
+ (typeattributeset proc_cpuinfo_32_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_32_0 (proc_deny_new_usb))
+ (typeattributeset proc_dirty_32_0 (proc_dirty))
+ (typeattributeset proc_diskstats_32_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_32_0 (proc_drop_caches))
+diff --git a/private/compat/33.0/33.0.cil b/private/compat/33.0/33.0.cil
+index 69bc089..204048e 100644
+--- a/private/compat/33.0/33.0.cil
++++ b/private/compat/33.0/33.0.cil
+@@ -811,7 +811,6 @@
+ (expandtypeattribute (proc_cmdline_33_0) true)
+ (expandtypeattribute (proc_cpu_alignment_33_0) true)
+ (expandtypeattribute (proc_cpuinfo_33_0) true)
+-(expandtypeattribute (proc_deny_new_usb_33_0) true)
+ (expandtypeattribute (proc_dirty_33_0) true)
+ (expandtypeattribute (proc_diskstats_33_0) true)
+ (expandtypeattribute (proc_drop_caches_33_0) true)
+@@ -2123,7 +2122,6 @@
+ (typeattributeset proc_cmdline_33_0 (proc_cmdline))
+ (typeattributeset proc_cpu_alignment_33_0 (proc_cpu_alignment))
+ (typeattributeset proc_cpuinfo_33_0 (proc_cpuinfo))
+-(typeattributeset proc_deny_new_usb_33_0 (proc_cpuinfo))
+ (typeattributeset proc_dirty_33_0 (proc_dirty))
+ (typeattributeset proc_diskstats_33_0 (proc_diskstats))
+ (typeattributeset proc_drop_caches_33_0 (proc_drop_caches))
+diff --git a/private/genfs_contexts b/private/genfs_contexts
+index a87d8f7..41c60df 100644
+--- a/private/genfs_contexts
++++ b/private/genfs_contexts
+@@ -47,7 +47,6 @@ genfscon proc /sys/fs/suid_dumpable u:object_r:proc_security:s0
+ genfscon proc /sys/kernel/bpf_ u:object_r:proc_bpf:s0
+ genfscon proc /sys/kernel/core_pattern u:object_r:usermodehelper:s0
+ genfscon proc /sys/kernel/core_pipe_limit u:object_r:usermodehelper:s0
+-genfscon proc /sys/kernel/deny_new_usb u:object_r:proc_deny_new_usb:s0
+ genfscon proc /sys/kernel/domainname u:object_r:proc_hostname:s0
+ genfscon proc /sys/kernel/dmesg_restrict u:object_r:proc_security:s0
+ genfscon proc /sys/kernel/hostname u:object_r:proc_hostname:s0
+diff --git a/private/property_contexts b/private/property_contexts
+index 5a01d68..b946a5e 100644
+--- a/private/property_contexts
++++ b/private/property_contexts
+@@ -104,7 +104,6 @@ sys.boot.reason.last    u:object_r:last_boot_reason_prop:s0
+ pm.                     u:object_r:pm_prop:s0
+ test.sys.boot.reason    u:object_r:test_boot_reason_prop:s0
+ test.userspace_reboot.requested u:object_r:userspace_reboot_test_prop:s0
+-security.deny_new_usb   u:object_r:system_prop:s0
+ sys.lmk.                u:object_r:system_lmk_prop:s0
+ sys.trace.              u:object_r:system_trace_prop:s0
+ wrap.                   u:object_r:zygote_wrap_prop:s0 prefix string
+diff --git a/public/file.te b/public/file.te
+index cc02ab2..01143f7 100644
+--- a/public/file.te
++++ b/public/file.te
+@@ -31,7 +31,6 @@ type proc_buddyinfo, fs_type, proc_type;
+ type proc_cmdline, fs_type, proc_type;
+ type proc_cpu_alignment, fs_type, proc_type;
+ type proc_cpuinfo, fs_type, proc_type;
+-type proc_deny_new_usb, fs_type, proc_type;
+ type proc_dirty, fs_type, proc_type;
+ type proc_diskstats, fs_type, proc_type;
+ type proc_extra_free_kbytes, fs_type, proc_type;
+diff --git a/public/init.te b/public/init.te
+index a0e9e2a..29dd42d 100644
+--- a/public/init.te
++++ b/public/init.te
+@@ -400,7 +400,6 @@ allow init {
+ allow init {
+   proc_abi
+   proc_cpu_alignment
+-  proc_deny_new_usb
+   proc_dirty
+   proc_hostname
+   proc_hung_task
+-- 
+2.44.0
