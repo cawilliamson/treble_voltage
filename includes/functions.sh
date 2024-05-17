@@ -13,8 +13,8 @@ function setupEnv() {
   git config --global user.name "androidbuild"
   git config --global color.ui false
 
-  # clean tmp directory
-  rm -rf tmp/
+  # clean out and tmp directories
+  rm -rf out/ tmp/
 
   # create directories
   mkdir -p out/ src/ tmp/
