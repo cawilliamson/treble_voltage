@@ -29,16 +29,9 @@ function cloneAndPrepareSources() {
     mkdir -p .repo/local_manifests
     cp -v ../configs/*.xml .repo/local_manifests/
 
-    # sync sources with retry logic, try a total of 5 times
-    local max_attempts=5
-    local attempt=1
+    # sync sources with retry logic, retry indefinitely with 1 minute delay
     until repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags; do
-      echo "Repo sync failed, attempt $attempt of $max_attempts, retrying..."
-      ((attempt++))
-      if [ $attempt -gt $max_attempts ]; then
-        echo "Repo sync failed after $max_attempts attempts."
-        exit 1
-      fi
+      echo "Repo sync failed, retrying in 1min..."
       sleep 60
     done
 
