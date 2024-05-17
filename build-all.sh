@@ -17,6 +17,9 @@ function setupEnv() {
   git config --global user.name "androidbuild"
   git config --global color.ui false
 
+  # clean tmp directory
+  rm -rf tmp/
+
   # create directories
   mkdir -p src/ tmp/
 }
@@ -52,7 +55,7 @@ function applyPatches() {
 }
 
 function stashGappsImplementations() {
-  mv -v src/external/GmsCompat* tmp/
+  mv -v src/packages/apps/GmsCompat tmp/
   mv -v src/vendor/gapps tmp/
   mv -v src/vendor/partner_gms tmp/
 }
@@ -75,8 +78,8 @@ function buildStandardImage() {
       # set variant code
       variantCode="v"
 
-      # copy gmscompat to external
-      cp -Rfv "../tmp/GmsCompat*" external/
+      # copy gmscompat to apps
+      cp -Rfv "../tmp/GmsCompat" packages/apps/
     elif [[ "${targetVariant}" == "microg" ]]; then
       # set variant code
       variantCode="M"
@@ -106,7 +109,7 @@ function buildStandardImage() {
 
     # post build cleanup
     if [[ "${1}" == "vanilla" ]]; then
-      rm -rf external/GmsCompat*
+      rm -rf packages/apps/GmsCompat
     elif [[ "${1}" == "gapps" ]]; then
       rm -rf vendor/gapps
     elif [[ "${1}" == "microg" ]]; then
