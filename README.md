@@ -1,84 +1,10 @@
-<p align="center">
-  <img src="https://avatars.githubusercontent.com/u/81792437?s=200&v=4"><br>
-  <img src="https://github.com/cawilliamson/treble_voltage/actions/workflows/build-gsi.yml/badge.svg">
-</p>
-
 ### Building
 You'll need to get familiar with [Git and Repo](https://source.android.com/source/using-repo.html) as well as [How to build a GSI](https://github.com/phhusson/treble_experimentations/wiki/How-to-build-a-GSI%3F).
 
-## Glone base repo
-Firstly we need to clone the base repo (this one) which we can do by runnng the following:
-
+## Perform full build automatically and upload
+Run the following script:
 ```bash
-git clone --depth=1 https://github.com/cawilliamson/treble_voltage.git
-cd treble_voltage/
-```
-
-## Initalise the Treble VoltageOS repo
-Now we want to fetch the VoltageOS manifest files:
-```bash
-mkdir -p src/
-cd src/
-repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1 --git-lfs
-```
-
-## Copy our manifest
-Copy our own manifest which is needed for the GSI portion of the build:
-```bash
-mkdir -p .repo/local_manifests
-cp -v ../configs/*.xml .repo/local_manifests/
-```
-
-## Sync the repository
-Sync ALL necessary sources to build the ROM:
-```bash
-repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-```
-
-## Apply the patches
-Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
-```bash
-../patches/apply.sh . pre
-../patches/apply.sh . trebledroid
-../patches/apply.sh . personal
-```
-
-## Build the TrebleApp
-In order to build our patched TrebleApp you need to run the following:
-```bash
-. build/envsetup.sh
-pushd treble_app/
-bash build.sh release
-cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
-popd
-```
-
-## Generate base ROM config
-In order to generate the base ROM config run the following commands:
-```bash
-pushd device/phh/treble
-cp -v ../../../configs/voltage.mk .
-bash generate.sh voltage
-popd
-```
-
-## Compilation
-In the ROM folder, run this for building an arm64 standard build (needed even if you want a vndklite build):
-```bash
-. build/envsetup.sh
-lunch treble_arm64_bvN-ap1a-userdebug
-make systemimage -j$(nproc --all)
-```
-
-## Convert standard build to vndklite build (optional)
-Run the following commands if you require a vndklite build:
-```bash
-pushd treble_adapter/
-cp -v ../out/target/product/tdgsi_arm64_ab/system.img standard_system_arm64.img
-sudo bash-adapter.sh 64 standard_system_arm64.img
-sudo mv s.img s_arm64.img
-sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64.img
-popd
+./build-all.sh
 ```
 
 ## Troubleshooting
