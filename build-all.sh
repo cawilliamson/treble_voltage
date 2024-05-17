@@ -79,7 +79,7 @@ function buildStandardImage() {
       cp -Rfv "../tmp/GmsCompat*" external/
     elif [[ "${targetVariant}" == "microg" ]]; then
       # set variant code
-      variantCode="m"
+      variantCode="M"
 
       # copy partner_gms to vendor
       cp -Rfv "../tmp/partner_gms" vendor/
@@ -139,7 +139,7 @@ function runVndkSepolicyTests() {
     if [[ "${targetVariant}" == "vanilla" ]]; then
       variantCode="v"
     elif [[ "${targetVariant}" == "microg" ]]; then
-      variantCode="m"
+      variantCode="M"
     elif [[ "${targetVariant}" == "gapps" ]]; then
       variantCode="g"
     fi
