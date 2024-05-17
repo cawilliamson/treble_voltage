@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+### START: FUNCTIONS
+
 function setupEnv() {
   # setup environment vars
   AOSP_SOURCE_VERSION="ap1a"
+  BUILD_DATE=$(date +%Y%m%d)
   ROM_NAME="VoltageOS"
   ROM_VERSION="3.4"
   export ROM_NAME ROM_VERSION
@@ -14,9 +17,6 @@ function setupEnv() {
 
   # create directories
   mkdir -p src/ tmp/
-
-  # generate build timestamp and use for entire build
-  date +%Y%m%d > tmp/cachedBuildDate.txt
 }
 
 function cloneAndPrepareSources() {
@@ -150,9 +150,6 @@ function runVndkSepolicyTests() {
 
 function renameAndCompressImages() {
   pushd tmp/ || exit
-    # determine build date
-    buildDate=$(cat cachedBuildDate.txt)
-
     # define arrays for variants and architectures
     declare -a variants=("vanilla" "microg" "gapps")
     declare -a architectures=("arm64" "arm32_binder64")
@@ -163,9 +160,9 @@ function renameAndCompressImages() {
       for arch in "${architectures[@]}"; do
         for type in "${types[@]}"; do
           if [[ "$type" == "standard" ]]; then
-            mv -v "system_${variant}_${arch}.img" "${ROM_NAME}-${variant}-${arch}-ab-${ROM_VERSION}-${buildDate}-UNOFFICIAL.img"
+            mv -v "system_${variant}_${arch}.img" "${ROM_NAME}-${variant}-${arch}-ab-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
           elif [[ "$type" == "vndklite" ]]; then
-            mv -v "s_${variant}_${arch}_vndklite.img" "${ROM_NAME}-${variant}-${arch}-ab-vndklite-${ROM_VERSION}-${buildDate}-UNOFFICIAL.img"
+            mv -v "s_${variant}_${arch}_vndklite.img" "${ROM_NAME}-${variant}-${arch}-ab-vndklite-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
           fi
         done
       done
@@ -178,16 +175,17 @@ function renameAndCompressImages() {
 
 function uploadAsGitHubRelease() {
   pushd tmp/ || exit
-    # determine build date
-    buildDate=$(cat cachedBuildDate.txt)
-
     # create release
-    gh release create "${ROM_VERSION}"-"${buildDate}" -d "${ROM_NAME}"-"${ROM_VERSION}"-"${buildDate}" -p
+    gh release create "${ROM_VERSION}"-"${BUILD_DATE}" -d "${ROM_NAME}"-"${ROM_VERSION}"-"${BUILD_DATE}" -p
 
     # upload images
-    gh release upload "${ROM_VERSION}"-"${buildDate}" --clobber -- *.img.xz
+    gh release upload "${ROM_VERSION}"-"${BUILD_DATE}" --clobber -- *.img.xz
   popd || exit
 }
+
+### END: FUNCTIONS
+
+### START: BUILD
 
 # setup environment
 setupEnv
@@ -230,3 +228,5 @@ done
 # rename, compress, and upload all images
 renameAndCompressImages
 uploadAsGitHubRelease
+
+### END: BUILD
