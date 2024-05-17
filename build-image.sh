@@ -9,6 +9,7 @@
 set -e
 
 # source functions
+# shellcheck disable=SC1091
 source includes/functions.sh
 
 # Check if two arguments are provided
