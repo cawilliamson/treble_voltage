@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# set all errors to immediately exit the script
+set -e
+
 #
 ### START: FUNCTIONS
 #
@@ -38,7 +41,7 @@ function cloneAndPrepareSources() {
     until repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags; do
       echo "Repo sync failed, retrying in 1min..."
       sleep 60
-    done
+    done || true # <-- workaround needed to allow retry to work without "set -e" causing script exit.
 
     # generate base rom config
     pushd device/phh/treble || exit
