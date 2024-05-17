@@ -153,25 +153,23 @@ function renameAndCompressImages() {
     # determine build date
     buildDate=$(cat cachedBuildDate.txt)
 
-    # arm64 - standard
-    mv -v system_vanilla_arm64.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    mv -v system_microg_arm64.img "${ROM_NAME}"-microg-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    mv -v system_gapps_arm64.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+    # define arrays for variants and architectures
+    declare -a variants=("vanilla" "microg" "gapps")
+    declare -a architectures=("arm64" "arm32_binder64")
+    declare -a types=("standard" "vndklite")
 
-    # arm32_binder64 - standard
-    mv -v system_vanilla_arm32_binder64.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    mv -v system_microg_arm32_binder64.img "${ROM_NAME}"-microg-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    mv -v system_gapps_arm32_binder64.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-
-    # arm64 - vndklite
-    mv -v s_vanilla_arm64_vndklite.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    mv -v s_microg_arm64_vndklite.img "${ROM_NAME}"-microg-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    mv -v s_gapps_arm64_vndklite.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-
-    # arm32_binder64 - vndklite
-    mv -v s_vanilla_arm32_binder64_vndklite.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    mv -v s_microg_arm32_binder64_vndklite.img "${ROM_NAME}"-microg-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-    mv -v s_gapps_arm32_binder64_vndklite.img "${ROM_NAME}"-gapps-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+    # loop through each variant and architecture
+    for variant in "${variants[@]}"; do
+      for arch in "${architectures[@]}"; do
+        for type in "${types[@]}"; do
+          if [[ "$type" == "standard" ]]; then
+            mv -v "system_${variant}_${arch}.img" "${ROM_NAME}-${variant}-${arch}-ab-${ROM_VERSION}-${buildDate}-UNOFFICIAL.img"
+          elif [[ "$type" == "vndklite" ]]; then
+            mv -v "s_${variant}_${arch}_vndklite.img" "${ROM_NAME}-${variant}-${arch}-ab-vndklite-${ROM_VERSION}-${buildDate}-UNOFFICIAL.img"
+          fi
+        done
+      done
+    done
 
     # perform compression
     find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \;
@@ -197,14 +195,11 @@ setupEnv
 # clone sources
 cloneAndPrepareSources
 
-# apply prepatches
-applyPatches pre
-
-# apply trebledroid patches
-applyPatches trebledroid
-
-# apply personal patches
-applyPatches personal
+# apply patches
+patchTypes=("pre" "trebledroid" "personal")
+for patchType in "${patchTypes[@]}"; do
+  applyPatches "$patchType"
+done
 
 # stash gapps implementations
 stashGappsImplementations
@@ -212,47 +207,26 @@ stashGappsImplementations
 # build treble app
 buildTrebleApp
 
-### build standard vanilla arm64 image
-buildStandardImage "vanilla" "arm64"
+# define arrays for variants and architectures
+variants=("vanilla" "microg" "gapps")
+architectures=("arm64" "arm32_binder64")
 
-# run vndk sepolicy tests (after first build)
-runVndkSepolicyTests "vanilla" "arm64"
+# loop through each variant and architecture for standard and vndklite images
+for variant in "${variants[@]}"; do
+  for arch in "${architectures[@]}"; do
+    # build standard image
+    buildStandardImage "$variant" "$arch"
 
-### build standard microg arm64 image
-buildStandardImage "microg" "arm64"
+    # run vndk sepolicy tests (only after the first build of each type)
+    if [[ "$arch" == "arm64" && "$variant" == "vanilla" ]]; then
+      runVndkSepolicyTests "$variant" "$arch"
+    fi
 
-### build standard gapps arm64 image
-buildStandardImage "gapps" "arm64"
+    # build vndklite image
+    buildVndkLiteImage "$variant" "$arch"
+  done
+done
 
-### build standard vanilla arm32_binder64 image
-buildStandardImage "vanilla" "arm32_binder64"
-
-### build standard microg arm32_binder64 image
-buildStandardImage "microg" "arm32_binder64"
-
-### build standard gapps arm32_binder64 image
-buildStandardImage "gapps" "arm32_binder64"
-
-### build vndklite vanilla arm64 image
-buildVndkLiteImage "vanilla" "arm64"
-
-### build vndklite microg arm64 image
-buildVndkLiteImage "microg" "arm64"
-
-### build vndklite gapps arm64 image
-buildVndkLiteImage "gapps" "arm64"
-
-### build vndklite vanilla arm32_binder64 image
-buildVndkLiteImage "vanilla" "arm32_binder64"
-
-### build vndklite microg arm32_binder64 image
-buildVndkLiteImage "microg" "arm32_binder64"
-
-### build vndklite gapps arm32_binder64 image
-buildVndkLiteImage "gapps" "arm32_binder64"
-
-### rename and compress all images
+# rename, compress, and upload all images
 renameAndCompressImages
-
-### upload as github release
 uploadAsGitHubRelease
