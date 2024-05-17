@@ -52,6 +52,7 @@ function applyPatches() {
 }
 
 function stashGappsImplementations() {
+  mv -v src/external/GmsCompat* tmp/
   mv -v src/vendor/gapps tmp/
   mv -v src/vendor/partner_gms tmp/
 }
@@ -73,6 +74,9 @@ function buildStandardImage() {
     if [[ "${targetVariant}" == "vanilla" ]]; then
       # set variant code
       variantCode="v"
+
+      # copy gmscompat to external
+      cp -Rfv "../tmp/GmsCompat*" external/
     elif [[ "${targetVariant}" == "microg" ]]; then
       # set variant code
       variantCode="m"
@@ -101,7 +105,9 @@ function buildStandardImage() {
     mv -v "out/target/product/tdgsi_${targetArch}_ab/system.img" "../tmp/system_${targetVariant}_${targetArch}.img"
 
     # post build cleanup
-    if [[ "${1}" == "gapps" ]]; then
+    if [[ "${1}" == "vanilla" ]]; then
+      rm -rf external/GmsCompat*
+    elif [[ "${1}" == "gapps" ]]; then
       rm -rf vendor/gapps
     elif [[ "${1}" == "microg" ]]; then
       rm -rf vendor/partner_gms
