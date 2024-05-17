@@ -116,8 +116,8 @@ function buildStandardImage() {
 
 function buildVndkLiteImage() {
   # parse inputs
-  targetVariant="${1}"
-  targetArch="${2}"
+  targetArch="${1}"
+  targetVariant="${2}"
 
   # build vndk lite image
   pushd src/treble_adapter || exit
@@ -131,8 +131,8 @@ function buildVndkLiteImage() {
 function runVndkSepolicyTests() {
   pushd src/ || exit
     # parse inputs
-    targetVariant="${1}"
-    targetArch="${2}"
+    targetArch="${1}"
+    targetVariant="${2}"
 
     # determine variant code
     if [[ "${targetVariant}" == "vanilla" ]]; then
@@ -158,13 +158,13 @@ function runVndkSepolicyTests() {
 function renameAndCompressImages() {
   pushd tmp/ || exit
     # define arrays for variants and architectures
-    declare -a variants=("vanilla" "microg" "gapps")
     declare -a architectures=("arm64" "arm32_binder64")
+    declare -a variants=("vanilla" "microg" "gapps")
     declare -a types=("standard" "vndklite")
 
-    # loop through each variant and architecture
-    for variant in "${variants[@]}"; do
-      for arch in "${architectures[@]}"; do
+    # loop through each arch and variant
+    for arch in "${architectures[@]}"; do
+      for variant in "${variants[@]}"; do
         for type in "${types[@]}"; do
           if [[ "$type" == "standard" ]]; then
             mv -v "system_${variant}_${arch}.img" ../out/"${ROM_NAME}-${variant}-${arch}-ab-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
@@ -174,14 +174,16 @@ function renameAndCompressImages() {
         done
       done
     done
+  popd || exit
 
+  pushd out/ || exit
     # perform compression
     find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \;
   popd || exit
 }
 
 function uploadAsGitHubRelease() {
-  pushd tmp/ || exit
+  pushd out/ || exit
     # create release
     gh release create "${ROM_VERSION}"-"${BUILD_DATE}" -d "${ROM_NAME}"-"${ROM_VERSION}"-"${BUILD_DATE}" -p
 
