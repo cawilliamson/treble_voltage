@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
+#
 ### START: FUNCTIONS
+#
 
 function setupEnv() {
   # setup environment vars
@@ -183,9 +185,13 @@ function uploadAsGitHubRelease() {
   popd || exit
 }
 
+#
 ### END: FUNCTIONS
+#
 
+#
 ### START: BUILD
+#
 
 # setup environment
 setupEnv
@@ -229,4 +235,6 @@ done
 renameAndCompressImages
 uploadAsGitHubRelease
 
+#
 ### END: BUILD
+#
