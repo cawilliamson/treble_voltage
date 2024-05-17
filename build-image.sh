@@ -24,12 +24,12 @@ variant="${2}"
 # Validate variant and architecture
 allowed_architectures=("arm64" "arm32_binder64")
 allowed_variants=("vanilla" "microg" "gapps")
-if [[ ! "${allowed_architectures[*]}" =~ $architecture ]]; then
-  echo "Invalid architecture: $architecture. Allowed architectures are: ${allowed_architectures[*]}"
+if [[ ! "${allowed_architectures[*]}" =~ ${architecture} ]]; then
+  echo "Invalid architecture: ${architecture}. Allowed architectures are: ${allowed_architectures[*]}"
   exit 1
 fi
-if [[ ! "${allowed_variants[*]}" =~ $variant ]]; then
-  echo "Invalid variant: $variant. Allowed variants are: ${allowed_variants[*]}"
+if [[ ! "${allowed_variants[*]}" =~ ${variant} ]]; then
+  echo "Invalid variant: ${variant}. Allowed variants are: ${allowed_variants[*]}"
   exit 1
 fi
 
@@ -43,7 +43,7 @@ cloneAndPrepareSources
 # NOTE: debug can be added to patchTypes list to get early adb logs but it completely breaks adb security so use sparingly!
 patchTypes=("pre" "trebledroid" "personal")
 for patchType in "${patchTypes[@]}"; do
-  applyPatches "$patchType"
+  applyPatches "${patchType}"
 done
 
 # stash gapps implementations
@@ -53,10 +53,10 @@ stashGappsImplementations
 buildTrebleApp
 
 # Build standard image (if vndklite needed - )
-buildStandardImage "$variant" "$architecture"
+buildStandardImage "${architecture}" "${variant}"
 
 # Build vndklite image
-buildVndkLiteImage "$variant" "$architecture"
+buildVndkLiteImage "${architecture}" "${variant}"
 
 # rename, compress, and upload all images
 renameAndCompressImages

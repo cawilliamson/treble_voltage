@@ -17,7 +17,7 @@ function setupEnv() {
   rm -rf tmp/
 
   # create directories
-  mkdir -p src/ tmp/
+  mkdir -p out/ src/ tmp/
 }
 
 function cloneAndPrepareSources() {
@@ -65,8 +65,8 @@ function buildTrebleApp() {
 
 function buildStandardImage() {
   # parse inputs
-  targetVariant="${1}"
-  targetArch="${2}"
+  targetArch="${1}"
+  targetVariant="${2}"
 
   pushd src/ || exit
     # process variant config
@@ -104,11 +104,11 @@ function buildStandardImage() {
     mv -v "out/target/product/tdgsi_${targetArch}_ab/system.img" "../tmp/system_${targetVariant}_${targetArch}.img"
 
     # post build cleanup
-    if [[ "${1}" == "vanilla" ]]; then
+    if [[ "${targetVariant}" == "vanilla" ]]; then
       rm -rf packages/apps/GmsCompat
-    elif [[ "${1}" == "gapps" ]]; then
+    elif [[ "${targetVariant}" == "gapps" ]]; then
       rm -rf vendor/gapps
-    elif [[ "${1}" == "microg" ]]; then
+    elif [[ "${targetVariant}" == "microg" ]]; then
       rm -rf vendor/partner_gms
     fi
   popd || exit
@@ -167,9 +167,9 @@ function renameAndCompressImages() {
       for arch in "${architectures[@]}"; do
         for type in "${types[@]}"; do
           if [[ "$type" == "standard" ]]; then
-            mv -v "system_${variant}_${arch}.img" "${ROM_NAME}-${variant}-${arch}-ab-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
+            mv -v "system_${variant}_${arch}.img" ../out/"${ROM_NAME}-${variant}-${arch}-ab-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
           elif [[ "$type" == "vndklite" ]]; then
-            mv -v "s_${variant}_${arch}_vndklite.img" "${ROM_NAME}-${variant}-${arch}-ab-vndklite-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
+            mv -v "s_${variant}_${arch}_vndklite.img" ../out/"${ROM_NAME}-${variant}-${arch}-ab-vndklite-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
           fi
         done
       done
