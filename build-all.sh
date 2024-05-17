@@ -10,6 +10,7 @@ function setupEnv() {
   # setup git config
   git config --global user.email "androidbuild@localhost"
   git config --global user.name "androidbuild"
+  git config --global color.ui false
 
   # create directories
   mkdir -p src/ tmp/
