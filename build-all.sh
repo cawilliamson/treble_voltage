@@ -29,8 +29,18 @@ function cloneAndPrepareSources() {
     mkdir -p .repo/local_manifests
     cp -v ../configs/*.xml .repo/local_manifests/
 
-    # sync sources
-    repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags
+    # sync sources with retry logic, try a total of 5 times
+    local max_attempts=5
+    local attempt=1
+    until repo sync -c -j"$(nproc --all)" --force-sync --no-clone-bundle --no-tags; do
+      echo "Repo sync failed, attempt $attempt of $max_attempts, retrying..."
+      ((attempt++))
+      if [ $attempt -gt $max_attempts ]; then
+        echo "Repo sync failed after $max_attempts attempts."
+        exit 1
+      fi
+      sleep 60
+    done
 
     # generate base rom config
     pushd device/phh/treble || exit
