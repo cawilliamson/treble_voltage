@@ -188,9 +188,13 @@ function renameAndCompressImages() {
       for variant in "${variants[@]}"; do
         for type in "${types[@]}"; do
           if [[ "$type" == "standard" ]]; then
-            mv -v "system_${variant}_${arch}.img" ../out/"${ROM_NAME}-${variant}-${arch}-ab-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
+            if [[ -f "system_${variant}_${arch}.img" ]]; then
+              mv -v "system_${variant}_${arch}.img" "../out/${ROM_NAME}-${variant}-${arch}-ab-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
+            fi
           elif [[ "$type" == "vndklite" ]]; then
-            mv -v "s_${variant}_${arch}_vndklite.img" ../out/"${ROM_NAME}-${variant}-${arch}-ab-vndklite-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
+            if [[ -f "s_${variant}_${arch}_vndklite.img" ]]; then
+              mv -v "s_${variant}_${arch}_vndklite.img" "../out/${ROM_NAME}-${variant}-${arch}-ab-vndklite-${ROM_VERSION}-${BUILD_DATE}-UNOFFICIAL.img"
+            fi
           fi
         done
       done
