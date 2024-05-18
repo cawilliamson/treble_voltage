@@ -47,7 +47,7 @@ function applyPatches() {
 }
 
 function stashGappsImplementations() {
-  mv -v external/Apps tmp/
+  mv -v src/external/Apps tmp/
   mv -v src/packages/apps/GmsCompat tmp/
   mv -v src/vendor/gapps tmp/
   mv -v src/vendor/partner_gms tmp/
