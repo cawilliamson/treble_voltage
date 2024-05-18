@@ -21,7 +21,7 @@ Change-Id: I8fc82ed266a2cc59636b662c7ea7e29c94f509b5
  2 files changed, 48 insertions(+)
 
 diff --git a/services/core/java/com/android/server/pm/AppsFilterImpl.java b/services/core/java/com/android/server/pm/AppsFilterImpl.java
-index 82622d9a4ea8..277c9abe2e1c 100644
+index 095c5105..4e793531 100644
 --- a/services/core/java/com/android/server/pm/AppsFilterImpl.java
 +++ b/services/core/java/com/android/server/pm/AppsFilterImpl.java
 @@ -36,6 +36,7 @@ import static com.android.server.pm.AppsFilterUtils.canQueryAsUpdateOwner;
@@ -32,16 +32,16 @@ index 82622d9a4ea8..277c9abe2e1c 100644
  
  import android.annotation.NonNull;
  import android.annotation.Nullable;
-@@ -599,6 +600,7 @@ public final class AppsFilterImpl extends AppsFilterLocked implements Watchable,
+@@ -590,6 +591,7 @@ public final class AppsFilterImpl extends AppsFilterLocked implements Watchable,
              newIsForceQueryable = mForceQueryable.contains(newPkgSetting.getAppId())
                              /* shared user that is already force queryable */
                              || newPkgSetting.isForceQueryableOverride() /* adb override */
 +                            || (newPkg.isForceQueryable() && isMicrogSigned(newPkg))
+                             || isGmsApp
                              || (newPkgSetting.isSystem() && (mSystemAppsQueryable
                              || newPkg.isForceQueryable()
-                             || ArrayUtils.contains(mForceQueryableByDevicePackageNames,
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 3cb2420cd223..b0d9be30edc1 100644
+index 7df4e528..545c2478 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -100,6 +100,7 @@ import android.content.pm.UserPackage;
@@ -71,8 +71,8 @@ index 3cb2420cd223..b0d9be30edc1 100644
      // PackageManagerService attributes that are primitives are referenced through the
      // pms object directly.  Primitives are the only attributes so referenced.
      protected final PackageManagerService mService;
-@@ -1463,6 +1469,42 @@ public class ComputerEngine implements Computer {
-         return result;
+@@ -1486,6 +1492,42 @@ public class ComputerEngine implements Computer {
+         return pi;
      }
  
 +    public static boolean isMicrogSigned(AndroidPackage p) {
@@ -114,7 +114,7 @@ index 3cb2420cd223..b0d9be30edc1 100644
      public final PackageInfo generatePackageInfo(PackageStateInternal ps,
              @PackageManager.PackageInfoFlagsBits long flags, int userId) {
          if (!mUserManager.exists(userId)) return null;
-@@ -1511,6 +1553,10 @@ public class ComputerEngine implements Computer {
+@@ -1541,6 +1583,10 @@ public class ComputerEngine implements Computer {
              packageInfo.packageName = packageInfo.applicationInfo.packageName =
                      resolveExternalPackageName(p);
  
@@ -125,5 +125,5 @@ index 3cb2420cd223..b0d9be30edc1 100644
              return packageInfo;
          } else if ((flags & (MATCH_UNINSTALLED_PACKAGES | MATCH_ARCHIVED_PACKAGES)) != 0
                  && PackageUserStateUtils.isAvailable(state, flags)) {
--- 
+--
 2.34.1
