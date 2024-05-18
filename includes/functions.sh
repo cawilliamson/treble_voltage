@@ -63,6 +63,13 @@ function buildStandardImage() {
   targetArch="${1}"
   targetVariant="${2}"
 
+  # determine arch code
+  if [[ "${targetArch}" == "arm64" ]]; then
+    archCode="arm64";
+  elif [[ "${targetArch}" == "arm32_binder64" ]]; then
+    archCode="a64";
+  fi
+
   pushd src/ || exit
     # process variant config
     if [[ "${targetVariant}" == "vanilla" ]]; then
@@ -96,7 +103,7 @@ function buildStandardImage() {
     . build/envsetup.sh
 
     # lunch build
-    lunch "treble_${targetArch}_b${variantCode}N-${AOSP_SOURCE_VERSION}-userdebug"
+    lunch "treble_${archCode}_b${variantCode}N-${AOSP_SOURCE_VERSION}-userdebug"
 
     # build system image
     make systemimage -j"$(nproc --all)"
