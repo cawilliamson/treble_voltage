@@ -47,6 +47,7 @@ function applyPatches() {
 }
 
 function stashGappsImplementations() {
+  mv -v external/Apps tmp/
   mv -v src/packages/apps/GmsCompat tmp/
   mv -v src/vendor/gapps tmp/
   mv -v src/vendor/partner_gms tmp/
@@ -76,6 +77,9 @@ function buildStandardImage() {
     if [[ "${targetVariant}" == "vanilla" ]]; then
       # set variant code
       variantCode="v"
+
+      # copy apps to external
+      cp -Rfv "../tmp/Apps" external/
 
       # copy gmscompat to apps
       cp -Rfv "../tmp/GmsCompat" packages/apps/
@@ -114,6 +118,7 @@ function buildStandardImage() {
 
     # post build cleanup
     if [[ "${targetVariant}" == "vanilla" ]]; then
+      rm -rf external/Apps
       rm -rf packages/apps/GmsCompat
     elif [[ "${targetVariant}" == "gapps" ]]; then
       rm -rf vendor/gapps
