@@ -5,6 +5,7 @@ function setupEnv() {
   AOSP_SOURCE_VERSION="ap1a"
   BUILD_DATE=$(date +%Y%m%d)
   ROM_NAME="VoltageOS"
+  ROM_NAME_SHORT="voltage"
   ROM_VERSION="3.4"
   export ROM_NAME ROM_VERSION
 
@@ -24,7 +25,7 @@ function cloneSources() {
   mkdir -p src/
   pushd src/ || exit
     # init repo
-    repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1 --git-lfs
+    repo init -u "https://github.com/${ROM_NAME}/manifest.git" -b 14 --depth=1 --git-lfs
 
     # copy local manifests
     mkdir -p .repo/local_manifests
@@ -38,8 +39,8 @@ function cloneSources() {
 
     # generate base rom config
     pushd device/phh/treble || exit
-      cp -v ../../../../configs/voltage.mk .
-      bash generate.sh voltage
+      cp -v "../../../../configs/${ROM_NAME_SHORT}-${targetVariant}.mk" .
+      bash generate.sh "${ROM_NAME_SHORT}"
     popd || exit
   popd || exit
 }
@@ -47,14 +48,6 @@ function cloneSources() {
 function applyPatches() {
   pushd src/ || exit
     ../patches/apply.sh . "${1}"
-  popd || exit
-}
-
-function prepareSources() {
-  # generate base rom config
-  pushd src/device/phh/treble || exit
-    cp -v ../../../../configs/voltage.mk .
-    bash generate.sh voltage
   popd || exit
 }
 
@@ -97,6 +90,12 @@ function buildStandardImage() {
       # copy gapps to vendor
       cp -Rfv ../tmp/gapps vendor/
     fi
+
+    # generate base rom config
+    pushd device/phh/treble || exit
+      cp -v "../../../../configs/${ROM_NAME_SHORT}-${targetVariant}.mk" .
+      bash generate.sh "${ROM_NAME_SHORT}"
+    popd || exit
 
     # setup build environment
     # shellcheck disable=SC1091

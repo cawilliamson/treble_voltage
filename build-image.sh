@@ -47,9 +47,6 @@ for patchType in "${patchTypes[@]}"; do
   applyPatches "${patchType}"
 done
 
-# prepare sources
-prepareSources
-
 # stash gapps implementations
 stashGappsImplementations
 
