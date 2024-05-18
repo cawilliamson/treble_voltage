@@ -4,10 +4,11 @@ function setupEnv() {
   # setup environment vars
   AOSP_SOURCE_VERSION="ap1a"
   BUILD_DATE=$(date +%Y%m%d)
+  MAINTAINER="cawilliamson"
   ROM_NAME="VoltageOS"
   ROM_NAME_SHORT="voltage"
   ROM_VERSION="3.4"
-  export ROM_NAME ROM_VERSION
+  export AOSP_SOURCE_VERSION BUILD_DATE MAINTAINER ROM_NAME ROM_NAME_SHORT ROM_VERSION
 
   # setup git config
   git config --global user.email "androidbuild@localhost"
@@ -199,8 +200,11 @@ function renameAndCompressImages() {
 
 function uploadAsGitHubRelease() {
   pushd out/ || exit
+    # set default repo
+    gh repo set-default "${MAINTAINER}/treble_${ROM_NAME_SHORT}"
+
     # create release
-    gh release create "${ROM_VERSION}"-"${BUILD_DATE}" -d "${ROM_NAME}"-"${ROM_VERSION}"-"${BUILD_DATE}" -p
+    gh release create -d -n "" -t "${ROM_NAME} ${ROM_VERSION}-${BUILD_DATE}" "${ROM_VERSION}-${BUILD_DATE}"
 
     # upload images
     gh release upload "${ROM_VERSION}"-"${BUILD_DATE}" --clobber -- *.img.xz
