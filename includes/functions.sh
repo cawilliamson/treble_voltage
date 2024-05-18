@@ -36,12 +36,6 @@ function cloneSources() {
       echo "Repo sync failed, retrying in 1min..."
       sleep 60
     done || true # <-- workaround needed to allow retry to work without "set -e" causing script exit.
-
-    # generate base rom config
-    pushd device/phh/treble || exit
-      cp -v "../../../../configs/${ROM_NAME_SHORT}-${targetVariant}.mk" .
-      bash generate.sh "${ROM_NAME_SHORT}"
-    popd || exit
   popd || exit
 }
 
