@@ -20,7 +20,7 @@ function setupEnv() {
   mkdir -p out/ src/ tmp/
 }
 
-function cloneAndPrepareSources() {
+function cloneSources() {
   mkdir -p src/
   pushd src/ || exit
     # init repo
@@ -47,6 +47,14 @@ function cloneAndPrepareSources() {
 function applyPatches() {
   pushd src/ || exit
     ../patches/apply.sh . "${1}"
+  popd || exit
+}
+
+function prepareSources() {
+  # generate base rom config
+  pushd src/device/phh/treble || exit
+    cp -v ../../../../configs/voltage.mk .
+    bash generate.sh voltage
   popd || exit
 }
 
