@@ -13,7 +13,7 @@ set -e
 source includes/functions.sh
 
 # Check if two arguments are provided
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 2 ]; then
   echo "Usage: $0 <architecture> <variant>"
   exit 1
 fi
