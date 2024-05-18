@@ -1,7 +1,7 @@
 From 3168331a6f24e1c989bbff64c84b6c63fd8d095b Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Mon, 18 Mar 2024 21:10:36 +0000
-Subject: [PATCH] Remove duplicate FDroidPrivilegedExtension
+Subject: [PATCH 1/2] Remove duplicate FDroidPrivilegedExtension
 
 ---
  FDroidPrivilegedExtension/Android.mk | 20 --------------------

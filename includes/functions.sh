@@ -46,6 +46,13 @@ function applyPatches() {
   popd || exit
 }
 
+function fetchLatestMicroG() {
+  pushd src/vendor/partner_gms || exit
+    git fetch
+    git checkout "${MICROG_BRANCH}"
+  popd || exit
+}
+
 function stashGappsImplementations() {
   mv -v src/external/Apps tmp/
   mv -v src/packages/apps/GmsCompat tmp/
