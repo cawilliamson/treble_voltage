@@ -135,6 +135,13 @@ function runVndkSepolicyTests() {
     targetArch="${1}"
     targetVariant="${2}"
 
+    # determine arch code
+    if [[ "${targetArch}" == "arm64" ]]; then
+      archCode="arm64";
+    elif [[ "${targetArch}" == "arm32_binder64" ]]; then
+      archCode="a64";
+    fi
+
     # determine variant code
     if [[ "${targetVariant}" == "vanilla" ]]; then
       variantCode="v"
@@ -149,7 +156,7 @@ function runVndkSepolicyTests() {
     . build/envsetup.sh
 
     # lunch build
-    lunch "treble_${targetArch}_b${variantCode}N-${AOSP_SOURCE_VERSION}-userdebug"
+    lunch "treble_${archCode}_b${variantCode}N-${AOSP_SOURCE_VERSION}-userdebug"
 
     # run vndk sepolicy tests
     make vndk-test-sepolicy -j"$(nproc --all)"
