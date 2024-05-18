@@ -109,7 +109,7 @@ function buildStandardImage() {
     make systemimage -j"$(nproc --all)"
 
     # move system image to tmp
-    mv -v "out/target/product/tdgsi_${targetArch}_ab/system.img" "../tmp/system_${targetVariant}_${targetArch}.img"
+    mv -v "out/target/product/tdgsi_${archCode}_ab/system.img" "../tmp/system_${targetVariant}_${targetArch}.img"
 
     # post build cleanup
     if [[ "${targetVariant}" == "vanilla" ]]; then
