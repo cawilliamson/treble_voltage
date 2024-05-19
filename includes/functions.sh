@@ -106,7 +106,7 @@ function buildStandardImage() {
 
     # generate base rom config
     pushd device/phh/treble || exit
-      cp -v "../../../../configs/${ROM_NAME_SHORT}-${targetVariant}.mk" .
+      cp -v "../../../../configs/${ROM_NAME_SHORT}-${targetVariant}.mk" "${ROM_NAME_SHORT}.mk"
       bash generate.sh "${ROM_NAME_SHORT}"
     popd || exit
 
