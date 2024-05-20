@@ -1,11 +1,25 @@
 ### Building
 You'll need to get familiar with [Git and Repo](https://source.android.com/source/using-repo.html) as well as [How to build a GSI](https://github.com/phhusson/treble_experimentations/wiki/How-to-build-a-GSI%3F).
 
-## Perform full build automatically and upload
-Run the following script:
+## Sync GitHub repo
+Run the following:
+```bash
+git clone --progress https://github.com/cawilliamson/treble_voltage.git
+```
+
+## Build ALL variants and upload to GitHub
+Run the following:
 ```bash
 ./build-all.sh
 ```
+
+## Build one variant and store in out/
+Run the following:
+```bash
+./build-image.sh "<arch>" "<variant>"
+```
+
+Replace `<arch>` with `arm64` or `arm32_binder64` and `<variant>` with `vanilla`, `gapps`, or `microg`.
 
 ## Troubleshooting
 If you face any conflicts while applying patches, apply the patch manually.
