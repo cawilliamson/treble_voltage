@@ -5,6 +5,7 @@ You'll need to get familiar with [Git and Repo](https://source.android.com/sourc
 Run the following:
 ```bash
 git clone --progress https://github.com/cawilliamson/treble_voltage.git
+cd treble_voltage/
 ```
 
 ## Build ALL variants and upload to GitHub
