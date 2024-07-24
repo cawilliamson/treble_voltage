@@ -41,8 +41,6 @@ jobs:
         timeout_minutes: 40
     - name: apply patches
       run: |
-        # apply pre-patches
-        ../patches/apply.sh . pre
         # apply trebledroid patches
         ../patches/apply.sh . trebledroid
         # apply personal patches

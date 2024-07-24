@@ -17,7 +17,7 @@ cloneSources
 
 # apply patches
 # NOTE: debug can be added to patchTypes list to get early adb logs but it completely breaks adb security so use sparingly!
-patchTypes=("pre" "trebledroid" "personal")
+patchTypes=("trebledroid" "personal")
 for patchType in "${patchTypes[@]}"; do
   applyPatches "${patchType}"
 done

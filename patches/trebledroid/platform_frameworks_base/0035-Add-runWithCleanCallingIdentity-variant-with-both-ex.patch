@@ -1,7 +1,7 @@
-From 7c46cbce0bbd442cc859c744bcc682cc7de290f2 Mon Sep 17 00:00:00 2001
+From 4f23f2917496b0683fac7275c9a5498b33589259 Mon Sep 17 00:00:00 2001
 From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
 Date: Sat, 12 Aug 2023 20:11:17 +0800
-Subject: [PATCH 35/50] Add runWithCleanCallingIdentity variant with both
+Subject: [PATCH 35/54] Add runWithCleanCallingIdentity variant with both
  executor and return value
 
 This complements the fixup to ImsPhoneCallTracker (in fw/o/t) for U
@@ -12,10 +12,10 @@ Change-Id: If444290787025e130dce4bdeaf92372ae32793fe
  1 file changed, 30 insertions(+)
 
 diff --git a/telephony/common/com/android/internal/telephony/util/TelephonyUtils.java b/telephony/common/com/android/internal/telephony/util/TelephonyUtils.java
-index aed8fb8c4503..1467e7f2fc29 100644
+index a63db88cb614..1d5a36885307 100644
 --- a/telephony/common/com/android/internal/telephony/util/TelephonyUtils.java
 +++ b/telephony/common/com/android/internal/telephony/util/TelephonyUtils.java
-@@ -42,7 +42,9 @@ import com.android.internal.telephony.ITelephony;
+@@ -44,7 +44,9 @@ import com.android.internal.telephony.ITelephony;
  import java.io.PrintWriter;
  import java.util.Collections;
  import java.util.List;
@@ -25,7 +25,7 @@ index aed8fb8c4503..1467e7f2fc29 100644
  import java.util.concurrent.Executor;
  import java.util.concurrent.TimeUnit;
  import java.util.function.Supplier;
-@@ -151,6 +153,34 @@ public final class TelephonyUtils {
+@@ -153,6 +155,34 @@ public final class TelephonyUtils {
          }
      }
  
@@ -62,3 +62,4 @@ index aed8fb8c4503..1467e7f2fc29 100644
       */
 -- 
 2.34.1
+

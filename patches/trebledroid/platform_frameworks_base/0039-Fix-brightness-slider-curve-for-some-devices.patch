@@ -1,25 +1,48 @@
-From 5e0d9c331d6a950e9a131d0bda4c0d0550014283 Mon Sep 17 00:00:00 2001
+From 34e366e41f1a97a5a144db58b026717821e7d159 Mon Sep 17 00:00:00 2001
 From: ChonDoit <thphantomblog@gmail.com>
 Date: Thu, 24 Aug 2023 15:58:15 -0300
-Subject: [PATCH 39/50] Fix brightness slider curve for some devices
+Subject: [PATCH 39/54] Fix brightness slider curve for some devices
 
 Some devices report max brightness as 2047 or 4095
 ---
- .../src/com/android/settingslib/display/BrightnessUtils.java    | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../com/android/settingslib/display/BrightnessUtils.java | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java b/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
-index 35f01f67..a67789cf 100644
+index 35f01f672..c5a65c5f9 100644
 --- a/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
 +++ b/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
-@@ -26,7 +26,7 @@ import com.android.internal.display.BrightnessSynchronizer;
+@@ -25,11 +25,10 @@ import com.android.internal.display.BrightnessSynchronizer;
+ 
  public class BrightnessUtils {
  
-     public static final boolean sysUseLowGamma = Boolean.parseBoolean(
+-    public static final boolean sysUseLowGamma = Boolean.parseBoolean(
 -        SystemProperties.get("persist.sys.brightness.low.gamma", "false"));
-+        SystemProperties.get("persist.sys.phh.low_gamma_brightness", "false"));
++    public static final boolean LowGammaBrightness = Boolean.parseBoolean(SystemProperties.get("persist.sys.phh.low_gamma_brightness", "false"));
  
      public static final int GAMMA_SPACE_MIN = 0;
-     public static final int GAMMA_SPACE_MAX = sysUseLowGamma ? 255 : 65535;
+-    public static final int GAMMA_SPACE_MAX = sysUseLowGamma ? 255 : 65535;
++    public static final int GAMMA_SPACE_MAX = LowGammaBrightness ? 255 : 65535;
+ 
+     // Hybrid Log Gamma constant values
+     private static final float R = 0.5f;
+@@ -95,7 +94,7 @@ public class BrightnessUtils {
+         // it shouldn't be out of bounds.
+         final float normalizedRet = MathUtils.constrain(ret, 0, 12);
+ 
+-        return sysUseLowGamma ? MathUtils.constrain(BrightnessSynchronizer.brightnessIntToFloat(val),
++        return LowGammaBrightness ? MathUtils.constrain(BrightnessSynchronizer.brightnessIntToFloat(val),
+                          min, max) : MathUtils.lerp(min, max, normalizedRet / 12);
+     }
+ 
+@@ -143,7 +142,7 @@ public class BrightnessUtils {
+             ret = A * MathUtils.log(normalizedVal - B) + C;
+         }
+ 
+-        return sysUseLowGamma ? BrightnessSynchronizer.brightnessFloatToInt(
++        return LowGammaBrightness ? BrightnessSynchronizer.brightnessFloatToInt(
+                        MathUtils.constrain(val, min, max)) : Math.round(MathUtils.lerp(GAMMA_SPACE_MIN, GAMMA_SPACE_MAX, ret));
+     }
+ }
 --
 2.34.1

@@ -1,38 +1,59 @@
-From 1eba6db538dad432388b81e1d4df52ab367c7156 Mon Sep 17 00:00:00 2001
+From 8a315f66383f91115ba8e3a28afa63ab7bea7834 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 27 May 2023 06:41:32 -0400
-Subject: [PATCH 6/9] Add properties to disable some features/commands/states
+Subject: [PATCH 6/8] Add properties to disable some features/commands/states
  that the ble chip declared but doesnt actually support
 
 ---
- system/gd/hci/controller.cc | 72 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 68 insertions(+), 4 deletions(-)
+ system/gd/hci/controller.cc | 83 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 68 insertions(+), 15 deletions(-)
 
 diff --git a/system/gd/hci/controller.cc b/system/gd/hci/controller.cc
-index be068bdbd3..645c74e868 100644
+index 6facfef..e585920 100644
 --- a/system/gd/hci/controller.cc
 +++ b/system/gd/hci/controller.cc
-@@ -16,6 +16,7 @@
+@@ -16,9 +16,9 @@
  
  #include "hci/controller.h"
+ 
+-#include <android-base/strings.h>
+ #include <android_bluetooth_flags.h>
  
 +#include <base/strings/string_split.h>
  #include <future>
  #include <memory>
  #include <string>
-@@ -29,6 +30,7 @@
- #include "os/metrics.h"
+@@ -35,6 +35,8 @@
  #include "os/system_properties.h"
  #include "sysprops/sysprops_module.h"
-+using bluetooth::os::GetSystemProperty;
  
++using bluetooth::os::GetSystemProperty;
++
  namespace bluetooth {
  namespace hci {
-@@ -302,7 +304,23 @@ struct Controller::impl {
+ 
+@@ -43,8 +45,6 @@ constexpr uint8_t kMinEncryptionKeySize = 7;  // #define MIN_ENCRYPTION_KEY_SIZE
+ constexpr bool kDefaultVendorCapabilitiesEnabled = true;
+ static const std::string kPropertyVendorCapabilitiesEnabled =
+     "bluetooth.core.le.vendor_capabilities.enabled";
+-static const char kPropertyDisabledCommands[] =
+-    "bluetooth.hci.disabled_commands";
+ 
+ using os::Handler;
+ 
+@@ -316,16 +316,23 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      ASSERT_LOG(status == ErrorCode::SUCCESS, "Status 0x%02hhx, %s", status, ErrorCodeText(status).c_str());
 -    local_supported_commands_ = complete_view.GetSupportedCommands();
+-
+-    if (auto disabledCommands = os::GetSystemProperty(kPropertyDisabledCommands)) {
+-      for (const auto& command : android::base::Split(*disabledCommands, ",")) {
+-        uint16_t index = std::stoi(command);
+-        uint16_t byte_index = index / 10;
+-        uint16_t bit_index = index % 10;
+-        local_supported_commands_[byte_index] &= ~(1 << bit_index);
+-      }
 +    //local_supported_commands_ = complete_view.GetSupportedCommands();
 +
 +    auto local_commands = complete_view.GetSupportedCommands();
@@ -47,13 +68,13 @@ index be068bdbd3..645c74e868 100644
 +            uint16_t bit_index = index % 10;
 +            local_commands[byte_index] &= ~(1 << bit_index);
 +        }
-+    }
+     }
 +
 +    local_supported_commands_ = local_commands;
    }
  
    void read_local_extended_features_complete_handler(std::promise<void> promise, CommandCompleteView view) {
-@@ -311,7 +329,25 @@ struct Controller::impl {
+@@ -334,7 +341,25 @@ struct Controller::impl {
      ErrorCode status = complete_view.GetStatus();
      ASSERT_LOG(status == ErrorCode::SUCCESS, "Status 0x%02hhx, %s", status, ErrorCodeText(status).c_str());
      uint8_t page_number = complete_view.GetPageNumber();
@@ -80,7 +101,7 @@ index be068bdbd3..645c74e868 100644
      bluetooth::os::LogMetricBluetoothLocalSupportedFeatures(page_number, complete_view.GetExtendedLmpFeatures());
      // Query all extended features
      if (page_number < complete_view.GetMaximumPageNumber()) {
-@@ -464,7 +500,21 @@ struct Controller::impl {
+@@ -487,7 +512,21 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      ASSERT_LOG(status == ErrorCode::SUCCESS, "Status 0x%02hhx, %s", status, ErrorCodeText(status).c_str());
@@ -103,7 +124,7 @@ index be068bdbd3..645c74e868 100644
    }
  
    void le_read_supported_states_handler(CommandCompleteView view) {
-@@ -472,7 +522,21 @@ struct Controller::impl {
+@@ -495,7 +534,21 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      ASSERT_LOG(status == ErrorCode::SUCCESS, "Status 0x%02hhx, %s", status, ErrorCodeText(status).c_str());
@@ -125,6 +146,7 @@ index be068bdbd3..645c74e868 100644
 +    le_supported_states_ = local_states;
    }
  
-   void le_read_connect_list_size_handler(CommandCompleteView view) {
--- 
+   void le_read_accept_list_size_handler(CommandCompleteView view) {
+--
 2.34.1
+

@@ -1,7 +1,7 @@
-From 9851d034b5d9d56d146fb07bf6caf91944109259 Mon Sep 17 00:00:00 2001
+From 7de635ba1e5979396146cd6062608d139f0c5ff3 Mon Sep 17 00:00:00 2001
 From: LuK1337 <priv.luk@gmail.com>
 Date: Mon, 19 Feb 2024 16:20:04 +0100
-Subject: [PATCH 50/53] Allow signature spoofing for microG Companion/Services
+Subject: [PATCH 50/54] Allow signature spoofing for microG Companion/Services
 
 This patch enables signature spoofing when the following conditions are
 met:
@@ -21,7 +21,7 @@ Change-Id: I8fc82ed266a2cc59636b662c7ea7e29c94f509b5
  2 files changed, 48 insertions(+)
 
 diff --git a/services/core/java/com/android/server/pm/AppsFilterImpl.java b/services/core/java/com/android/server/pm/AppsFilterImpl.java
-index 095c5105..4e793531 100644
+index 3005e35f7..d52339492 100644
 --- a/services/core/java/com/android/server/pm/AppsFilterImpl.java
 +++ b/services/core/java/com/android/server/pm/AppsFilterImpl.java
 @@ -36,6 +36,7 @@ import static com.android.server.pm.AppsFilterUtils.canQueryAsUpdateOwner;
@@ -41,18 +41,10 @@ index 095c5105..4e793531 100644
                              || (newPkgSetting.isSystem() && (mSystemAppsQueryable
                              || newPkg.isForceQueryable()
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 7df4e528..545c2478 100644
+index e31c5a9a6..48a3bacf3 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
-@@ -100,6 +100,7 @@ import android.content.pm.UserPackage;
- import android.content.pm.VersionedPackage;
- import android.os.Binder;
- import android.os.Build;
-+import android.os.Bundle;
- import android.os.IBinder;
- import android.os.ParcelableException;
- import android.os.PatternMatcher;
-@@ -172,6 +173,7 @@ import java.util.Collections;
+@@ -174,6 +174,7 @@ import java.util.Collections;
  import java.util.Comparator;
  import java.util.List;
  import java.util.Objects;
@@ -60,7 +52,7 @@ index 7df4e528..545c2478 100644
  import java.util.Set;
  import java.util.UUID;
  
-@@ -421,6 +423,10 @@ public class ComputerEngine implements Computer {
+@@ -423,6 +424,10 @@ public class ComputerEngine implements Computer {
      private final PackageManagerInternal.ExternalSourcesPolicy mExternalSourcesPolicy;
      private final CrossProfileIntentResolverEngine mCrossProfileIntentResolverEngine;
  
@@ -71,7 +63,7 @@ index 7df4e528..545c2478 100644
      // PackageManagerService attributes that are primitives are referenced through the
      // pms object directly.  Primitives are the only attributes so referenced.
      protected final PackageManagerService mService;
-@@ -1486,6 +1492,42 @@ public class ComputerEngine implements Computer {
+@@ -1488,6 +1493,42 @@ public class ComputerEngine implements Computer {
          return pi;
      }
  
@@ -114,10 +106,11 @@ index 7df4e528..545c2478 100644
      public final PackageInfo generatePackageInfo(PackageStateInternal ps,
              @PackageManager.PackageInfoFlagsBits long flags, int userId) {
          if (!mUserManager.exists(userId)) return null;
-@@ -1541,6 +1583,10 @@ public class ComputerEngine implements Computer {
-             packageInfo.packageName = packageInfo.applicationInfo.packageName =
-                     resolveExternalPackageName(p);
- 
+@@ -1550,6 +1591,11 @@ public class ComputerEngine implements Computer {
+                             mApexManager.getActivePackageNameForApexModuleName(apexModuleName));
+                 }
+             }
++
 +            generateFakeSignature(p).ifPresent(fakeSignature -> {
 +                packageInfo.signatures = new Signature[]{fakeSignature};
 +            });
@@ -127,3 +120,4 @@ index 7df4e528..545c2478 100644
                  && PackageUserStateUtils.isAvailable(state, flags)) {
 --
 2.34.1
+

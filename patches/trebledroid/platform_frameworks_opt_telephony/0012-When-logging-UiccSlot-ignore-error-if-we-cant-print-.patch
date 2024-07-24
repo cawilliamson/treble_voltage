@@ -1,7 +1,7 @@
-From ca9002ba2fedfe6e16c1340e19c9d689150ef8db Mon Sep 17 00:00:00 2001
+From e0832343864d4745a012c99121782080e3a408e0 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Tue, 17 Oct 2023 11:08:06 -0400
-Subject: [PATCH 06/10] When logging UiccSlot, ignore error if we cant print
+Subject: [PATCH 12/16] When logging UiccSlot, ignore error if we cant print
  IccIds
 
 ---
@@ -29,3 +29,4 @@ index db10271a2f..00c8acb0db 100644
                  + ", mCardState=" + mCardState + " mSupportedMepMode=" + mSupportedMepMode + "]";
 -- 
 2.34.1
+

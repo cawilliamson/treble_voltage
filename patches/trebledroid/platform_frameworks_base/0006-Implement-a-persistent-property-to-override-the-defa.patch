@@ -1,20 +1,20 @@
-From b36339eaa7cab43ec0c5eaa523ed75e42ca10c8e Mon Sep 17 00:00:00 2001
+From f13ab9cf0dd4846bffd85f894cbccd410b186004 Mon Sep 17 00:00:00 2001
 From: Peter Cai <peter@typeblog.net>
 Date: Wed, 1 Jun 2022 16:56:20 -0400
-Subject: [PATCH 06/50] Implement a persistent property to override the default
+Subject: [PATCH 06/54] Implement a persistent property to override the default
  primary camera (0)
 
 Change-Id: I49b45d00bf71d7932591b3516d49a680e1b6568b
 ---
- core/java/android/hardware/Camera.java                | 5 ++++++
- core/java/android/hardware/camera2/CameraManager.java | 9 +++++++++
- 2 files changed, 14 insertions(+)
+ core/java/android/hardware/Camera.java                | 4 ++++
+ core/java/android/hardware/camera2/CameraManager.java | 8 ++++++++
+ 2 files changed, 12 insertions(+)
 
 diff --git a/core/java/android/hardware/Camera.java b/core/java/android/hardware/Camera.java
-index 039644387715..26ba0ca39ab9 100644
+index f2a4796b5..fbb41f85b 100644
 --- a/core/java/android/hardware/Camera.java
 +++ b/core/java/android/hardware/Camera.java
-@@ -404,6 +405,11 @@ public class Camera {
+@@ -476,6 +476,10 @@ public class Camera {
       * @see #open(int)
       */
      public static Camera open() {
@@ -22,15 +22,14 @@ index 039644387715..26ba0ca39ab9 100644
 +        if (altPrimaryCamera > 0) {
 +            return new Camera(altPrimaryCamera);
 +        }
-+
          int numberOfCameras = getNumberOfCameras();
          CameraInfo cameraInfo = new CameraInfo();
          for (int i = 0; i < numberOfCameras; i++) {
 diff --git a/core/java/android/hardware/camera2/CameraManager.java b/core/java/android/hardware/camera2/CameraManager.java
-index bcce4b65be18..ef2e0e570578 100644
+index 0ac36d478..15e3fa1d6 100644
 --- a/core/java/android/hardware/camera2/CameraManager.java
 +++ b/core/java/android/hardware/camera2/CameraManager.java
-@@ -2234,6 +2234,15 @@ public final class CameraManager {
+@@ -2207,6 +2207,14 @@ public final class CameraManager {
                          }
                      }});
  
@@ -42,7 +41,6 @@ index bcce4b65be18..ef2e0e570578 100644
 +                cameraIds[0] = cameraIds[altPrimaryCamera];
 +                cameraIds[altPrimaryCamera] = origPrimary;
 +            }
-+
          }
  
          public static boolean cameraStatusesContains(CameraStatus[] cameraStatuses, String id) {

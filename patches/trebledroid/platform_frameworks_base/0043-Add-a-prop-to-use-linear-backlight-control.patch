@@ -1,14 +1,14 @@
-From 90b7513cbbc99c7e2de0cf51b5bbc69c45a2fce2 Mon Sep 17 00:00:00 2001
+From 82bdbc47d1b956faf669c33232851a04071fe8f2 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Mon, 30 Oct 2023 19:25:27 -0400
-Subject: [PATCH 43/50] Add a prop to use linear backlight control
+Subject: [PATCH 43/54] Add a prop to use linear backlight control
 
 ---
  .../settings/brightness/BrightnessController.java      | 10 ++++++++--
  1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/settings/brightness/BrightnessController.java b/packages/SystemUI/src/com/android/systemui/settings/brightness/BrightnessController.java
-index 6af9b739da52..65e32255dcad 100644
+index e92630fc67a2..7080e18e4223 100644
 --- a/packages/SystemUI/src/com/android/systemui/settings/brightness/BrightnessController.java
 +++ b/packages/SystemUI/src/com/android/systemui/settings/brightness/BrightnessController.java
 @@ -346,9 +346,15 @@ public class BrightnessController implements ToggleSlider.Listener, MirroredBrig
@@ -39,3 +39,4 @@ index 6af9b739da52..65e32255dcad 100644
          }
 -- 
 2.34.1
+
