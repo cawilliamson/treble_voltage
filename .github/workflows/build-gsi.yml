@@ -58,6 +58,10 @@ jobs:
         # move gapps variants post-patching to tmp dir to avoid build cross-contamination
         mv -v src/vendor/gapps tmp/
         mv -v src/vendor/partner_gms tmp/
+    - name: generate signing keys
+      run: |
+        ./gen_keys
+      working-directory: vendor/voltage-priv/keys
     - name: build treble app
       run: |
         # copy vanilla config
