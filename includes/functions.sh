@@ -7,7 +7,7 @@ function setupEnv() {
   MAINTAINER="cawilliamson"
   ROM_NAME="VoltageOS"
   ROM_NAME_SHORT="voltage"
-  ROM_VERSION="3.4"
+  ROM_VERSION="3.5"
   export AOSP_SOURCE_VERSION BUILD_DATE MAINTAINER ROM_NAME ROM_NAME_SHORT ROM_VERSION
 
   # setup git config
