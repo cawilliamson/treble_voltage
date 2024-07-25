@@ -60,8 +60,12 @@ jobs:
         mv -v src/vendor/partner_gms tmp/
     - name: generate signing keys
       run: |
-        ./gen_keys
-      working-directory: src/vendor/voltage-priv/keys
+        . build/envsetup.sh
+
+        pushd vendor/voltage-priv/keys
+          ./gen_keys
+        popd
+      working-directory: src
     - name: build treble app
       run: |
         # copy vanilla config
