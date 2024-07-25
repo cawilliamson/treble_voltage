@@ -61,7 +61,7 @@ jobs:
     - name: generate signing keys
       run: |
         ./gen_keys
-      working-directory: vendor/voltage-priv/keys
+      working-directory: src/vendor/voltage-priv/keys
     - name: build treble app
       run: |
         # copy vanilla config
