@@ -43,6 +43,7 @@ jobs:
       run: |
         # apply trebledroid patches
         ../patches/apply.sh . trebledroid
+
         # apply personal patches
         ../patches/apply.sh . personal
       working-directory: src
@@ -50,19 +51,23 @@ jobs:
       run: |
         # create tmp directory
         mkdir -p tmp/
+
         # generate build timestamp and use for entire build
         echo "$(date +%Y%m%d)" > tmp/cachedBuildDate.txt
+
         # move gapps variants post-patching to tmp dir to avoid build cross-contamination
         mv -v src/vendor/gapps tmp/
         mv -v src/vendor/partner_gms tmp/
-    - name: generate base rom config
-      run: |
-        cp -v ../../../../configs/voltage.mk .
-        bash generate.sh voltage
-      working-directory: src/device/phh/treble
     - name: build treble app
       run: |
+        # copy vanilla config
+        pushd device/phh/treble
+          cp -fv ../../../../configs/voltage_vanilla.mk voltage.mk
+          bash generate.sh voltage
+        popd
+
         . build/envsetup.sh
+
         pushd treble_app/
           bash build.sh release
           cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
@@ -70,6 +75,12 @@ jobs:
       working-directory: src
     - name: build standard vanilla arm64 image
       run: |
+        # copy vanilla config
+        pushd device/phh/treble
+          cp -v ../../../../configs/voltage_vanilla.mk voltage.mk
+          bash generate.sh voltage
+        popd
+
         . build/envsetup.sh
         lunch treble_arm64_bvN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
@@ -83,8 +94,15 @@ jobs:
       working-directory: src
     - name: build standard microg arm64 image
       run: |
+        # copy microg config
+        pushd device/phh/treble
+          cp -fv ../../../../configs/voltage_microg.mk voltage.mk
+          bash generate.sh voltage
+        popd
+
         # copy microg to correct folder for build
         cp -Rfv ../tmp/partner_gms vendor/
+
         . build/envsetup.sh
         lunch treble_arm64_bmN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
@@ -94,6 +112,12 @@ jobs:
       working-directory: src
     - name: build standard gapps arm64 image
       run: |
+        # copy gapps config
+        pushd device/phh/treble
+          cp -fv ../../../../configs/voltage_gapps.mk voltage.mk
+          bash generate.sh voltage
+        popd
+
         # copy gapps to correct folder for build
         cp -Rfv ../tmp/gapps vendor/
         . build/envsetup.sh
@@ -105,6 +129,12 @@ jobs:
       working-directory: src
     - name: build standard vanilla arm32_binder64 image
       run: |
+        # copy vanilla config
+        pushd device/phh/treble
+          cp -fv ../../../../configs/voltage_vanilla.mk voltage.mk
+          bash generate.sh voltage
+        popd
+
         . build/envsetup.sh
         lunch treble_a64_bvN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
@@ -112,6 +142,12 @@ jobs:
       working-directory: src
     - name: build standard microg arm32_binder64 image
       run: |
+        # copy microg config
+        pushd device/phh/treble
+          cp -fv ../../../../configs/voltage_microg.mk voltage.mk
+          bash generate.sh voltage
+        popd
+
         # copy microg to correct folder for build
         cp -Rfv ../tmp/partner_gms vendor/
         . build/envsetup.sh
@@ -123,6 +159,12 @@ jobs:
       working-directory: src
     - name: build standard gapps arm32_binder64 image
       run: |
+        # copy gapps config
+        pushd device/phh/treble
+          cp -fv ../../../../configs/voltage_gapps.mk voltage.mk
+          bash generate.sh voltage
+        popd
+
         # copy gapps to correct folder for build
         cp -Rfv ../tmp/gapps vendor/
         . build/envsetup.sh
