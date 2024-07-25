@@ -63,9 +63,10 @@ jobs:
         # copy vanilla config
         pushd device/phh/treble
           cp -fv ../../../../configs/voltage-vanilla.mk voltage.mk
-          bash -x generate.sh voltage
+          bash generate.sh voltage
         popd
 
+        set -x
         . build/envsetup.sh
 
         pushd treble_app/
