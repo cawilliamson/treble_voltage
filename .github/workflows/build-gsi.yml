@@ -62,7 +62,6 @@ jobs:
       run: |
         # copy vanilla config
         pushd device/phh/treble
-          ls -l ../../../../
           cp -fv ../../../../configs/voltage-vanilla.mk voltage.mk
           bash generate.sh voltage
         popd
@@ -78,7 +77,7 @@ jobs:
       run: |
         # copy vanilla config
         pushd device/phh/treble
-          cp -v ../../../../configs/voltage_vanilla.mk voltage.mk
+          cp -v ../../../../configs/voltage-vanilla.mk voltage.mk
           bash generate.sh voltage
         popd
 
@@ -97,7 +96,7 @@ jobs:
       run: |
         # copy microg config
         pushd device/phh/treble
-          cp -fv ../../../../configs/voltage_microg.mk voltage.mk
+          cp -fv ../../../../configs/voltage-microg.mk voltage.mk
           bash generate.sh voltage
         popd
 
@@ -115,7 +114,7 @@ jobs:
       run: |
         # copy gapps config
         pushd device/phh/treble
-          cp -fv ../../../../configs/voltage_gapps.mk voltage.mk
+          cp -fv ../../../../configs/voltage-gapps.mk voltage.mk
           bash generate.sh voltage
         popd
 
@@ -132,7 +131,7 @@ jobs:
       run: |
         # copy vanilla config
         pushd device/phh/treble
-          cp -fv ../../../../configs/voltage_vanilla.mk voltage.mk
+          cp -fv ../../../../configs/voltage-vanilla.mk voltage.mk
           bash generate.sh voltage
         popd
 
@@ -145,7 +144,7 @@ jobs:
       run: |
         # copy microg config
         pushd device/phh/treble
-          cp -fv ../../../../configs/voltage_microg.mk voltage.mk
+          cp -fv ../../../../configs/voltage-microg.mk voltage.mk
           bash generate.sh voltage
         popd
 
@@ -162,7 +161,7 @@ jobs:
       run: |
         # copy gapps config
         pushd device/phh/treble
-          cp -fv ../../../../configs/voltage_gapps.mk voltage.mk
+          cp -fv ../../../../configs/voltage-gapps.mk voltage.mk
           bash generate.sh voltage
         popd
 
