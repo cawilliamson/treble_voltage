@@ -17,8 +17,8 @@ phh change: No need to be debuggable
 Change-Id: I8fc82ed266a2cc59636b662c7ea7e29c94f509b5
 ---
  .../com/android/server/pm/AppsFilterImpl.java |  2 +
- .../com/android/server/pm/ComputerEngine.java | 46 +++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ .../com/android/server/pm/ComputerEngine.java | 47 +++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
 diff --git a/services/core/java/com/android/server/pm/AppsFilterImpl.java b/services/core/java/com/android/server/pm/AppsFilterImpl.java
 index 3005e35f7..d52339492 100644
@@ -41,10 +41,18 @@ index 3005e35f7..d52339492 100644
                              || (newPkgSetting.isSystem() && (mSystemAppsQueryable
                              || newPkg.isForceQueryable()
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index e31c5a9a6..48a3bacf3 100644
+index e31c5a9a6..c0987dae3 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
-@@ -174,6 +174,7 @@ import java.util.Collections;
+@@ -102,6 +102,7 @@ import android.content.pm.UserPackage;
+ import android.content.pm.VersionedPackage;
+ import android.os.Binder;
+ import android.os.Build;
++import android.os.Bundle;
+ import android.os.IBinder;
+ import android.os.ParcelableException;
+ import android.os.PatternMatcher;
+@@ -174,6 +175,7 @@ import java.util.Collections;
  import java.util.Comparator;
  import java.util.List;
  import java.util.Objects;
@@ -52,7 +60,7 @@ index e31c5a9a6..48a3bacf3 100644
  import java.util.Set;
  import java.util.UUID;
  
-@@ -423,6 +424,10 @@ public class ComputerEngine implements Computer {
+@@ -423,6 +425,10 @@ public class ComputerEngine implements Computer {
      private final PackageManagerInternal.ExternalSourcesPolicy mExternalSourcesPolicy;
      private final CrossProfileIntentResolverEngine mCrossProfileIntentResolverEngine;
  
@@ -63,7 +71,7 @@ index e31c5a9a6..48a3bacf3 100644
      // PackageManagerService attributes that are primitives are referenced through the
      // pms object directly.  Primitives are the only attributes so referenced.
      protected final PackageManagerService mService;
-@@ -1488,6 +1493,42 @@ public class ComputerEngine implements Computer {
+@@ -1488,6 +1494,42 @@ public class ComputerEngine implements Computer {
          return pi;
      }
  
@@ -106,7 +114,7 @@ index e31c5a9a6..48a3bacf3 100644
      public final PackageInfo generatePackageInfo(PackageStateInternal ps,
              @PackageManager.PackageInfoFlagsBits long flags, int userId) {
          if (!mUserManager.exists(userId)) return null;
-@@ -1550,6 +1591,11 @@ public class ComputerEngine implements Computer {
+@@ -1550,6 +1592,11 @@ public class ComputerEngine implements Computer {
                              mApexManager.getActivePackageNameForApexModuleName(apexModuleName));
                  }
              }
@@ -120,4 +128,3 @@ index e31c5a9a6..48a3bacf3 100644
                  && PackageUserStateUtils.isAvailable(state, flags)) {
 --
 2.34.1
-
