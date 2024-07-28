@@ -1,0 +1,20 @@
+From 32de9dbb723f68f24901a20f7e3748ea7b4b2275 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Mon, 6 May 2024 19:35:41 +0100
+Subject: [PATCH 12/12] Disable enforcing unauthenticated adb
+
+---
+ system.prop | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/system.prop b/system.prop
+index f3c0c45..b2bcf63 100644
+--- a/system.prop
++++ b/system.prop
+@@ -1,4 +1,3 @@
+-ro.adb.secure=0
+ #Some devices have sdcardfs kernel panicing on 8.0
+ #Disable for everyone for the moment
+ ro.sys.sdcardfs=0
+-- 
+2.44.0
