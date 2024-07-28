@@ -1,0 +1,30 @@
+From 57bbe46aac2e83863ce71e371808a2fed5145257 Mon Sep 17 00:00:00 2001
+From: ahnet-69 <syedmusicrealise@gmail.com>
+Date: Sun, 24 Dec 2023 11:45:59 +0500
+Subject: [PATCH 1/6] Remove duplicated props
+
+---
+ config/common.mk  | 7 +------
+ 1 files changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/config/common.mk b/config/common.mk
+index d31a6b7..5457bbc 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -34,13 +34,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+     persist.sys.recovery_update=true
+ endif
+ 
+-ifeq ($(TARGET_BUILD_VARIANT),eng)
+-# Disable ADB authentication
+-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=0
+-else
+-# Enable ADB authentication
+-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=1
+ 
++ifneq ($(TARGET_BUILD_VARIANT),eng)
+ # Disable extra StrictMode features on all non-engineering builds
+ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.strictmode.disable=true
+ endif
+-- 
+2.34.1
