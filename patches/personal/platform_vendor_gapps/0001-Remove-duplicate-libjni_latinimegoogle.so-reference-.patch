@@ -1,0 +1,58 @@
+From 634c26332b12027ecaf7bda6bf1e56fcb440908f Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Tue, 12 Mar 2024 14:38:22 +0000
+Subject: [PATCH 1/1] Remove duplicate libjni_latinimegoogle.so reference from
+ gapps
+
+---
+ arm/arm-vendor.mk       | 3 ---
+ arm64/arm64-vendor.mk   | 4 ----
+ x86_64/x86_64-vendor.mk | 4 ----
+ 3 files changed, 11 deletions(-)
+
+diff --git a/arm/arm-vendor.mk b/arm/arm-vendor.mk
+index 97b3d8a..a4f9fc6 100644
+--- a/arm/arm-vendor.mk
++++ b/arm/arm-vendor.mk
+@@ -5,9 +5,6 @@
+ PRODUCT_SOONG_NAMESPACES += \
+     vendor/gapps/arm
+ 
+-PRODUCT_COPY_FILES += \
+-    vendor/gapps/arm/proprietary/product/lib/libjni_latinimegoogle.so:$(TARGET_COPY_OUT_PRODUCT)/lib/libjni_latinimegoogle.so
+-
+ PRODUCT_PACKAGES += \
+     GmsCore \
+     Phonesky
+diff --git a/arm64/arm64-vendor.mk b/arm64/arm64-vendor.mk
+index a91b86c..874dffe 100644
+--- a/arm64/arm64-vendor.mk
++++ b/arm64/arm64-vendor.mk
+@@ -5,10 +5,6 @@
+ PRODUCT_SOONG_NAMESPACES += \
+     vendor/gapps/arm64
+ 
+-PRODUCT_COPY_FILES += \
+-    vendor/gapps/arm64/proprietary/product/lib/libjni_latinimegoogle.so:$(TARGET_COPY_OUT_PRODUCT)/lib/libjni_latinimegoogle.so \
+-    vendor/gapps/arm64/proprietary/product/lib64/libjni_latinimegoogle.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libjni_latinimegoogle.so
+-
+ PRODUCT_PACKAGES += \
+     GmsCore \
+     Phonesky
+diff --git a/x86_64/x86_64-vendor.mk b/x86_64/x86_64-vendor.mk
+index 4e3966e..b0caca0 100644
+--- a/x86_64/x86_64-vendor.mk
++++ b/x86_64/x86_64-vendor.mk
+@@ -5,10 +5,6 @@
+ PRODUCT_SOONG_NAMESPACES += \
+     vendor/gapps/x86_64
+ 
+-PRODUCT_COPY_FILES += \
+-    vendor/gapps/x86_64/proprietary/product/lib/libjni_latinimegoogle.so:$(TARGET_COPY_OUT_PRODUCT)/lib/libjni_latinimegoogle.so \
+-    vendor/gapps/x86_64/proprietary/product/lib64/libjni_latinimegoogle.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libjni_latinimegoogle.so
+-
+ PRODUCT_PACKAGES += \
+     GmsCore \
+     Phonesky
+-- 
+2.43.1

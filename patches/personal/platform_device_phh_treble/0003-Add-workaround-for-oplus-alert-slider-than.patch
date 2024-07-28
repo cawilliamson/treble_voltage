@@ -1,0 +1,30 @@
+From abecf851dc0201eab2554602cd3152ae600d0353 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Wed, 17 Jan 2024 11:03:45 +0000
+Subject: [PATCH 3/11] Add workaround for oplus alert slider (thanks to PHH)
+
+---
+ cmds/oplus-alert-slider.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cmds/oplus-alert-slider.cpp b/cmds/oplus-alert-slider.cpp
+index d2a73a8..c22c37f 100644
+--- a/cmds/oplus-alert-slider.cpp
++++ b/cmds/oplus-alert-slider.cpp
+@@ -44,11 +44,11 @@ int main() {
+         }
+         printf("State %d\n", read_tristate());
+         if(state == 1) {
+-            system("service call audio 41 i32 0 s16 android");
++            system("service call audio 42 i32 0 s16 android");
+         } else if(state == 2) {
+-            system("service call audio 41 i32 1 s16 android");
++            system("service call audio 42 i32 1 s16 android");
+         } else if(state == 3) {
+-            system("service call audio 41 i32 2 s16 android");
++            system("service call audio 42 i32 2 s16 android");
+         }
+     }
+ }
+-- 
+2.42.0

@@ -1,0 +1,38 @@
+From 6b92fe8c0688490bd118109bb64338bca5ecc9c6 Mon Sep 17 00:00:00 2001
+From: androidbuild <androidbuild@localhost>
+Date: Sun, 28 Jul 2024 23:56:08 +0200
+Subject: [PATCH 3/3] Disable onInputDeviceChanged to solve soft bootloop
+
+---
+ .../input/KeyboardBacklightController.java       | 16 ----------------
+ 1 file changed, 16 deletions(-)
+
+diff --git a/services/core/java/com/android/server/input/KeyboardBacklightController.java b/services/core/java/com/android/server/input/KeyboardBacklightController.java
+index c3205afe1..42f074664 100644
+--- a/services/core/java/com/android/server/input/KeyboardBacklightController.java
++++ b/services/core/java/com/android/server/input/KeyboardBacklightController.java
+@@ -376,22 +376,6 @@ final class KeyboardBacklightController implements
+     @VisibleForTesting
+     @Override
+     public void onInputDeviceChanged(int deviceId) {
+-        InputDevice inputDevice = getInputDevice(deviceId);
+-        if (inputDevice == null) {
+-            return;
+-        }
+-        final Light keyboardBacklight = getKeyboardBacklight(inputDevice);
+-        if (keyboardBacklight == null) {
+-            mKeyboardBacklights.remove(deviceId);
+-            return;
+-        }
+-        KeyboardBacklightState state = mKeyboardBacklights.get(deviceId);
+-        if (state != null && state.mLight.getId() == keyboardBacklight.getId()) {
+-            return;
+-        }
+-        // The keyboard backlight was added or changed.
+-        mKeyboardBacklights.put(deviceId, new KeyboardBacklightState(deviceId, keyboardBacklight));
+-        maybeRestoreBacklightBrightness(inputDevice, keyboardBacklight);
+     }
+ 
+     private InputDevice getInputDevice(int deviceId) {
+-- 
+2.43.0

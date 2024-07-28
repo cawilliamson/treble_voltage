@@ -1,0 +1,24 @@
+From 05d4507b42b48be14158a4a1e9e865a0a117c73f Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Mon, 22 Jan 2024 18:04:03 +0000
+Subject: [PATCH 7/11] Move NoCutoutOverlay to /product - selinux context fix
+
+---
+ overlay/packages/apps/overlays/NoCutoutOverlay/Android.mk | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/overlay/packages/apps/overlays/NoCutoutOverlay/Android.mk b/overlay/packages/apps/overlays/NoCutoutOverlay/Android.mk
+index 839a9ec..afe97f1 100644
+--- a/overlay/packages/apps/overlays/NoCutoutOverlay/Android.mk
++++ b/overlay/packages/apps/overlays/NoCutoutOverlay/Android.mk
+@@ -8,6 +8,8 @@ LOCAL_SRC_FILES := $(call all-subdir-java-files)
+ 
+ LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
+ 
++LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/overlay
++
+ LOCAL_PACKAGE_NAME := NoCutoutOverlay
+ LOCAL_SDK_VERSION := current
+ 
+-- 
+2.42.0
