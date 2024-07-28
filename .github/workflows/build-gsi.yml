@@ -45,7 +45,7 @@ jobs:
         ../patches/apply.sh . trebledroid
 
         # apply personal patches
-        #../patches/apply.sh . personal
+        ../patches/apply.sh . personal
       working-directory: src
     - name: setup tmp directory and stash gapps variants
       run: |
