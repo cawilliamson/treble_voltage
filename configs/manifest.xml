@@ -36,13 +36,13 @@
   <project path="external/Apps" name="platform_external_Apps" remote="grapheneos" revision="14" clone-depth="1" />
 
   <!-- lineageos4microg: microg -->
-  <!-- <project path="vendor/partner_gms" name="android_vendor_partner_gms" remote="lineageos4microg" revision="master" clone-depth="1" /> -->
+  <project path="vendor/partner_gms" name="android_vendor_partner_gms" remote="lineageos4microg" revision="master" clone-depth="1" />
 
   <!-- lmodroid: openeuicc -->
   <project path="packages/apps/OpenEUICC" name="platform_packages_apps_OpenEUICC" remote="lmodroid" revision="fourteen" clone-depth="1" />
 
   <!-- mindthegapps: gapps -->
-  <!--<project path="vendor/gapps" name="vendor_gapps" remote="mindthegapps" revision="upsilon" clone-depth="1" />-->
+  <project path="vendor/gapps" name="vendor_gapps" remote="mindthegapps" revision="upsilon" clone-depth="1" />
 
   <!-- phhusson: lptools  -->
   <project path="vendor/lptools" name="vendor_lptools" remote="phhusson" revision="master" clone-depth="1" />
