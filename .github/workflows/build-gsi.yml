@@ -34,7 +34,7 @@ jobs:
       with:
         command: |
           pushd src/
-            repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+            repo sync -c -j4 --force-sync --no-clone-bundle --no-tags
           popd
         max_attempts: 3
         retry_on: error
