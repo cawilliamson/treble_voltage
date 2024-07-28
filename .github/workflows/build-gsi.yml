@@ -45,7 +45,7 @@ jobs:
         ../patches/apply.sh . trebledroid
 
         # apply personal patches
-        ../patches/apply.sh . personal
+        #../patches/apply.sh . personal
       working-directory: src
     - name: setup tmp directory and stash gapps variants
       run: |
@@ -100,149 +100,149 @@ jobs:
         lunch treble_arm64_bvN-ap1a-userdebug
         make vndk-test-sepolicy -j"$(nproc --all)"
       working-directory: src
-    - name: build standard microg arm64 image
-      run: |
-        # copy microg config
-        pushd device/phh/treble
-          cp -fv ../../../../configs/voltage-microg.mk voltage.mk
-          bash generate.sh voltage
-        popd
-
-        # copy microg to correct folder for build
-        cp -Rfv ../tmp/partner_gms vendor/
-
-        . build/envsetup.sh
-        lunch treble_arm64_bmN-ap1a-userdebug
-        make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_microg_arm64.img
-        # remove microg folder to avoid contaminating next build
-        rm -Rfv vendor/partner_gms
-      working-directory: src
-    - name: build standard gapps arm64 image
-      run: |
-        # copy gapps config
-        pushd device/phh/treble
-          cp -fv ../../../../configs/voltage-gapps.mk voltage.mk
-          bash generate.sh voltage
-        popd
-
-        # copy gapps to correct folder for build
-        cp -Rfv ../tmp/gapps vendor/
-        . build/envsetup.sh
-        lunch treble_arm64_bgN-ap1a-userdebug
-        make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_gapps_arm64.img
-        # remove gapps folder to avoid contaminating next build
-        rm -Rfv vendor/gapps
-      working-directory: src
-    - name: build standard vanilla arm32_binder64 image
-      run: |
-        # copy vanilla config
-        pushd device/phh/treble
-          cp -fv ../../../../configs/voltage-vanilla.mk voltage.mk
-          bash generate.sh voltage
-        popd
-
-        . build/envsetup.sh
-        lunch treble_a64_bvN-ap1a-userdebug
-        make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_vanilla_arm32_binder64.img
-      working-directory: src
-    - name: build standard microg arm32_binder64 image
-      run: |
-        # copy microg config
-        pushd device/phh/treble
-          cp -fv ../../../../configs/voltage-microg.mk voltage.mk
-          bash generate.sh voltage
-        popd
-
-        # copy microg to correct folder for build
-        cp -Rfv ../tmp/partner_gms vendor/
-        . build/envsetup.sh
-        lunch treble_a64_bmN-ap1a-userdebug
-        make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_microg_arm32_binder64.img
-         # remove microg folder to avoid contaminating next build
-        rm -Rfv vendor/partner_gms
-      working-directory: src
-    - name: build standard gapps arm32_binder64 image
-      run: |
-        # copy gapps config
-        pushd device/phh/treble
-          cp -fv ../../../../configs/voltage-gapps.mk voltage.mk
-          bash generate.sh voltage
-        popd
-
-        # copy gapps to correct folder for build
-        cp -Rfv ../tmp/gapps vendor/
-        . build/envsetup.sh
-        lunch treble_a64_bgN-ap1a-userdebug
-        make systemimage -j"$(nproc --all)"
-        mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_gapps_arm32_binder64.img
-        # remove gapps folder to avoid contaminating next build
-        rm -Rfv vendor/gapps
-      working-directory: src
-    - name: adapt vndklite vanilla arm64 image
-      run: |
-        cp -v ../../tmp/system_vanilla_arm64.img standard_system_vanilla_arm64.img
-        sudo bash lite-adapter.sh 64 standard_system_vanilla_arm64.img
-        sudo mv s.img ../../tmp/s_vanilla_arm64_vndklite.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_vanilla_arm64_vndklite.img
-      working-directory: src/treble_adapter
-    - name: adapt vndklite microg arm64 image
-      run: |
-        cp -v ../../tmp/system_microg_arm64.img standard_system_microg_arm64.img
-        sudo bash lite-adapter.sh 64 standard_system_microg_arm64.img
-        sudo mv s.img ../../tmp/s_microg_arm64_vndklite.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_microg_arm64_vndklite.img
-      working-directory: src/treble_adapter
-    - name: adapt vndklite gapps arm64 image
-      run: |
-        cp -v ../../tmp/system_gapps_arm64.img standard_system_gapps_arm64.img
-        sudo bash lite-adapter.sh 64 standard_system_gapps_arm64.img
-        sudo mv s.img ../../tmp/s_gapps_arm64_vndklite.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_gapps_arm64_vndklite.img
-      working-directory: src/treble_adapter
-    - name: adapt vndklite vanilla arm32_binder64 image
-      run: |
-        cp -v ../../tmp/system_vanilla_arm32_binder64.img standard_system_vanilla_arm32_binder64.img
-        sudo bash lite-adapter.sh 32 standard_system_vanilla_arm32_binder64.img
-        sudo mv s.img ../../tmp/s_vanilla_arm32_binder64_vndklite.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_vanilla_arm32_binder64_vndklite.img
-      working-directory: src/treble_adapter
-    - name: adapt microg vanilla arm32_binder64 image
-      run: |
-        cp -v ../../tmp/system_microg_arm32_binder64.img standard_system_microg_arm32_binder64.img
-        sudo bash lite-adapter.sh 32 standard_system_microg_arm32_binder64.img
-        sudo mv s.img ../../tmp/s_microg_arm32_binder64_vndklite.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_microg_arm32_binder64_vndklite.img
-      working-directory: src/treble_adapter
-    - name: adapt vndklite gapps arm32_binder64 image
-      run: |
-        cp -v ../../tmp/system_gapps_arm32_binder64.img standard_system_gapps_arm32_binder64.img
-        sudo bash lite-adapter.sh 32 standard_system_gapps_arm32_binder64.img
-        sudo mv s.img ../../tmp/s_gapps_arm32_binder64_vndklite.img
-        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_gapps_arm32_binder64_vndklite.img
-      working-directory: src/treble_adapter
+#    - name: build standard microg arm64 image
+#      run: |
+#        # copy microg config
+#        pushd device/phh/treble
+#          cp -fv ../../../../configs/voltage-microg.mk voltage.mk
+#          bash generate.sh voltage
+#        popd
+#
+#        # copy microg to correct folder for build
+#        cp -Rfv ../tmp/partner_gms vendor/
+#
+#        . build/envsetup.sh
+#        lunch treble_arm64_bmN-ap1a-userdebug
+#        make systemimage -j"$(nproc --all)"
+#        mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_microg_arm64.img
+#        # remove microg folder to avoid contaminating next build
+#        rm -Rfv vendor/partner_gms
+#      working-directory: src
+#    - name: build standard gapps arm64 image
+#      run: |
+#        # copy gapps config
+#        pushd device/phh/treble
+#          cp -fv ../../../../configs/voltage-gapps.mk voltage.mk
+#          bash generate.sh voltage
+#        popd
+#
+#        # copy gapps to correct folder for build
+#        cp -Rfv ../tmp/gapps vendor/
+#        . build/envsetup.sh
+#        lunch treble_arm64_bgN-ap1a-userdebug
+#        make systemimage -j"$(nproc --all)"
+#        mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_gapps_arm64.img
+#        # remove gapps folder to avoid contaminating next build
+#        rm -Rfv vendor/gapps
+#      working-directory: src
+#    - name: build standard vanilla arm32_binder64 image
+#      run: |
+#        # copy vanilla config
+#        pushd device/phh/treble
+#          cp -fv ../../../../configs/voltage-vanilla.mk voltage.mk
+#          bash generate.sh voltage
+#        popd
+#
+#        . build/envsetup.sh
+#        lunch treble_a64_bvN-ap1a-userdebug
+#        make systemimage -j"$(nproc --all)"
+#        mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_vanilla_arm32_binder64.img
+#      working-directory: src
+#    - name: build standard microg arm32_binder64 image
+#      run: |
+#        # copy microg config
+#        pushd device/phh/treble
+#          cp -fv ../../../../configs/voltage-microg.mk voltage.mk
+#          bash generate.sh voltage
+#        popd
+#
+#        # copy microg to correct folder for build
+#        cp -Rfv ../tmp/partner_gms vendor/
+#        . build/envsetup.sh
+#        lunch treble_a64_bmN-ap1a-userdebug
+#        make systemimage -j"$(nproc --all)"
+#        mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_microg_arm32_binder64.img
+#         # remove microg folder to avoid contaminating next build
+#        rm -Rfv vendor/partner_gms
+#      working-directory: src
+#    - name: build standard gapps arm32_binder64 image
+#      run: |
+#        # copy gapps config
+#        pushd device/phh/treble
+#          cp -fv ../../../../configs/voltage-gapps.mk voltage.mk
+#          bash generate.sh voltage
+#        popd
+#
+#        # copy gapps to correct folder for build
+#        cp -Rfv ../tmp/gapps vendor/
+#        . build/envsetup.sh
+#        lunch treble_a64_bgN-ap1a-userdebug
+#        make systemimage -j"$(nproc --all)"
+#        mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_gapps_arm32_binder64.img
+#        # remove gapps folder to avoid contaminating next build
+#        rm -Rfv vendor/gapps
+#      working-directory: src
+#    - name: adapt vndklite vanilla arm64 image
+#      run: |
+#        cp -v ../../tmp/system_vanilla_arm64.img standard_system_vanilla_arm64.img
+#        sudo bash lite-adapter.sh 64 standard_system_vanilla_arm64.img
+#        sudo mv s.img ../../tmp/s_vanilla_arm64_vndklite.img
+#        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_vanilla_arm64_vndklite.img
+#      working-directory: src/treble_adapter
+#    - name: adapt vndklite microg arm64 image
+#      run: |
+#        cp -v ../../tmp/system_microg_arm64.img standard_system_microg_arm64.img
+#        sudo bash lite-adapter.sh 64 standard_system_microg_arm64.img
+#        sudo mv s.img ../../tmp/s_microg_arm64_vndklite.img
+#        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_microg_arm64_vndklite.img
+#      working-directory: src/treble_adapter
+#    - name: adapt vndklite gapps arm64 image
+#      run: |
+#        cp -v ../../tmp/system_gapps_arm64.img standard_system_gapps_arm64.img
+#        sudo bash lite-adapter.sh 64 standard_system_gapps_arm64.img
+#        sudo mv s.img ../../tmp/s_gapps_arm64_vndklite.img
+#        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_gapps_arm64_vndklite.img
+#      working-directory: src/treble_adapter
+#    - name: adapt vndklite vanilla arm32_binder64 image
+#      run: |
+#        cp -v ../../tmp/system_vanilla_arm32_binder64.img standard_system_vanilla_arm32_binder64.img
+#        sudo bash lite-adapter.sh 32 standard_system_vanilla_arm32_binder64.img
+#        sudo mv s.img ../../tmp/s_vanilla_arm32_binder64_vndklite.img
+#        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_vanilla_arm32_binder64_vndklite.img
+#      working-directory: src/treble_adapter
+#    - name: adapt microg vanilla arm32_binder64 image
+#      run: |
+#        cp -v ../../tmp/system_microg_arm32_binder64.img standard_system_microg_arm32_binder64.img
+#        sudo bash lite-adapter.sh 32 standard_system_microg_arm32_binder64.img
+#        sudo mv s.img ../../tmp/s_microg_arm32_binder64_vndklite.img
+#        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_microg_arm32_binder64_vndklite.img
+#      working-directory: src/treble_adapter
+#    - name: adapt vndklite gapps arm32_binder64 image
+#      run: |
+#        cp -v ../../tmp/system_gapps_arm32_binder64.img standard_system_gapps_arm32_binder64.img
+#        sudo bash lite-adapter.sh 32 standard_system_gapps_arm32_binder64.img
+#        sudo mv s.img ../../tmp/s_gapps_arm32_binder64_vndklite.img
+#        sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') ../../tmp/s_gapps_arm32_binder64_vndklite.img
+#      working-directory: src/treble_adapter
     - name: rename image files
       run: |
         buildDate=$(cat cachedBuildDate.txt)
         # arm64 - standard
         mv -v system_vanilla_arm64.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v system_microg_arm64.img "${ROM_NAME}"-microg-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v system_gapps_arm64.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v system_microg_arm64.img "${ROM_NAME}"-microg-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v system_gapps_arm64.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         # arm32_binder64 - standard
-        mv -v system_vanilla_arm32_binder64.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v system_microg_arm32_binder64.img "${ROM_NAME}"-microg-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v system_gapps_arm32_binder64.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        # arm64 - vndklite
-        mv -v s_vanilla_arm64_vndklite.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v s_microg_arm64_vndklite.img "${ROM_NAME}"-microg-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v s_gapps_arm64_vndklite.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        # arm32_binder64 - vndklite
-        mv -v s_vanilla_arm32_binder64_vndklite.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v s_microg_arm32_binder64_vndklite.img "${ROM_NAME}"-microg-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
-        mv -v s_gapps_arm32_binder64_vndklite.img "${ROM_NAME}"-gapps-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v system_vanilla_arm32_binder64.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v system_microg_arm32_binder64.img "${ROM_NAME}"-microg-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v system_gapps_arm32_binder64.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        # arm64 - vndklite
+#        mv -v s_vanilla_arm64_vndklite.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v s_microg_arm64_vndklite.img "${ROM_NAME}"-microg-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v s_gapps_arm64_vndklite.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        # arm32_binder64 - vndklite
+#        mv -v s_vanilla_arm32_binder64_vndklite.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v s_microg_arm32_binder64_vndklite.img "${ROM_NAME}"-microg-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+#        mv -v s_gapps_arm32_binder64_vndklite.img "${ROM_NAME}"-gapps-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
       working-directory: tmp
     - name: compress all images with xz
       run: find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \;
