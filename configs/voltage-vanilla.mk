@@ -16,7 +16,7 @@ PRODUCT_PACKAGE_OVERLAYS += \
 
 # Packages
 PRODUCT_PACKAGES += \
-  Apps \
+  AppStore \
   AuroraStorePrivilegedExtension \
   F-DroidPrivilegedExtension \
   OpenEUICC
