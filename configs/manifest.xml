@@ -32,8 +32,8 @@
   <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_x86_64" />
   <project path="external/mulch-webview" name="mulch" remote="divested-mobile" revision="master" clone-depth="1" />
 
-  <!-- grapheneos: apps -->
-  <project path="external/Apps" name="platform_external_Apps" remote="grapheneos" revision="14" clone-depth="1" />
+  <!-- grapheneos: app store -->
+  <project path="external/Apps" name="platform_external_AppStore" remote="grapheneos" revision="14" clone-depth="1" />
 
   <!-- lineageos4microg: microg -->
   <project path="vendor/partner_gms" name="android_vendor_partner_gms" remote="lineageos4microg" revision="master" clone-depth="1" />
