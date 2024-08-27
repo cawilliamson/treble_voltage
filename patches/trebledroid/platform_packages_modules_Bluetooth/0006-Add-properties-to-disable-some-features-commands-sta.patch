@@ -39,8 +39,8 @@ index 6facfef..e585920 100644
 -static const char kPropertyDisabledCommands[] =
 -    "bluetooth.hci.disabled_commands";
  
- using os::Handler;
- 
+ constexpr bool kDefaultErroneousDataReportingEnabled = true;
+ static const std::string kPropertyErroneousDataReportingEnabled =
 @@ -316,16 +316,23 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
