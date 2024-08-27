@@ -117,6 +117,7 @@ jobs:
         lunch treble_arm64_bmN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_microg_arm64.img
+
         # remove microg folder to avoid contaminating next build
         rm -Rfv vendor/partner_gms
       working-directory: src
@@ -134,6 +135,7 @@ jobs:
         lunch treble_arm64_bgN-ap1a-userdebug
         make systemimage -j"$(nproc --all)"
         mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_gapps_arm64.img
+
         # remove gapps folder to avoid contaminating next build
         rm -Rfv vendor/gapps
       working-directory: src
@@ -228,19 +230,24 @@ jobs:
       working-directory: src/treble_adapter
     - name: rename image files
       run: |
+        # fetch build date
         buildDate=$(cat cachedBuildDate.txt)
+
         # arm64 - standard
         mv -v system_vanilla_arm64.img "${ROM_NAME}"-vanilla-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_microg_arm64.img "${ROM_NAME}"-microg-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_gapps_arm64.img "${ROM_NAME}"-gapps-arm64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+
         # arm32_binder64 - standard
         mv -v system_vanilla_arm32_binder64.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_microg_arm32_binder64.img "${ROM_NAME}"-microg-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v system_gapps_arm32_binder64.img "${ROM_NAME}"-gapps-arm32_binder64-ab-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+
         # arm64 - vndklite
         mv -v s_vanilla_arm64_vndklite.img "${ROM_NAME}"-vanilla-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v s_microg_arm64_vndklite.img "${ROM_NAME}"-microg-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v s_gapps_arm64_vndklite.img "${ROM_NAME}"-gapps-arm64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
+
         # arm32_binder64 - vndklite
         mv -v s_vanilla_arm32_binder64_vndklite.img "${ROM_NAME}"-vanilla-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
         mv -v s_microg_arm32_binder64_vndklite.img "${ROM_NAME}"-microg-arm32_binder64-ab-vndklite-"${ROM_VERSION}"-"${buildDate}"-UNOFFICIAL.img
@@ -259,8 +266,13 @@ jobs:
     - name: upload to github
       run: |
         buildDate=$(cat cachedBuildDate.txt)
-        webDir="/var/www/html/${ROM_NAME}-${ROM_VERSION}-${buildDate}"
-        pushd "${webDir}/"
+        pushd "/var/www/html/${ROM_NAME}-${ROM_VERSION}-${buildDate}"
+          # create fake git repo
+          git init
+
+          # set git remote
+          git remote add origin "https://github.com/${MAINTAINER}/${REPO_NAME}.git"
+
           # set default repo
           gh repo set-default "${MAINTAINER}/${REPO_NAME}"
 
@@ -269,6 +281,9 @@ jobs:
 
           # upload files
           gh release upload "${ROM_VERSION}"-"${buildDate}" --clobber -- *.img.xz
+
+          # remove git dir
+          rm -rf .git/
         popd
     - name: cleanup work directory
       uses: eviden-actions/clean-self-hosted-runner@v1
