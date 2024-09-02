@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 
 env:
+  APPLY_DEBUG_PATCHES: true
   DISABLE_RUNNER_CLEANUP: false # should ONLY be set to true for debugging
   MAINTAINER: cawilliamson
   REPO_NAME: treble_voltage
@@ -49,6 +50,10 @@ jobs:
         # apply personal patches
         ../patches/apply.sh . personal
       working-directory: src
+    - name: apply debug patches
+      run: ../patches/apply.sh . debug
+      working-directory: src
+      if: ${{ env.APPLY_DEBUG_PATCHES == 'true' }}
     - name: setup tmp directory and stash gapps variants
       run: |
         # create tmp directory
