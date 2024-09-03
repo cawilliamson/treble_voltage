@@ -267,10 +267,13 @@ jobs:
         webDir="/var/www/html/${ROM_NAME}-${ROM_VERSION}-${buildDate}"
         mkdir -p "${webDir}"
         cp -fv *.img.xz "${webDir}/"
+        cp -v cachedBuildDate.txt "${webDir}/"
       working-directory: tmp
     - name: upload to github
       run: |
         buildDate=$(cat cachedBuildDate.txt)
+        rm -f cachedBuildDate.txt
+
         pushd "/var/www/html/${ROM_NAME}-${ROM_VERSION}-${buildDate}"
           # create fake git repo
           git init
