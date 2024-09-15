@@ -267,7 +267,7 @@ jobs:
         webDir="/var/www/html/${ROM_NAME}-${ROM_VERSION}-${buildDate}"
         mkdir -p "${webDir}"
         cp -fv *.img.xz "${webDir}/"
-        cp -v cachedBuildDate.txt "${webDir}/"
+        cp -v cachedBuildDate.txt /var/www/html/
       working-directory: tmp
     - name: upload to github
       run: |
@@ -293,6 +293,7 @@ jobs:
           # remove git dir
           rm -rf .git/
         popd
+      working-directory: /var/www/html
     - name: cleanup work directory
       uses: eviden-actions/clean-self-hosted-runner@v1
       if: ${{ always() }} # Run even if previous steps in the job fail or are canceled
