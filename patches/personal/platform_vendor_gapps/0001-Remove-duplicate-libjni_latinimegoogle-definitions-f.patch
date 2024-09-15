@@ -1,0 +1,187 @@
+From 5dc7948c01025ffbc972e8bcad6537e4a48fa9fb Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Sun, 15 Sep 2024 10:32:54 +0100
+Subject: [PATCH] Remove duplicate libjni_latinimegoogle definitions from gapps
+
+---
+ arm/Android.bp          | 17 -----------------
+ arm/arm-vendor.mk       |  1 -
+ arm64/Android.bp        | 21 ---------------------
+ arm64/arm64-vendor.mk   |  1 -
+ x86/Android.bp          | 17 -----------------
+ x86/x86-vendor.mk       |  1 -
+ x86_64/Android.bp       | 21 ---------------------
+ x86_64/x86_64-vendor.mk |  1 -
+ 8 files changed, 80 deletions(-)
+
+diff --git a/arm/Android.bp b/arm/Android.bp
+index 1db0055..f966708 100644
+--- a/arm/Android.bp
++++ b/arm/Android.bp
+@@ -8,23 +8,6 @@ soong_namespace {
+ 	],
+ }
+ 
+-cc_prebuilt_library_shared {
+-	name: "libjni_latinimegoogle",
+-	owner: "gapps",
+-	strip: {
+-		none: true,
+-	},
+-	target: {
+-		android_arm: {
+-			srcs: ["proprietary/product/lib/libjni_latinimegoogle.so"],
+-			shared_libs: ["libc", "libm", "libc++", "libdl", ],
+-		},
+-	},
+-	compile_multilib: "32",
+-	prefer: true,
+-	product_specific: true,
+-}
+-
+ android_app_import {
+ 	name: "GmsCore",
+ 	owner: "gapps",
+diff --git a/arm/arm-vendor.mk b/arm/arm-vendor.mk
+index 6cc907c..0f99e2a 100644
+--- a/arm/arm-vendor.mk
++++ b/arm/arm-vendor.mk
+@@ -7,7 +7,6 @@ PRODUCT_SOONG_NAMESPACES += \
+ 
+ 
+ PRODUCT_PACKAGES += \
+-    libjni_latinimegoogle \
+     GmsCore \
+     Phonesky
+ 
+diff --git a/arm64/Android.bp b/arm64/Android.bp
+index 861f7f4..2503e40 100644
+--- a/arm64/Android.bp
++++ b/arm64/Android.bp
+@@ -8,27 +8,6 @@ soong_namespace {
+ 	],
+ }
+ 
+-cc_prebuilt_library_shared {
+-	name: "libjni_latinimegoogle",
+-	owner: "gapps",
+-	strip: {
+-		none: true,
+-	},
+-	target: {
+-		android_arm: {
+-			srcs: ["proprietary/product/lib/libjni_latinimegoogle.so"],
+-			shared_libs: ["libc", "libm", "libc++", "libdl", ],
+-		},
+-		android_arm64: {
+-			srcs: ["proprietary/product/lib64/libjni_latinimegoogle.so"],
+-			shared_libs: ["libc", "libm", "libc++", "libdl", ],
+-		},
+-	},
+-	compile_multilib: "both",
+-	prefer: true,
+-	product_specific: true,
+-}
+-
+ android_app_import {
+ 	name: "GmsCore",
+ 	owner: "gapps",
+diff --git a/arm64/arm64-vendor.mk b/arm64/arm64-vendor.mk
+index 1f42576..60b7b8c 100644
+--- a/arm64/arm64-vendor.mk
++++ b/arm64/arm64-vendor.mk
+@@ -7,7 +7,6 @@ PRODUCT_SOONG_NAMESPACES += \
+ 
+ 
+ PRODUCT_PACKAGES += \
+-    libjni_latinimegoogle \
+     GmsCore \
+     Phonesky
+ 
+diff --git a/x86/Android.bp b/x86/Android.bp
+index e9fa0c8..449167d 100644
+--- a/x86/Android.bp
++++ b/x86/Android.bp
+@@ -8,23 +8,6 @@ soong_namespace {
+ 	],
+ }
+ 
+-cc_prebuilt_library_shared {
+-	name: "libjni_latinimegoogle",
+-	owner: "gapps",
+-	strip: {
+-		none: true,
+-	},
+-	target: {
+-		android_x86: {
+-			srcs: ["proprietary/product/lib/libjni_latinimegoogle.so"],
+-			shared_libs: ["libc", "libc++", "libm", "libdl", ],
+-		},
+-	},
+-	compile_multilib: "32",
+-	prefer: true,
+-	product_specific: true,
+-}
+-
+ android_app_import {
+ 	name: "GmsCore",
+ 	owner: "gapps",
+diff --git a/x86/x86-vendor.mk b/x86/x86-vendor.mk
+index 4abb867..27e1bb8 100644
+--- a/x86/x86-vendor.mk
++++ b/x86/x86-vendor.mk
+@@ -7,7 +7,6 @@ PRODUCT_SOONG_NAMESPACES += \
+ 
+ 
+ PRODUCT_PACKAGES += \
+-    libjni_latinimegoogle \
+     GmsCore \
+     Phonesky
+ 
+diff --git a/x86_64/Android.bp b/x86_64/Android.bp
+index 6dcdfcf..dcac0f3 100644
+--- a/x86_64/Android.bp
++++ b/x86_64/Android.bp
+@@ -8,27 +8,6 @@ soong_namespace {
+ 	],
+ }
+ 
+-cc_prebuilt_library_shared {
+-	name: "libjni_latinimegoogle",
+-	owner: "gapps",
+-	strip: {
+-		none: true,
+-	},
+-	target: {
+-		android_x86: {
+-			srcs: ["proprietary/product/lib/libjni_latinimegoogle.so"],
+-			shared_libs: ["libc", "libc++", "libm", "libdl", ],
+-		},
+-		android_x86_64: {
+-			srcs: ["proprietary/product/lib64/libjni_latinimegoogle.so"],
+-			shared_libs: ["libc", "libc++", "libm", "libdl", ],
+-		},
+-	},
+-	compile_multilib: "both",
+-	prefer: true,
+-	product_specific: true,
+-}
+-
+ android_app_import {
+ 	name: "GmsCore",
+ 	owner: "gapps",
+diff --git a/x86_64/x86_64-vendor.mk b/x86_64/x86_64-vendor.mk
+index 61ee098..5f01183 100644
+--- a/x86_64/x86_64-vendor.mk
++++ b/x86_64/x86_64-vendor.mk
+@@ -7,7 +7,6 @@ PRODUCT_SOONG_NAMESPACES += \
+ 
+ 
+ PRODUCT_PACKAGES += \
+-    libjni_latinimegoogle \
+     GmsCore \
+     Phonesky
+ 
+-- 
+2.46.0
+
