@@ -9,7 +9,7 @@ env:
   MAINTAINER: cawilliamson
   REPO_NAME: treble_voltage
   ROM_NAME: VoltageOS
-  ROM_VERSION: 3.6
+  ROM_VERSION: 3.7
 
 jobs:
   build-gsi:
