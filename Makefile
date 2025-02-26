@@ -131,9 +131,9 @@ define BUILD_SYSTEM_IMAGE
 	lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
 	make systemimage -j$(CPU_LIMIT) && \
 	if [ "$(1)" = "arm64" ]; then \
-		mv -v out/target/product/tdgsi_arm64_ab/system.img /var/tmp/system_$(3)_$(1).img \
+		mv -v out/target/product/tdgsi_arm64_ab/system.img /var/tmp/system_$(3)_$(1).img; \
 	else \
-		mv -v out/target/product/tdgsi_a64_ab/system.img /var/tmp/system_$(3)_$(1).img \
+		mv -v out/target/product/tdgsi_a64_ab/system.img /var/tmp/system_$(3)_$(1).img; \
 	fi
 endef
 
@@ -155,9 +155,9 @@ endef
 define PREPARE_OUTPUT
 	cd ../tmp && \
 	if [ "$(1)" = "arm64" ]; then \
-		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-$(1)-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img \
+		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-$(1)-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
 	else \
-		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img \
+		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
 	fi && \
 	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
 	cp -fv *.img.xz /out/
