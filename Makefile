@@ -56,8 +56,9 @@ clean:
 # Step 1: Clone ROM manifest
 define CLONE_MANIFEST
 	mkdir -p src/ && \
-	cd src/ && \
-	repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs
+	pushd src/ && \
+	repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs && \
+	popd
 endef
 
 # Step 2: Copy manifest config
@@ -86,33 +87,37 @@ endef
 
 # Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
-	mv -v vendor/gapps /work/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
-	mv -v vendor/partner_gms /work/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
+	mv -v src/vendor/gapps /work/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
+	mv -v src/vendor/partner_gms /work/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
 endef
 
 # Step 7: Generate signing keys
 define GENERATE_KEYS
 	. build/envsetup.sh && \
-	cd vendor/voltage-priv/keys && \
-	./gen_keys
+	pushd vendor/voltage-priv/keys && \
+	./gen_keys && \
+	popd
 endef
 
 # Step 8: Configure device
 define CONFIGURE_DEVICE
-	cd device/phh/treble && \
+	pushd device/phh/treble && \
 	cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
-	bash generate.sh voltage
+	bash generate.sh voltage && \
+	popd
 endef
 
 # Step 9: Build treble app (vanilla only)
 define BUILD_TREBLE_APP
 	. build/envsetup.sh && \
-	cd treble_app/ && \
+	pushd treble_app/ && \
 	bash build.sh release && \
 	cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
-	cd ../device/phh/treble && \
+	popd && \
+	pushd device/phh/treble && \
 	cp -v /work/repo/configs/voltage-vanilla.mk voltage.mk && \
-	bash generate.sh voltage
+	bash generate.sh voltage && \
+	popd
 endef
 
 # Step 10: Copy vendor files (microg/gapps)
