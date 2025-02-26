@@ -160,7 +160,7 @@ define PREPARE_OUTPUT
 		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img \
 	fi && \
 	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
-	cp -fv *.img.xz /out/ && \
+	cp -fv *.img.xz /out/
 endef
 
 # Step 15: Setup for vndklite build using normal build output
