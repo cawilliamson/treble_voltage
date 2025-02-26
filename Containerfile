@@ -23,12 +23,9 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     gperf \
     imagemagick \
-    lib32ncurses5-dev \
     lib32readline-dev \
     lib32z1-dev \
     liblz4-tool \
-    libncurses5 \
-    libncurses5-dev \
     libsdl1.2-dev \
     libssl-dev \
     libxml2 \
@@ -50,6 +47,14 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# install libncurses5
+RUN cd /var/tmp && \
+    curl -O http://launchpadlibrarian.net/648013231/libtinfo5_6.4-2_amd64.deb && \
+    dpkg -i libtinfo5_6.4-2_amd64.deb && \
+    curl -LO http://launchpadlibrarian.net/648013227/libncurses5_6.4-2_amd64.deb && \
+    dpkg -i libncurses5_6.4-2_amd64.deb && \
+    rm -f ./*.deb
 
 # Install repo tool
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
