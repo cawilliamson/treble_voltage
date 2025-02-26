@@ -8,11 +8,11 @@
 	build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
 
 # Configuration variables
+DEBUG_PATCHES ?= false
 ROM_NAME ?= VoltageOS
 ROM_VERSION ?= 4.2
 MAINTAINER ?= cawilliamson
 REPO_NAME ?= treble_voltage
-APPLY_DEBUG_PATCHES ?= true
 OUTPUT_DIR ?= $(PWD)/output
 MAX_CPU_PERCENT ?= 100
 MAX_MEM_PERCENT ?= 100
@@ -27,11 +27,11 @@ CONTAINER_RUN = podman run --rm --privileged \
 	--memory="$(MEM_LIMIT)" \
 	--pids-limit=0 \
 	-v "$(OUTPUT_DIR):/output:Z" \
+	-e DEBUG_PATCHES="$(DEBUG_PATCHES)" \
 	-e ROM_NAME="$(ROM_NAME)" \
 	-e ROM_VERSION="$(ROM_VERSION)" \
 	-e MAINTAINER="$(MAINTAINER)" \
-	-e REPO_NAME="$(REPO_NAME)" \
-	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)"
+	-e REPO_NAME="$(REPO_NAME)"
 
 # Default target
 all: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64
@@ -80,7 +80,7 @@ endef
 
 # Step 6: Apply debug patches (conditional)
 define APPLY_DEBUG_PATCHES
-	if [ '$(APPLY_DEBUG_PATCHES)' = 'true' ]; then ../patches/apply.sh . debug; fi
+	if [ '$(DEBUG_PATCHES)' = 'true' ]; then ../patches/apply.sh . debug; fi
 endef
 
 # Step 7: Setup tmp directory and stash gapps variants
