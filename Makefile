@@ -88,7 +88,7 @@ define APPLY_DEBUG_PATCHES
 	if [ '$(DEBUG_PATCHES)' = 'true' ]; then \
 		pushd /work/src && \
 			/work/repo/patches/apply.sh . debug; \
-		popd
+		popd; \
 	fi
 endef
 
@@ -225,7 +225,6 @@ endef
 
 # Build standard GSI (vanilla/microg/gapps)
 define BUILD_STANDARD_GSI
-	mkdir -p $(OUTPUT_DIR)
 	$(CONTAINER_RUN) \
 		-e BUILD_TYPE="$(1)" \
 		-e ARCH="$(2)" \
