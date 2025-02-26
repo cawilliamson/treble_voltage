@@ -55,95 +55,109 @@ clean:
 
 # Step 1: Clone ROM manifest
 define CLONE_MANIFEST
-	mkdir -p src/ && \
-	pushd src/ && \
-	repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs && \
+	pushd /work/src && \
+		repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs && \
 	popd
 endef
 
 # Step 2: Copy manifest config
 define COPY_MANIFEST_CONFIG
-	mkdir -p .repo/local_manifests && \
-	cp -v /work/repo/configs/*.xml .repo/local_manifests/
+	pushd /work/src && \
+		mkdir -p .repo/local_manifests && \
+		cp -v /work/repo/configs/*.xml .repo/local_manifests/ && \
+	popd
 endef
 
 # Step 3: Perform full sources sync
 define SYNC_SOURCES
-	repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags
+	pushd /work/src && \
+		repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags && \
+	popd
 endef
 
 # Step 4: Apply patches
 define APPLY_PATCHES
-	/work/repo/patches/apply.sh . trebledroid && \
-	/work/repo/patches/apply.sh . personal
+	pushd /work/src && \
+		/work/repo/patches/apply.sh . trebledroid && \
+		/work/repo/patches/apply.sh . personal && \
+	popd
 endef
 
 # Step 5: Apply debug patches (conditional)
 define APPLY_DEBUG_PATCHES
 	if [ '$(DEBUG_PATCHES)' = 'true' ]; then \
-		/work/repo/patches/apply.sh . debug; \
+		pushd /work/src && \
+			/work/repo/patches/apply.sh . debug; \
+		popd
 	fi
 endef
 
 # Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
-	mv -v src/vendor/gapps /work/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
-	mv -v src/vendor/partner_gms /work/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
+	pushd /work/src && \
+		mv -v src/vendor/gapps /work/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
+		mv -v src/vendor/partner_gms /work/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
+	popd
 endef
 
 # Step 7: Generate signing keys
 define GENERATE_KEYS
-	. build/envsetup.sh && \
-	pushd vendor/voltage-priv/keys && \
-	./gen_keys && \
+	pushd /work/src && \
+		. build/envsetup.sh && \
+		pushd vendor/voltage-priv/keys && \
+			./gen_keys && \
+		popd
 	popd
 endef
 
 # Step 8: Configure device
 define CONFIGURE_DEVICE
-	pushd device/phh/treble && \
-	cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
-	bash generate.sh voltage && \
+	pushd /work/src/device/phh/treble && \
+		cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
+		bash generate.sh voltage && \
 	popd
 endef
 
-# Step 9: Build treble app (vanilla only)
+# Step 9: Build treble app
 define BUILD_TREBLE_APP
-	. build/envsetup.sh && \
-	pushd treble_app/ && \
-	bash build.sh release && \
-	cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
+	pushd /work/src/treble_app/ && \
+		bash build.sh release && \
+		cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 	popd && \
-	pushd device/phh/treble && \
-	cp -v /work/repo/configs/voltage-vanilla.mk voltage.mk && \
-	bash generate.sh voltage && \
+	pushd /work/src/device/phh/treble && \
+		cp -v /work/repo/configs/voltage-vanilla.mk voltage.mk && \
+		bash generate.sh voltage && \
+
 	popd
 endef
 
 # Step 10: Copy vendor files (microg/gapps)
 define COPY_VENDOR_FILES
 	if [ "$(1)" = "microg" ]; then \
-		cp -Rfv /work/tmp/partner_gms vendor/; \
+		cp -Rfv /work/tmp/partner_gms /work/src/vendor/; \
 	elif [ "$(1)" = "gapps" ]; then \
-		cp -Rfv /work/tmp/gapps vendor/; \
+		cp -Rfv /work/tmp/gapps /work/src/vendor/; \
 	fi
 endef
 
 # Step 11: Build system image
 define BUILD_SYSTEM_IMAGE
-	. build/envsetup.sh && \
-	lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
-	make systemimage -j$(CPU_LIMIT) && \
-	if [ "$(1)" = "arm64" ]; then \
-		mv -v out/target/product/tdgsi_arm64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
-	else \
-		mv -v out/target/product/tdgsi_a64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
-	fi
+	pushd /work/src && \
+		lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
+		make systemimage -j$(CPU_LIMIT) && \
+		if [ "$(1)" = "arm64" ]; then \
+			mv -v out/target/product/tdgsi_arm64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
+		else \
+			mv -v out/target/product/tdgsi_a64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
+		fi && \
+	popd
 endef
 
 # Step 12: Run vndk sepolicy tests (vanilla only)
 define RUN_SEPOLICY_TESTS
-	make vndk-test-sepolicy -j$(CPU_LIMIT)
+	pushd /work/src && \
+		make vndk-test-sepolicy -j$(CPU_LIMIT) && \
+	popd
 endef
 
 # Step 13: Cleanup vendor files
@@ -157,14 +171,15 @@ endef
 
 # Step 14: Prepare output
 define PREPARE_OUTPUT
-	cd ../tmp && \
-	if [ "$(1)" = "arm64" ]; then \
-		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-$(1)-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
-	else \
-		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
-	fi && \
-	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
-	cp -fv *.img.xz /out/
+	pushd /work/tmp && \
+		if [ "$(1)" = "arm64" ]; then \
+			mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-$(1)-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
+		else \
+			mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
+		fi && \
+		find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
+		cp -fv *.img.xz /out/ && \
+	popd
 endef
 
 # Commented out vndklite functions - will address later
