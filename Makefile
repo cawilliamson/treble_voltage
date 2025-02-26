@@ -3,9 +3,10 @@
 
 .PHONY: all clean setup build-container \
 	build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
-	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
-	build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64 \
-	build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
+	build-vanilla-a64 build-microg-a64 build-gapps-a64
+# Commented out vndklite targets - will address later
+#	build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64 \
+#	build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
 
 # Configuration variables
 BUILD_DATE := $(shell date "+%Y-%m-%d")
@@ -34,7 +35,9 @@ CONTAINER_RUN = podman run --rm --privileged \
 	-e ROM_VERSION="$(ROM_VERSION)"
 
 # Default target
-all: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64
+all: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64
+# Commented out vndklite targets - will address later
+# build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64
 
 # Setup output directory
 setup:
@@ -54,7 +57,7 @@ clean:
 define CLONE_MANIFEST
 	mkdir -p src/ && \
 	pushd src/ && \
-	repo init -u https://github.com/VoltageOS/manifest.git -b "${ROM_TAG}" --depth=1 --git-lfs
+	repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs
 	popd
 endef
 
@@ -164,45 +167,46 @@ define PREPARE_OUTPUT
 	cp -fv *.img.xz /out/
 endef
 
-# Step 15: Setup for vndklite build using normal build output
-define SETUP_VNDKLITE_WORKSPACE
-	# Create tmp directory if it doesn't exist
-	mkdir -p /work/tmp/ && \
-	# Copy normal build output from output directory
-	cp -v /out/*.img.xz . 2>/dev/null || echo 'No images found' && \
-	# Extract the compressed images
-	find . -name '*.img.xz' -exec xz -d "{}" \; 2>/dev/null || true
-endef
-
-# Step 16: Initialize repo for vndklite
-define INIT_VNDKLITE_REPO
-	mkdir -p src/ && cd src/ && \
-	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs && \
-	mkdir -p .repo/local_manifests && \
-	cp -v /work/repo/configs/*.xml .repo/local_manifests/ && \
-	repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags --current-branch treble_adapter
-endef
-
-# Step 17: Process vndklite image using normal build output
-define PROCESS_VNDKLITE_IMAGE
-	cd src/treble_adapter && \
-	# Copy the normal build image to use as input for vndklite conversion
-	cp -v ../../$(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img standard_system_$(1)_$(2).img && \
-	# Run the lite-adapter script to convert the normal build to vndklite
-	bash lite-adapter.sh $(if $(filter $(2),a64),32,64) standard_system_$(1)_$(2).img && \
-	# Move the resulting vndklite image
-	mv s.img ../../s_$(1)_$(2)_vndklite.img
-endef
-
-# Step 18: Rename and compress vndklite image for output
-define RENAME_VNDKLITE_IMAGE
-	# Rename the vndklite image to follow the naming convention
-	mv -v s_$(1)_$(2)_vndklite.img $(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-vndklite-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img && \
-	# Compress the image
-	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
-	# Copy the compressed image to the output directory
-	cp -fv *.img.xz /out/
-endef
+# Commented out vndklite functions - will address later
+# # Step 15: Setup for vndklite build using normal build output
+# define SETUP_VNDKLITE_WORKSPACE
+# 	# Create tmp directory if it doesn't exist
+# 	mkdir -p /work/tmp/ && \
+# 	# Copy normal build output from output directory
+# 	cp -v /out/*.img.xz . 2>/dev/null || echo 'No images found' && \
+# 	# Extract the compressed images
+# 	find . -name '*.img.xz' -exec xz -d "{}" \; 2>/dev/null || true
+# endef
+#
+# # Step 16: Initialize repo for vndklite
+# define INIT_VNDKLITE_REPO
+# 	mkdir -p src/ && cd src/ && \
+# 	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs && \
+# 	mkdir -p .repo/local_manifests && \
+# 	cp -v /work/repo/configs/*.xml .repo/local_manifests/ && \
+# 	repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags --current-branch treble_adapter
+# endef
+#
+# # Step 17: Process vndklite image using normal build output
+# define PROCESS_VNDKLITE_IMAGE
+# 	cd src/treble_adapter && \
+# 	# Copy the normal build image to use as input for vndklite conversion
+# 	cp -v ../../$(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img standard_system_$(1)_$(2).img && \
+# 	# Run the lite-adapter script to convert the normal build to vndklite
+# 	bash lite-adapter.sh $(if $(filter $(2),a64),32,64) standard_system_$(1)_$(2).img && \
+# 	# Move the resulting vndklite image
+# 	mv s.img ../../s_$(1)_$(2)_vndklite.img
+# endef
+#
+# # Step 18: Rename and compress vndklite image for output
+# define RENAME_VNDKLITE_IMAGE
+# 	# Rename the vndklite image to follow the naming convention
+# 	mv -v s_$(1)_$(2)_vndklite.img $(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-vndklite-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img && \
+# 	# Compress the image
+# 	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
+# 	# Copy the compressed image to the output directory
+# 	cp -fv *.img.xz /out/
+# endef
 
 # Build standard GSI (vanilla/microg/gapps)
 define BUILD_STANDARD_GSI
@@ -228,21 +232,22 @@ define BUILD_STANDARD_GSI
 			$(call PREPARE_OUTPUT,$(2),$(1))"
 endef
 
-# Build vndklite GSI (using normal build output)
-define BUILD_VNDKLITE_GSI
-	mkdir -p $(OUTPUT_DIR)
-	# This target depends on the normal build target, ensuring the normal build is completed first
-	# The normal build output is then used as input for the vndklite build
-	$(CONTAINER_RUN) \
-		-e BUILD_TYPE="vndklite-$(1)" \
-		-e ARCH="$(2)" \
-		voltage-gsi-builder \
-		/bin/bash -c " \
-			$(SETUP_VNDKLITE_WORKSPACE) && \
-			$(INIT_VNDKLITE_REPO) && \
-			$(call PROCESS_VNDKLITE_IMAGE,$(1),$(2)) && \
-			$(call RENAME_VNDKLITE_IMAGE,$(1),$(2))"
-endef
+# Commented out vndklite function - will address later
+# # Build vndklite GSI (using normal build output)
+# define BUILD_VNDKLITE_GSI
+# 	mkdir -p $(OUTPUT_DIR)
+# 	# This target depends on the normal build target, ensuring the normal build is completed first
+# 	# The normal build output is then used as input for the vndklite build
+# 	$(CONTAINER_RUN) \
+# 		-e BUILD_TYPE="vndklite-$(1)" \
+# 		-e ARCH="$(2)" \
+# 		voltage-gsi-builder \
+# 		/bin/bash -c " \
+# 			$(SETUP_VNDKLITE_WORKSPACE) && \
+# 			$(INIT_VNDKLITE_REPO) && \
+# 			$(call PROCESS_VNDKLITE_IMAGE,$(1),$(2)) && \
+# 			$(call RENAME_VNDKLITE_IMAGE,$(1),$(2))"
+# endef
 
 # Build vanilla arm64 GSI
 build-vanilla-arm64: setup build-container
@@ -268,44 +273,50 @@ build-microg-a64: setup build-container
 build-gapps-a64: setup build-container
 	$(call BUILD_STANDARD_GSI,gapps,a64,g)
 
-# Build vndklite vanilla arm64 GSI (depends on normal vanilla arm64 build)
-build-vndklite-vanilla-arm64: setup build-container build-vanilla-arm64
-	# This target depends on build-vanilla-arm64, ensuring the normal build is completed first
-	$(call BUILD_VNDKLITE_GSI,vanilla,arm64)
-
-# Build vndklite microG arm64 GSI (depends on normal microG arm64 build)
-build-vndklite-microg-arm64: setup build-container build-microg-arm64
-	# This target depends on build-microg-arm64, ensuring the normal build is completed first
-	$(call BUILD_VNDKLITE_GSI,microg,arm64)
-
-# Build vndklite GApps arm64 GSI (depends on normal GApps arm64 build)
-build-vndklite-gapps-arm64: setup build-container build-gapps-arm64
-	# This target depends on build-gapps-arm64, ensuring the normal build is completed first
-	$(call BUILD_VNDKLITE_GSI,gapps,arm64)
-
-# Build vndklite vanilla arm32_binder64 GSI (depends on normal vanilla a64 build)
-build-vndklite-vanilla-a64: setup build-container build-vanilla-a64
-	# This target depends on build-vanilla-a64, ensuring the normal build is completed first
-	$(call BUILD_VNDKLITE_GSI,vanilla,a64)
-
-# Build vndklite microG arm32_binder64 GSI (depends on normal microG a64 build)
-build-vndklite-microg-a64: setup build-container build-microg-a64
-	# This target depends on build-microg-a64, ensuring the normal build is completed first
-	$(call BUILD_VNDKLITE_GSI,microg,a64)
-
-# Build vndklite GApps arm32_binder64 GSI (depends on normal GApps a64 build)
-build-vndklite-gapps-a64: setup build-container build-gapps-a64
-	# This target depends on build-gapps-a64, ensuring the normal build is completed first
-	$(call BUILD_VNDKLITE_GSI,gapps,a64)
+# Commented out vndklite build targets - will address later
+# # Build vndklite vanilla arm64 GSI (depends on normal vanilla arm64 build)
+# build-vndklite-vanilla-arm64: setup build-container build-vanilla-arm64
+# 	# This target depends on build-vanilla-arm64, ensuring the normal build is completed first
+# 	$(call BUILD_VNDKLITE_GSI,vanilla,arm64)
+#
+# # Build vndklite microG arm64 GSI (depends on normal microG arm64 build)
+# build-vndklite-microg-arm64: setup build-container build-microg-arm64
+# 	# This target depends on build-microg-arm64, ensuring the normal build is completed first
+# 	$(call BUILD_VNDKLITE_GSI,microg,arm64)
+#
+# # Build vndklite GApps arm64 GSI (depends on normal GApps arm64 build)
+# build-vndklite-gapps-arm64: setup build-container build-gapps-arm64
+# 	# This target depends on build-gapps-arm64, ensuring the normal build is completed first
+# 	$(call BUILD_VNDKLITE_GSI,gapps,arm64)
+#
+# # Build vndklite vanilla arm32_binder64 GSI (depends on normal vanilla a64 build)
+# build-vndklite-vanilla-a64: setup build-container build-vanilla-a64
+# 	# This target depends on build-vanilla-a64, ensuring the normal build is completed first
+# 	$(call BUILD_VNDKLITE_GSI,vanilla,a64)
+#
+# # Build vndklite microG arm32_binder64 GSI (depends on normal microG a64 build)
+# build-vndklite-microg-a64: setup build-container build-microg-a64
+# 	# This target depends on build-microg-a64, ensuring the normal build is completed first
+# 	$(call BUILD_VNDKLITE_GSI,microg,a64)
+#
+# # Build vndklite GApps arm32_binder64 GSI (depends on normal GApps a64 build)
+# build-vndklite-gapps-a64: setup build-container build-gapps-a64
+# 	# This target depends on build-gapps-a64, ensuring the normal build is completed first
+# 	$(call BUILD_VNDKLITE_GSI,gapps,a64)
 
 # Convenience targets for building all variants of a specific type
 build-vanilla: build-vanilla-arm64 build-vanilla-a64
 build-microg: build-microg-arm64 build-microg-a64
 build-gapps: build-gapps-arm64 build-gapps-a64
-build-vndklite: build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64 build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
+# Commented out vndklite target - will address later
+# build-vndklite: build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64 build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
 
 # Build all arm64 variants
-build-arm64: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64
+build-arm64: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64
+# Commented out vndklite targets - will address later
+# build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64
 
 # Build all arm32_binder64 variants
-build-a64: build-vanilla-a64 build-microg-a64 build-gapps-a64 build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
+build-a64: build-vanilla-a64 build-microg-a64 build-gapps-a64
+# Commented out vndklite targets - will address later
+# build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
