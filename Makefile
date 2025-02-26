@@ -219,10 +219,10 @@ define BUILD_STANDARD_GSI
 			$(SETUP_TMP_DIR) && \
 			$(GENERATE_KEYS) && \
 			$(call CONFIGURE_DEVICE,$(1)) && \
-			$(if $(filter $(1),vanilla),$(BUILD_TREBLE_APP),) && \
+			$(BUILD_TREBLE_APP) && \
 			$(call COPY_VENDOR_FILES,$(1)) && \
 			$(call BUILD_SYSTEM_IMAGE,$(2),$(3),$(1)) && \
-			$(if $(filter $(1),vanilla),$(RUN_SEPOLICY_TESTS),) && \
+			$(RUN_SEPOLICY_TESTS) && \
 			$(call CLEANUP_VENDOR_FILES,$(1)) && \
 			$(call PREPARE_OUTPUT,$(2),$(1))"
 endef
