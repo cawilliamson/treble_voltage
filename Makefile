@@ -210,7 +210,7 @@ define BUILD_STANDARD_GSI
 		-e BUILD_TYPE="$(1)" \
 		-e ARCH="$(2)" \
 		voltage-gsi-builder \
-		/bin/bash -c "
+		/bin/bash -c " \
 			$(CLONE_MANIFEST) && \
 			$(COPY_MANIFEST_CONFIG) && \
 			$(SYNC_SOURCES) && \
