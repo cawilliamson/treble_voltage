@@ -13,7 +13,7 @@ ROM_NAME ?= VoltageOS
 ROM_VERSION ?= 4.2
 MAINTAINER ?= cawilliamson
 REPO_NAME ?= treble_voltage
-OUTPUT_DIR ?= $(PWD)/output
+OUTPUT_DIR ?= $(PWD)/out
 MAX_CPU_PERCENT ?= 100
 MAX_MEM_PERCENT ?= 100
 
@@ -26,7 +26,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 	--cpus="$(CPU_LIMIT)" \
 	--memory="$(MEM_LIMIT)" \
 	--pids-limit=0 \
-	-v "$(OUTPUT_DIR):/output:Z" \
+	-v "$(OUTPUT_DIR):/out:Z" \
 	-e DEBUG_PATCHES="$(DEBUG_PATCHES)" \
 	-e ROM_NAME="$(ROM_NAME)" \
 	-e ROM_VERSION="$(ROM_VERSION)" \
@@ -163,18 +163,20 @@ define PREPARE_OUTPUT
 		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
 	fi && \
 	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
-	cp -fv *.img.xz /output/ && \
-	cp -v cachedBuildDate.txt /output/
+	cp -fv *.img.xz /out/ && \
+	cp -v cachedBuildDate.txt /out/
 endef
 
 # Step 16: Setup for vndklite build using normal build output
 define SETUP_VNDKLITE_WORKSPACE
+	# Create tmp directory if it doesn't exist
+	mkdir -p ../tmp/ && \
 	# Copy normal build output from output directory
-	cp -v /output/*.img.xz . 2>/dev/null || echo 'No images found' && \
+	cp -v /out/*.img.xz . 2>/dev/null || echo 'No images found' && \
 	# Extract the compressed images
 	find . -name '*.img.xz' -exec xz -d "{}" \; 2>/dev/null || true && \
-	# Get the build date from the normal build
-	BUILD_DATE=$$(cat /output/cachedBuildDate.txt 2>/dev/null || date +%Y%m%d)
+	# Get the build date from the normal build or create it if it doesn't exist
+	BUILD_DATE=$$(cat /out/cachedBuildDate.txt 2>/dev/null || (echo $$(date +%Y%m%d) | tee ../tmp/cachedBuildDate.txt))
 endef
 
 # Step 17: Clone repo for vndklite
@@ -210,7 +212,7 @@ define RENAME_VNDKLITE_IMAGE
 	# Compress the image
 	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
 	# Copy the compressed image to the output directory
-	cp -fv *.img.xz /output/
+	cp -fv *.img.xz /out/
 endef
 
 # Build standard GSI (vanilla/microg/gapps)
