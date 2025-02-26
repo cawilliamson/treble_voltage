@@ -8,6 +8,7 @@
 	build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
 
 # Configuration variables
+BUILD_DATE := $(shell date +%Y%m%d)
 DEBUG_PATCHES ?= false
 ROM_NAME ?= VoltageOS
 ROM_TAG ?= 15-qpr1
@@ -27,6 +28,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 	--pids-limit=0 \
 	-v "$(OUTPUT_DIR):/out:Z" \
 	-v "$(PWD):/repo:Z" \
+	-e BUILD_DATE="$(BUILD_DATE)" \
 	-e DEBUG_PATCHES="$(DEBUG_PATCHES)" \
 	-e ROM_NAME="$(ROM_NAME)" \
 	-e ROM_VERSION="$(ROM_VERSION)"
@@ -81,11 +83,8 @@ endef
 
 # Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
-	mkdir -p ../tmp/ && \
-	echo $$(date +%Y%m%d) > ../tmp/cachedBuildDate.txt && \
-	export BUILD_DATE=$$(cat ../tmp/cachedBuildDate.txt) && \
-	mv -v vendor/gapps ../tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
-	mv -v vendor/partner_gms ../tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
+	mv -v vendor/gapps /var/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
+	mv -v vendor/partner_gms /var/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
 endef
 
 # Step 7: Generate signing keys
@@ -119,10 +118,10 @@ endef
 
 # Step 10: Copy vendor files (microg/gapps)
 define COPY_VENDOR_FILES
-	if [ '"$(1)"' = '"microg"' ]; then \
-		cp -Rfv ../tmp/partner_gms vendor/ \
-	elif [ '"$(1)"' = '"gapps"' ]; then \
-		cp -Rfv ../tmp/gapps vendor/ \
+	if [ "$(1)" = "microg" ]; then \
+		cp -Rfv /var/tmp/partner_gms vendor/ \
+	elif [ "$(1)" = "gapps" ]; then \
+		cp -Rfv /var/tmp/gapps vendor/ \
 	fi
 endef
 
@@ -131,10 +130,10 @@ define BUILD_SYSTEM_IMAGE
 	. build/envsetup.sh && \
 	lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
 	make systemimage -j$(CPU_LIMIT) && \
-	if [ '"$(1)"' = '"arm64"' ]; then \
-		mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_$(3)_$(1).img \
+	if [ "$(1)" = "arm64" ]; then \
+		mv -v out/target/product/tdgsi_arm64_ab/system.img /var/tmp/system_$(3)_$(1).img \
 	else \
-		mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_$(3)_$(1).img \
+		mv -v out/target/product/tdgsi_a64_ab/system.img /var/tmp/system_$(3)_$(1).img \
 	fi
 endef
 
@@ -145,9 +144,9 @@ endef
 
 # Step 13: Cleanup vendor files
 define CLEANUP_VENDOR_FILES
-	if [ '"$(1)"' = '"microg"' ]; then \
+	if [ "$(1)" = "microg" ]; then \
 		rm -Rfv vendor/partner_gms \
-	elif [ '"$(1)"' = '"gapps"' ]; then \
+	elif [ "$(1)" = "gapps" ]; then \
 		rm -Rfv vendor/gapps \
 	fi
 endef
@@ -155,26 +154,23 @@ endef
 # Step 14: Prepare output
 define PREPARE_OUTPUT
 	cd ../tmp && \
-	if [ '"$(1)"' = '"arm64"' ]; then \
+	if [ "$(1)" = "arm64" ]; then \
 		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-$(1)-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img \
 	else \
 		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img \
 	fi && \
 	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
 	cp -fv *.img.xz /out/ && \
-	cp -v cachedBuildDate.txt /out/
 endef
 
 # Step 15: Setup for vndklite build using normal build output
 define SETUP_VNDKLITE_WORKSPACE
 	# Create tmp directory if it doesn't exist
-	mkdir -p ../tmp/ && \
+	mkdir -p /var/tmp/ && \
 	# Copy normal build output from output directory
 	cp -v /out/*.img.xz . 2>/dev/null || echo 'No images found' && \
 	# Extract the compressed images
-	find . -name '*.img.xz' -exec xz -d "{}" \; 2>/dev/null || true && \
-	# Get the build date from the normal build or create it if it doesn't exist
-	export BUILD_DATE=$$(cat /out/cachedBuildDate.txt 2>/dev/null || (echo $$(date +%Y%m%d) | tee ../tmp/cachedBuildDate.txt))
+	find . -name '*.img.xz' -exec xz -d "{}" \; 2>/dev/null || true
 endef
 
 # Step 16: Initialize repo for vndklite
