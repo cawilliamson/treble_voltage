@@ -27,6 +27,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 	--memory="$(MEM_LIMIT)" \
 	--pids-limit=0 \
 	-v "$(OUTPUT_DIR):/out:Z" \
+	-v "$(PWD):/repo:Z" \
 	-e DEBUG_PATCHES="$(DEBUG_PATCHES)" \
 	-e ROM_NAME="$(ROM_NAME)" \
 	-e ROM_VERSION="$(ROM_VERSION)" \
@@ -49,41 +50,36 @@ clean:
 	rm -rf $(OUTPUT_DIR)
 	mkdir -p $(OUTPUT_DIR)
 
-# Step 1: Checkout basic repo
-define CHECKOUT_REPO
-	git clone --depth=1 https://github.com/$(MAINTAINER)/$(REPO_NAME).git && \
-	cd $(REPO_NAME)
-endef
 
-# Step 2: Clone ROM manifest
+# Step 1: Clone ROM manifest
 define CLONE_MANIFEST
 	mkdir -p src/ && cd src/ && \
 	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs
 endef
 
-# Step 3: Copy manifest config
+# Step 2: Copy manifest config
 define COPY_MANIFEST_CONFIG
 	mkdir -p .repo/local_manifests && \
-	cp -v ../configs/*.xml .repo/local_manifests/
+	cp -v /repo/configs/*.xml .repo/local_manifests/
 endef
 
-# Step 4: Perform full sources sync
+# Step 3: Perform full sources sync
 define SYNC_SOURCES
 	repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags
 endef
 
-# Step 5: Apply patches
+# Step 4: Apply patches
 define APPLY_PATCHES
-	../patches/apply.sh . trebledroid && \
-	../patches/apply.sh . personal
+	/repo/patches/apply.sh . trebledroid && \
+	/repo/patches/apply.sh . personal
 endef
 
-# Step 6: Apply debug patches (conditional)
+# Step 5: Apply debug patches (conditional)
 define APPLY_DEBUG_PATCHES
-	if [ '$(DEBUG_PATCHES)' = 'true' ]; then ../patches/apply.sh . debug; fi
+	if [ '$(DEBUG_PATCHES)' = 'true' ]; then /repo/patches/apply.sh . debug; fi
 endef
 
-# Step 7: Setup tmp directory and stash gapps variants
+# Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
 	mkdir -p ../tmp/ && \
 	echo $$(date +%Y%m%d) > ../tmp/cachedBuildDate.txt && \
@@ -92,21 +88,21 @@ define SETUP_TMP_DIR
 	mv -v vendor/partner_gms ../tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
 endef
 
-# Step 8: Generate signing keys
+# Step 7: Generate signing keys
 define GENERATE_KEYS
 	. build/envsetup.sh && \
 	pushd vendor/voltage-priv/keys && ./gen_keys && popd
 endef
 
-# Step 9: Configure device
+# Step 8: Configure device
 define CONFIGURE_DEVICE
 	pushd device/phh/treble && \
-	cp -fv ../../../../configs/voltage-$(1).mk voltage.mk && \
+	cp -fv /repo/configs/voltage-$(1).mk voltage.mk && \
 	bash generate.sh voltage && \
 	popd
 endef
 
-# Step 10: Build treble app (vanilla only)
+# Step 9: Build treble app (vanilla only)
 define BUILD_TREBLE_APP
 	. build/envsetup.sh && \
 	pushd treble_app/ && \
@@ -114,12 +110,12 @@ define BUILD_TREBLE_APP
 	cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 	popd && \
 	pushd device/phh/treble && \
-	cp -v ../../../../configs/voltage-vanilla.mk voltage.mk && \
+	cp -v /repo/configs/voltage-vanilla.mk voltage.mk && \
 	bash generate.sh voltage && \
 	popd
 endef
 
-# Step 11: Copy vendor files (microg/gapps)
+# Step 10: Copy vendor files (microg/gapps)
 define COPY_VENDOR_FILES
 	if [ "$(1)" = "microg" ]; then \
 		cp -Rfv ../tmp/partner_gms vendor/; \
@@ -128,7 +124,7 @@ define COPY_VENDOR_FILES
 	fi
 endef
 
-# Step 12: Build system image
+# Step 11: Build system image
 define BUILD_SYSTEM_IMAGE
 	. build/envsetup.sh && \
 	lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
@@ -140,12 +136,12 @@ define BUILD_SYSTEM_IMAGE
 	fi
 endef
 
-# Step 13: Run vndk sepolicy tests (vanilla only)
+# Step 12: Run vndk sepolicy tests (vanilla only)
 define RUN_SEPOLICY_TESTS
 	make vndk-test-sepolicy -j$(CPU_LIMIT)
 endef
 
-# Step 14: Cleanup vendor files
+# Step 13: Cleanup vendor files
 define CLEANUP_VENDOR_FILES
 	if [ "$(1)" = "microg" ]; then \
 		rm -Rfv vendor/partner_gms; \
@@ -154,7 +150,7 @@ define CLEANUP_VENDOR_FILES
 	fi
 endef
 
-# Step 15: Prepare output
+# Step 14: Prepare output
 define PREPARE_OUTPUT
 	cd ../tmp && \
 	if [ "$(1)" = "arm64" ]; then \
@@ -167,7 +163,7 @@ define PREPARE_OUTPUT
 	cp -v cachedBuildDate.txt /out/
 endef
 
-# Step 16: Setup for vndklite build using normal build output
+# Step 15: Setup for vndklite build using normal build output
 define SETUP_VNDKLITE_WORKSPACE
 	# Create tmp directory if it doesn't exist
 	mkdir -p ../tmp/ && \
@@ -179,33 +175,27 @@ define SETUP_VNDKLITE_WORKSPACE
 	BUILD_DATE=$$(cat /out/cachedBuildDate.txt 2>/dev/null || (echo $$(date +%Y%m%d) | tee ../tmp/cachedBuildDate.txt))
 endef
 
-# Step 17: Clone repo for vndklite
-define CLONE_VNDKLITE_REPO
-	git clone --depth=1 https://github.com/$(MAINTAINER)/$(REPO_NAME).git
-endef
-
-# Step 18: Initialize repo for vndklite
+# Step 16: Initialize repo for vndklite
 define INIT_VNDKLITE_REPO
-	cd $(REPO_NAME) && \
 	mkdir -p src/ && cd src/ && \
 	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs && \
 	mkdir -p .repo/local_manifests && \
-	cp -v ../configs/*.xml .repo/local_manifests/ && \
+	cp -v /repo/configs/*.xml .repo/local_manifests/ && \
 	repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags --current-branch treble_adapter
 endef
 
-# Step 19: Process vndklite image using normal build output
+# Step 17: Process vndklite image using normal build output
 define PROCESS_VNDKLITE_IMAGE
-	cd $(REPO_NAME)/src/treble_adapter && \
+	cd src/treble_adapter && \
 	# Copy the normal build image to use as input for vndklite conversion
-	cp -v ../../../$(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img standard_system_$(1)_$(2).img && \
+	cp -v ../../$(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img standard_system_$(1)_$(2).img && \
 	# Run the lite-adapter script to convert the normal build to vndklite
 	bash lite-adapter.sh $(if $(filter $(2),a64),32,64) standard_system_$(1)_$(2).img && \
 	# Move the resulting vndklite image
-	mv s.img ../../../s_$(1)_$(2)_vndklite.img
+	mv s.img ../../s_$(1)_$(2)_vndklite.img
 endef
 
-# Step 20: Rename and compress vndklite image for output
+# Step 18: Rename and compress vndklite image for output
 define RENAME_VNDKLITE_IMAGE
 	# Rename the vndklite image to follow the naming convention
 	mv -v s_$(1)_$(2)_vndklite.img $(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-vndklite-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img && \
@@ -223,7 +213,7 @@ define BUILD_STANDARD_GSI
 		-e ARCH="$(2)" \
 		voltage-gsi-builder \
 		/bin/bash -c "cd /src && \
-			$(CHECKOUT_REPO) && \
+			mkdir -p src/ && cd src/ && \
 			$(CLONE_MANIFEST) && \
 			$(COPY_MANIFEST_CONFIG) && \
 			$(SYNC_SOURCES) && \
@@ -251,7 +241,6 @@ define BUILD_VNDKLITE_GSI
 		voltage-gsi-builder \
 		/bin/bash -c "cd /src && \
 			$(SETUP_VNDKLITE_WORKSPACE) && \
-			$(CLONE_VNDKLITE_REPO) && \
 			$(INIT_VNDKLITE_REPO) && \
 			$(call PROCESS_VNDKLITE_IMAGE,$(1),$(2)) && \
 			$(call RENAME_VNDKLITE_IMAGE,$(1),$(2))"
