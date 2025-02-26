@@ -8,7 +8,7 @@
 	build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
 
 # Configuration variables
-BUILD_DATE := $(shell date +%Y%m%d)
+BUILD_DATE := $(shell date "+%Y-%m-%d")
 DEBUG_PATCHES ?= false
 ROM_NAME ?= VoltageOS
 ROM_TAG ?= 15-qpr1
@@ -119,9 +119,9 @@ endef
 # Step 10: Copy vendor files (microg/gapps)
 define COPY_VENDOR_FILES
 	if [ "$(1)" = "microg" ]; then \
-		cp -Rfv /var/tmp/partner_gms vendor/ \
+		cp -Rfv /var/tmp/partner_gms vendor/; \
 	elif [ "$(1)" = "gapps" ]; then \
-		cp -Rfv /var/tmp/gapps vendor/ \
+		cp -Rfv /var/tmp/gapps vendor/; \
 	fi
 endef
 
@@ -145,9 +145,9 @@ endef
 # Step 13: Cleanup vendor files
 define CLEANUP_VENDOR_FILES
 	if [ "$(1)" = "microg" ]; then \
-		rm -Rfv vendor/partner_gms \
+		rm -Rfv vendor/partner_gms; \
 	elif [ "$(1)" = "gapps" ]; then \
-		rm -Rfv vendor/gapps \
+		rm -Rfv vendor/gapps; \
 	fi
 endef
 
@@ -210,8 +210,7 @@ define BUILD_STANDARD_GSI
 		-e BUILD_TYPE="$(1)" \
 		-e ARCH="$(2)" \
 		voltage-gsi-builder \
-		/bin/bash -c "cd /src && \
-			mkdir -p src/ && cd src/ && \
+		/bin/bash -c "
 			$(CLONE_MANIFEST) && \
 			$(COPY_MANIFEST_CONFIG) && \
 			$(SYNC_SOURCES) && \
@@ -237,7 +236,7 @@ define BUILD_VNDKLITE_GSI
 		-e BUILD_TYPE="vndklite-$(1)" \
 		-e ARCH="$(2)" \
 		voltage-gsi-builder \
-		/bin/bash -c "cd /src && \
+		/bin/bash -c " \
 			$(SETUP_VNDKLITE_WORKSPACE) && \
 			$(INIT_VNDKLITE_REPO) && \
 			$(call PROCESS_VNDKLITE_IMAGE,$(1),$(2)) && \
