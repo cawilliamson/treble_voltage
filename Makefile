@@ -27,7 +27,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 	--memory="$(MEM_LIMIT)" \
 	--pids-limit=0 \
 	-v "$(OUTPUT_DIR):/out:Z" \
-	-v "$(PWD):/repo:Z" \
+	-v "$(PWD):/work/repo:Z" \
 	-e BUILD_DATE="$(BUILD_DATE)" \
 	-e DEBUG_PATCHES="$(DEBUG_PATCHES)" \
 	-e ROM_NAME="$(ROM_NAME)" \
@@ -53,14 +53,15 @@ clean:
 # Step 1: Clone ROM manifest
 define CLONE_MANIFEST
 	mkdir -p src/ && \
-	cd src/ && \
+	pushd src/ && \
 	repo init -u https://github.com/VoltageOS/manifest.git -b "${ROM_TAG}" --depth=1 --git-lfs
+	popd
 endef
 
 # Step 2: Copy manifest config
 define COPY_MANIFEST_CONFIG
 	mkdir -p .repo/local_manifests && \
-	cp -v /repo/configs/*.xml .repo/local_manifests/
+	cp -v /work/repo/configs/*.xml .repo/local_manifests/
 endef
 
 # Step 3: Perform full sources sync
@@ -70,21 +71,21 @@ endef
 
 # Step 4: Apply patches
 define APPLY_PATCHES
-	/repo/patches/apply.sh . trebledroid && \
-	/repo/patches/apply.sh . personal
+	/work/repo/patches/apply.sh . trebledroid && \
+	/work/repo/patches/apply.sh . personal
 endef
 
 # Step 5: Apply debug patches (conditional)
 define APPLY_DEBUG_PATCHES
 	if [ '$(DEBUG_PATCHES)' = 'true' ]; then \
-		/repo/patches/apply.sh . debug; \
+		/work/repo/patches/apply.sh . debug; \
 	fi
 endef
 
 # Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
-	mv -v vendor/gapps /var/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
-	mv -v vendor/partner_gms /var/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
+	mv -v vendor/gapps /work/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
+	mv -v vendor/partner_gms /work/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
 endef
 
 # Step 7: Generate signing keys
@@ -98,7 +99,7 @@ endef
 # Step 8: Configure device
 define CONFIGURE_DEVICE
 	pushd device/phh/treble && \
-	cp -fv /repo/configs/voltage-$(1).mk voltage.mk && \
+	cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
 	bash generate.sh voltage && \
 	popd
 endef
@@ -111,7 +112,7 @@ define BUILD_TREBLE_APP
 	cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 	popd && \
 	pushd device/phh/treble && \
-	cp -v /repo/configs/voltage-vanilla.mk voltage.mk && \
+	cp -v /work/repo/configs/voltage-vanilla.mk voltage.mk && \
 	bash generate.sh voltage && \
 	popd
 endef
@@ -119,9 +120,9 @@ endef
 # Step 10: Copy vendor files (microg/gapps)
 define COPY_VENDOR_FILES
 	if [ "$(1)" = "microg" ]; then \
-		cp -Rfv /var/tmp/partner_gms vendor/; \
+		cp -Rfv /work/tmp/partner_gms vendor/; \
 	elif [ "$(1)" = "gapps" ]; then \
-		cp -Rfv /var/tmp/gapps vendor/; \
+		cp -Rfv /work/tmp/gapps vendor/; \
 	fi
 endef
 
@@ -131,9 +132,9 @@ define BUILD_SYSTEM_IMAGE
 	lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
 	make systemimage -j$(CPU_LIMIT) && \
 	if [ "$(1)" = "arm64" ]; then \
-		mv -v out/target/product/tdgsi_arm64_ab/system.img /var/tmp/system_$(3)_$(1).img; \
+		mv -v out/target/product/tdgsi_arm64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
 	else \
-		mv -v out/target/product/tdgsi_a64_ab/system.img /var/tmp/system_$(3)_$(1).img; \
+		mv -v out/target/product/tdgsi_a64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
 	fi
 endef
 
@@ -166,7 +167,7 @@ endef
 # Step 15: Setup for vndklite build using normal build output
 define SETUP_VNDKLITE_WORKSPACE
 	# Create tmp directory if it doesn't exist
-	mkdir -p /var/tmp/ && \
+	mkdir -p /work/tmp/ && \
 	# Copy normal build output from output directory
 	cp -v /out/*.img.xz . 2>/dev/null || echo 'No images found' && \
 	# Extract the compressed images
@@ -178,7 +179,7 @@ define INIT_VNDKLITE_REPO
 	mkdir -p src/ && cd src/ && \
 	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs && \
 	mkdir -p .repo/local_manifests && \
-	cp -v /repo/configs/*.xml .repo/local_manifests/ && \
+	cp -v /work/repo/configs/*.xml .repo/local_manifests/ && \
 	repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags --current-branch treble_adapter
 endef
 
