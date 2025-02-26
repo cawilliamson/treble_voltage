@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install -y \
 
 # install libncurses5
 RUN cd /var/tmp && \
-    curl -O http://launchpadlibrarian.net/648013231/libtinfo5_6.4-2_amd64.deb && \
+    curl -O http://launchpadlibrarian.net/648013231/libtinfo5_6.4-2_amd64.deb && \H
     dpkg -i libtinfo5_6.4-2_amd64.deb && \
     curl -LO http://launchpadlibrarian.net/648013227/libncurses5_6.4-2_amd64.deb && \
     dpkg -i libncurses5_6.4-2_amd64.deb && \
@@ -60,12 +60,9 @@ RUN cd /var/tmp && \
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
     && chmod a+x /usr/local/bin/repo
 
-# Set up working directory
-WORKDIR /src
-
-# Create output directory
-RUN mkdir -p /output
-
 # Configure git
 RUN git config --global user.email 'androidbuild@localhost' && \
     git config --global user.name 'androidbuild'
+
+# Set up working directory
+WORKDIR /src
