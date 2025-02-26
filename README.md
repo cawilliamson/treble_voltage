@@ -1,98 +1,84 @@
-<p align="center">
-  <img src="https://avatars.githubusercontent.com/u/81792437?s=200&v=4"><br>
-  <img src="https://github.com/cawilliamson/treble_voltage/actions/workflows/build-gsi.yml/badge.svg">
-</p>
+# VoltageOS GSI Build System
 
-### Building
-You'll need to get familiar with [Git and Repo](https://source.android.com/source/using-repo.html) as well as [How to build a GSI](https://github.com/phhusson/treble_experimentations/wiki/How-to-build-a-GSI%3F).
+This repository contains a containerized build system for VoltageOS GSI images using Podman. It replicates the GitHub Actions workflow in a local environment.
 
-## Glone base repo
-Firstly we need to clone the base repo (this one) which we can do by runnng the following:
+## Prerequisites
+
+- [Podman](https://podman.io/) (or Docker)
+- At least 200GB of free disk space
+- At least 16GB of RAM (32GB recommended)
+- A fast internet connection
+
+## Usage
+
+The build system uses a Makefile to orchestrate the build process. Here are the available targets:
+
+### Build Everything
 
 ```bash
-git clone --depth=1 https://github.com/cawilliamson/treble_voltage.git
-cd treble_voltage/
+make
 ```
 
-## Initalise the Treble VoltageOS repo
-Now we want to fetch the VoltageOS manifest files:
+This will build the container image and all GSI variants (vanilla, microG, GApps, and vndklite).
+
+### Build Container Image Only
+
 ```bash
-mkdir -p src/
-cd src/
-repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1 --git-lfs
+make build-container
 ```
 
-## Copy our manifest
-Copy our own manifest which is needed for the GSI portion of the build:
+### Build Specific GSI Variants
+
 ```bash
-mkdir -p .repo/local_manifests
-cp -v ../configs/*.xml .repo/local_manifests/
+make build-vanilla    # Build vanilla GSI
+make build-microg     # Build microG GSI
+make build-gapps      # Build GApps GSI
+make build-vndklite   # Build vndklite variants
 ```
 
-## Sync the repository
-Sync ALL necessary sources to build the ROM:
+### Clean Build Directories
+
 ```bash
-repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+make clean
 ```
 
-## Apply the patches
-Copy the patches folder to the ROM folder and copy the apply-patches.sh to the rom folder. and run this in the ROM folder:
+## Configuration
+
+You can customize the build process with the following variables:
+
 ```bash
-../patches/apply.sh . trebledroid
-../patches/apply.sh . personal
+make ROM_NAME=VoltageOS ROM_VERSION=4.3 MAINTAINER=yourusername REPO_NAME=your-repo
 ```
 
-## Build the TrebleApp
-In order to build our patched TrebleApp you need to run the following:
+Available variables:
+
+- `ROM_NAME`: Name of the ROM (default: VoltageOS)
+- `ROM_VERSION`: Version of the ROM (default: 4.2)
+- `MAINTAINER`: GitHub username of the maintainer (default: cawilliamson)
+- `REPO_NAME`: Repository name (default: treble_voltage)
+- `APPLY_DEBUG_PATCHES`: Whether to apply debug patches (default: true)
+- `OUTPUT_DIR`: Directory for output files (default: ./output)
+- `MAX_CPU_PERCENT`: Maximum CPU usage in percent (default: 100)
+- `MAX_MEM_PERCENT`: Maximum memory usage in percent (default: 100)
+
+## Resource Limits
+
+You can limit CPU and memory usage with:
+
 ```bash
-. build/envsetup.sh
-pushd treble_app/
-bash build.sh release
-cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
-popd
+make MAX_CPU_PERCENT=50 MAX_MEM_PERCENT=75
 ```
 
-## Generate base ROM config
-In order to generate the base ROM config run the following commands:
-```bash
-pushd device/phh/treble
-cp -v ../../../configs/voltage.mk .
-bash generate.sh voltage
-popd
-```
+This will use 50% of available CPU cores and 75% of available memory.
 
-## Compilation
-In the ROM folder, run this for building an arm64 standard build (needed even if you want a vndklite build):
-```bash
-. build/envsetup.sh
-lunch treble_arm64_bvN-ap1a-userdebug
-make systemimage -j$(nproc --all)
-```
+## Output
 
-## Convert standard build to vndklite build (optional)
-Run the following commands if you require a vndklite build:
-```bash
-pushd treble_adapter/
-cp -v ../out/target/product/tdgsi_arm64_ab/system.img standard_system_arm64.img
-sudo bash-adapter.sh 64 standard_system_arm64.img
-sudo mv s.img s_arm64.img
-sudo chown $(whoami):$(id | awk -F'[()]' '{ print $2 }') s_arm64.img
-popd
-```
-
-## Troubleshooting
-If you face any conflicts while applying patches, apply the patch manually.
-For any other issues, report them via the [Issues](https://github.com/cawilliamson/treble_voltage/issues) tab.
+The built images will be available in the `output` directory (or the directory specified by `OUTPUT_DIR`).
 
 ## Credits
-These people have helped this project in some way or another, so they should be the ones who receive all the credit:
+
 - [VoltageOS Team](https://github.com/VoltageOS)
 - [Phhusson](https://github.com/phhusson)
 - [AndyYan](https://github.com/AndyCGYan)
 - [Ponces](https://github.com/ponces)
-- [Peter Cai](https://github.com/PeterCxy)
-- [Iceows](https://github.com/Iceows)
-- [ChonDoit](https://github.com/ChonDoit)
-- [Nazim](https://github.com/naz664)
-- [UniversalX](https://github.com/orgs/UniversalX-devs/)
-- [TQMatvey](https://github.com/TQMatvey)
+- And all other contributors to the project

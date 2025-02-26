@@ -9,7 +9,7 @@ env:
   MAINTAINER: cawilliamson
   REPO_NAME: treble_voltage
   ROM_NAME: VoltageOS
-  ROM_VERSION: 3.7
+  ROM_VERSION: 4.2
 
 jobs:
   build-gsi:
@@ -25,7 +25,7 @@ jobs:
       run: |
         mkdir -p src/
         pushd src/
-          repo init -u https://github.com/VoltageOS/manifest.git -b 14 --depth=1 --git-lfs
+          repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs
         popd
     - name: copy manifest config
       run: |
