@@ -10,6 +10,7 @@
 # Configuration variables
 DEBUG_PATCHES ?= false
 ROM_NAME ?= VoltageOS
+ROM_TAG ?= 15-qpr1
 ROM_VERSION ?= 4.2
 OUTPUT_DIR ?= $(PWD)/out
 MAX_CPU_PERCENT ?= 100
@@ -51,7 +52,7 @@ clean:
 define CLONE_MANIFEST
 	mkdir -p src/ && \
 	cd src/ && \
-	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs
+	repo init -u https://github.com/VoltageOS/manifest.git -b "${ROM_TAG}" --depth=1 --git-lfs
 endef
 
 # Step 2: Copy manifest config
@@ -74,7 +75,7 @@ endef
 # Step 5: Apply debug patches (conditional)
 define APPLY_DEBUG_PATCHES
 	if [ '$(DEBUG_PATCHES)' = 'true' ]; then \
-		/repo/patches/apply.sh . debug \
+		/repo/patches/apply.sh . debug; \
 	fi
 endef
 
@@ -82,7 +83,7 @@ endef
 define SETUP_TMP_DIR
 	mkdir -p ../tmp/ && \
 	echo $$(date +%Y%m%d) > ../tmp/cachedBuildDate.txt && \
-	BUILD_DATE=$$(cat ../tmp/cachedBuildDate.txt) && \
+	export BUILD_DATE=$$(cat ../tmp/cachedBuildDate.txt) && \
 	mv -v vendor/gapps ../tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
 	mv -v vendor/partner_gms ../tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
 endef
@@ -118,9 +119,9 @@ endef
 
 # Step 10: Copy vendor files (microg/gapps)
 define COPY_VENDOR_FILES
-	if [ "$(1)" = "microg" ]; then \
+	if [ '"$(1)"' = '"microg"' ]; then \
 		cp -Rfv ../tmp/partner_gms vendor/ \
-	elif [ "$(1)" = "gapps" ]; then \
+	elif [ '"$(1)"' = '"gapps"' ]; then \
 		cp -Rfv ../tmp/gapps vendor/ \
 	fi
 endef
@@ -130,7 +131,7 @@ define BUILD_SYSTEM_IMAGE
 	. build/envsetup.sh && \
 	lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
 	make systemimage -j$(CPU_LIMIT) && \
-	if [ "$(1)" = "arm64" ]; then \
+	if [ '"$(1)"' = '"arm64"' ]; then \
 		mv -v out/target/product/tdgsi_arm64_ab/system.img ../tmp/system_$(3)_$(1).img \
 	else \
 		mv -v out/target/product/tdgsi_a64_ab/system.img ../tmp/system_$(3)_$(1).img \
@@ -144,9 +145,9 @@ endef
 
 # Step 13: Cleanup vendor files
 define CLEANUP_VENDOR_FILES
-	if [ "$(1)" = "microg" ]; then \
+	if [ '"$(1)"' = '"microg"' ]; then \
 		rm -Rfv vendor/partner_gms \
-	elif [ "$(1)" = "gapps" ]; then \
+	elif [ '"$(1)"' = '"gapps"' ]; then \
 		rm -Rfv vendor/gapps \
 	fi
 endef
@@ -154,12 +155,12 @@ endef
 # Step 14: Prepare output
 define PREPARE_OUTPUT
 	cd ../tmp && \
-	if [ "$(1)" = "arm64" ]; then \
+	if [ '"$(1)"' = '"arm64"' ]; then \
 		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-$(1)-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img \
 	else \
 		mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img \
 	fi && \
-	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \  && \
+	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
 	cp -fv *.img.xz /out/ && \
 	cp -v cachedBuildDate.txt /out/
 endef
@@ -171,9 +172,9 @@ define SETUP_VNDKLITE_WORKSPACE
 	# Copy normal build output from output directory
 	cp -v /out/*.img.xz . 2>/dev/null || echo 'No images found' && \
 	# Extract the compressed images
-	find . -name '*.img.xz' -exec xz -d "{}" \  2>/dev/null || true && \
+	find . -name '*.img.xz' -exec xz -d "{}" \; 2>/dev/null || true && \
 	# Get the build date from the normal build or create it if it doesn't exist
-	BUILD_DATE=$$(cat /out/cachedBuildDate.txt 2>/dev/null || (echo $$(date +%Y%m%d) | tee ../tmp/cachedBuildDate.txt))
+	export BUILD_DATE=$$(cat /out/cachedBuildDate.txt 2>/dev/null || (echo $$(date +%Y%m%d) | tee ../tmp/cachedBuildDate.txt))
 endef
 
 # Step 16: Initialize repo for vndklite
@@ -201,7 +202,7 @@ define RENAME_VNDKLITE_IMAGE
 	# Rename the vndklite image to follow the naming convention
 	mv -v s_$(1)_$(2)_vndklite.img $(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-vndklite-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img && \
 	# Compress the image
-	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \  && \
+	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
 	# Copy the compressed image to the output directory
 	cp -fv *.img.xz /out/
 endef

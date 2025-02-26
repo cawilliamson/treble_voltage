@@ -1,10 +1,10 @@
 # VoltageOS GSI Build System
 
-This repository contains a containerized build system for VoltageOS GSI images using Podman. It replicates the GitHub Actions workflow in a local environment.
+This repository contains a containerized build system for VoltageOS GSI images using Podman.
 
 ## Prerequisites
 
-- [Podman](https://podman.io/) (or Docker)
+- [Podman](https://podman.io/)
 - At least 200GB of free disk space
 - At least 16GB of RAM (32GB recommended)
 - A fast internet connection
