@@ -19,10 +19,10 @@
   <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" clone-depth="1" />
 
   <!-- calyxos: aurora store extension -->
-  <project path="packages/apps/AuroraStorePrivilegedExtension" name="platform_packages_apps_AuroraStorePrivilegedExtension" remote="calyxos" revision="android14" clone-depth="1" />
+  <project path="packages/apps/AuroraStorePrivilegedExtension" name="platform_packages_apps_AuroraStorePrivilegedExtension" remote="calyxos" revision="android15" clone-depth="1" />
 
   <!-- calyxos: f-droid extension -->
-  <project path="packages/apps/F-DroidPrivilegedExtension" name="platform_packages_apps_F-DroidPrivilegedExtension" remote="calyxos" revision="android14" clone-depth="1" />
+  <project path="packages/apps/F-DroidPrivilegedExtension" name="platform_packages_apps_F-DroidPrivilegedExtension" remote="calyxos" revision="android15" clone-depth="1" />
 
   <!-- divested mobile: mulch webview -->
   <remove-project name="LineageOS/android_external_chromium-webview_patches" />
@@ -33,7 +33,7 @@
   <project path="external/mulch-webview" name="mulch" remote="divested-mobile" revision="master" clone-depth="1" />
 
   <!-- grapheneos: app store -->
-  <project path="external/Apps" name="platform_external_AppStore" remote="grapheneos" revision="14" clone-depth="1" />
+  <project path="external/Apps" name="platform_external_AppStore" remote="grapheneos" revision="15" clone-depth="1" />
 
   <!-- lineageos4microg: microg -->
   <project path="vendor/partner_gms" name="android_vendor_partner_gms" remote="lineageos4microg" revision="master" clone-depth="1" />
@@ -58,7 +58,7 @@
   <project name="vendor_vndk" path="treble_adapter/vendor_vndk" remote="phhusson" revision="android-10.0" clone-depth="1" />
 
   <!-- trebledroid: device -->
-  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-14.0" clone-depth="1" />
+  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-15.0" clone-depth="1" />
 
   <!-- trebledroid: hardware overlay -->
   <project path="vendor/hardware_overlay" name="vendor_hardware_overlay" remote="trebledroid" revision="pie" clone-depth="1" />
@@ -67,5 +67,5 @@
   <project path="treble_app" name="treble_app" remote="trebledroid" revision="master" clone-depth="1" />
 
   <!-- trebledroid: vendor interface -->
-  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="android-14.0" clone-depth="1" />
+  <project path="vendor/interfaces" name="vendor_interfaces" remote="trebledroid" revision="android-15.0" clone-depth="1" />
 </manifest>
