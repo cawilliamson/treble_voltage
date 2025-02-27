@@ -55,121 +55,120 @@ clean:
 
 # Step 1: Clone ROM manifest
 define CLONE_MANIFEST
-	pushd /work/src
-		repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs
+	pushd /work/src && \
+		repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs && \
 	popd
 endef
 
 # Step 2: Copy manifest config
 define COPY_MANIFEST_CONFIG
-	pushd /work/src
-		mkdir -p .repo/local_manifests
-		cp -v /work/repo/configs/*.xml .repo/local_manifests/
+	pushd /work/src && \
+		mkdir -p .repo/local_manifests && \
+		cp -v /work/repo/configs/*.xml .repo/local_manifests/ && \
 	popd
 endef
 
 # Step 3: Perform full sources sync
 define SYNC_SOURCES
-	pushd /work/src
-		repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags
+	pushd /work/src && \
+		repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags && \
 	popd
 endef
 
 # Step 4: Apply patches
 define APPLY_PATCHES
-	pushd /work/src
-		/work/repo/patches/apply.sh . trebledroid
-		/work/repo/patches/apply.sh . personal
+	pushd /work/src && \
+		/work/repo/patches/apply.sh . trebledroid && \
+		/work/repo/patches/apply.sh . personal && \
 	popd
 endef
 
 # Step 5: Apply debug patches (conditional)
 define APPLY_DEBUG_PATCHES
-	if [ '$(DEBUG_PATCHES)' = 'true' ]; then
-		pushd /work/src
-			/work/repo/patches/apply.sh . debug
-		popd
+	if [ '$(DEBUG_PATCHES)' = 'true' ]; then \
+		pushd /work/src && \
+			/work/repo/patches/apply.sh . debug && \
+		popd; \
 	fi
 endef
 
 # Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
-	pushd /work/src
-		mv -v src/vendor/gapps /work/tmp/ 2>/dev/null || echo 'vendor/gapps not found'
-		mv -v src/vendor/partner_gms /work/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found'
+	pushd /work/src && \
+		mv -v src/vendor/gapps /work/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
+		mv -v src/vendor/partner_gms /work/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found' && \
 	popd
 endef
 
 # Step 7: Generate signing keys
 define GENERATE_KEYS
-	pushd /work/src
-		. build/envsetup.sh
-		pushd vendor/voltage-priv/keys
-			./gen_keys
-		popd
+	pushd /work/src && \
+		. build/envsetup.sh && \
+		pushd vendor/voltage-priv/keys && \
+			./gen_keys && \
+		popd && \
 	popd
 endef
 
 # Step 8: Configure device
 define CONFIGURE_DEVICE
-	pushd /work/src/device/phh/treble
-		cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk
-		bash generate.sh voltage
+	pushd /work/src/device/phh/treble && \
+		cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
+		bash generate.sh voltage && \
 	popd
 endef
 
 # Step 9: Build treble app
 define BUILD_TREBLE_APP
-	pushd /work/src/treble_app/
-		bash build.sh release
-		cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk
-	popd
-
-	pushd /work/src/device/phh/treble
-		cp -v /work/repo/configs/voltage-vanilla.mk voltage.mk
-		bash generate.sh voltage
+	pushd /work/src/treble_app/ && \
+		bash build.sh release && \
+		cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
+	popd && \
+	pushd /work/src/device/phh/treble && \
+		cp -v /work/repo/configs/voltage-vanilla.mk voltage.mk && \
+		bash generate.sh voltage && \
 	popd
 endef
 
 # Step 10: Copy vendor files (microg/gapps)
 define COPY_VENDOR_FILES
-	if [ "$(1)" = "microg" ]; then
-		cp -Rfv /work/tmp/partner_gms /work/src/vendor/
-	elif [ "$(1)" = "gapps" ]; then
-		cp -Rfv /work/tmp/gapps /work/src/vendor/
+	if [ "$(1)" = "microg" ]; then \
+		cp -Rfv /work/tmp/partner_gms /work/src/vendor/; \
+	elif [ "$(1)" = "gapps" ]; then \
+		cp -Rfv /work/tmp/gapps /work/src/vendor/; \
 	fi
 endef
 
 # Step 11: Build system image
 define BUILD_SYSTEM_IMAGE
-	pushd /work/src
-		lunch treble_$(1)_b$(2)N-ap1a-userdebug
-		make systemimage -j$(CPU_LIMIT)
-		if [ "$(1)" = "arm64" ]; then
-			mv -v out/target/product/tdgsi_arm64_ab/system.img /work/tmp/system_$(3)_$(1).img
-		else
-			mv -v out/target/product/tdgsi_a64_ab/system.img /work/tmp/system_$(3)_$(1).img
-		fi
+	pushd /work/src && \
+		lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
+		make systemimage -j$(CPU_LIMIT) && \
+		if [ "$(1)" = "arm64" ]; then \
+			mv -v out/target/product/tdgsi_arm64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
+		else \
+			mv -v out/target/product/tdgsi_a64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
+		fi && \
 	popd
 endef
 
 # Step 12: Run vndk sepolicy tests (vanilla only)
 define RUN_SEPOLICY_TESTS
-	pushd /work/src
-		make vndk-test-sepolicy -j$(CPU_LIMIT)
+	pushd /work/src && \
+		make vndk-test-sepolicy -j$(CPU_LIMIT) && \
 	popd
 endef
 
 # Step 13: Prepare output
 define PREPARE_OUTPUT
-	pushd /work/tmp
-		if [ "$(1)" = "arm64" ]; then
-			mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-$(1)-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img
-		else
-			mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img
-		fi
-		find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \;
-		cp -fv *.img.xz /out/
+	pushd /work/tmp && \
+		if [ "$(1)" = "arm64" ]; then \
+			mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-$(1)-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
+		else \
+			mv -v system_$(2)_$(1).img $(ROM_NAME)-$(2)-arm32_binder64-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img; \
+		fi && \
+		find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
+		cp -fv *.img.xz /out/ && \
 	popd
 endef
 
@@ -177,29 +176,29 @@ endef
 # # Step 15: Setup for vndklite build using normal build output
 # define SETUP_VNDKLITE_WORKSPACE
 # 	# Create tmp directory if it doesn't exist
-# 	mkdir -p /work/tmp/
+# 	mkdir -p /work/tmp/ && \
 # 	# Copy normal build output from output directory
-# 	cp -v /out/*.img.xz . 2>/dev/null || echo 'No images found'
+# 	cp -v /out/*.img.xz . 2>/dev/null || echo 'No images found' && \
 # 	# Extract the compressed images
 # 	find . -name '*.img.xz' -exec xz -d "{}" \; 2>/dev/null || true
 # endef
 #
 # # Step 16: Initialize repo for vndklite
 # define INIT_VNDKLITE_REPO
-# 	mkdir -p src/ && cd src/
-# 	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs
-# 	mkdir -p .repo/local_manifests
-# 	cp -v /work/repo/configs/*.xml .repo/local_manifests/
+# 	mkdir -p src/ && cd src/ && \
+# 	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs && \
+# 	mkdir -p .repo/local_manifests && \
+# 	cp -v /work/repo/configs/*.xml .repo/local_manifests/ && \
 # 	repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags --current-branch treble_adapter
 # endef
 #
 # # Step 17: Process vndklite image using normal build output
 # define PROCESS_VNDKLITE_IMAGE
-# 	cd src/treble_adapter
+# 	cd src/treble_adapter && \
 # 	# Copy the normal build image to use as input for vndklite conversion
-# 	cp -v ../../$(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img standard_system_$(1)_$(2).img
+# 	cp -v ../../$(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img standard_system_$(1)_$(2).img && \
 # 	# Run the lite-adapter script to convert the normal build to vndklite
-# 	bash lite-adapter.sh $(if $(filter $(2),a64),32,64) standard_system_$(1)_$(2).img
+# 	bash lite-adapter.sh $(if $(filter $(2),a64),32,64) standard_system_$(1)_$(2).img && \
 # 	# Move the resulting vndklite image
 # 	mv s.img ../../s_$(1)_$(2)_vndklite.img
 # endef
@@ -207,9 +206,9 @@ endef
 # # Step 18: Rename and compress vndklite image for output
 # define RENAME_VNDKLITE_IMAGE
 # 	# Rename the vndklite image to follow the naming convention
-# 	mv -v s_$(1)_$(2)_vndklite.img $(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-vndklite-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img
+# 	mv -v s_$(1)_$(2)_vndklite.img $(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-vndklite-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img && \
 # 	# Compress the image
-# 	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \;
+# 	find . -maxdepth 1 -name '*.img' -exec xz -9 -T0 -v -z "{}" \; && \
 # 	# Copy the compressed image to the output directory
 # 	cp -fv *.img.xz /out/
 # endef
@@ -220,21 +219,19 @@ define BUILD_STANDARD_GSI
 		-e BUILD_TYPE="$(1)" \
 		-e ARCH="$(2)" \
 		voltage-gsi-builder \
-		/bin/bash <<'EOF'
-$(CLONE_MANIFEST)
-$(COPY_MANIFEST_CONFIG)
-$(SYNC_SOURCES)
-$(APPLY_PATCHES)
-$(APPLY_DEBUG_PATCHES)
-$(SETUP_TMP_DIR)
-$(GENERATE_KEYS)
-$(call CONFIGURE_DEVICE,$(1))
-$(BUILD_TREBLE_APP)
-$(call COPY_VENDOR_FILES,$(1))
-$(call BUILD_SYSTEM_IMAGE,$(2),$(3),$(1))
-$(RUN_SEPOLICY_TESTS)
-$(call PREPARE_OUTPUT,$(2),$(1))
-EOF
+		/bin/bash -c '$(CLONE_MANIFEST) && \
+		$(COPY_MANIFEST_CONFIG) && \
+		$(SYNC_SOURCES) && \
+		$(APPLY_PATCHES) && \
+		$(APPLY_DEBUG_PATCHES) && \
+		$(SETUP_TMP_DIR) && \
+		$(GENERATE_KEYS) && \
+		$(call CONFIGURE_DEVICE,$(1)) && \
+		$(BUILD_TREBLE_APP) && \
+		$(call COPY_VENDOR_FILES,$(1)) && \
+		$(call BUILD_SYSTEM_IMAGE,$(2),$(3),$(1)) && \
+		$(RUN_SEPOLICY_TESTS) && \
+		$(call PREPARE_OUTPUT,$(2),$(1))'
 endef
 # Commented out vndklite function - will address later
 # # Build vndklite GSI (using normal build output)
@@ -246,12 +243,10 @@ endef
 # 		-e BUILD_TYPE="vndklite-$(1)" \
 # 		-e ARCH="$(2)" \
 # 		voltage-gsi-builder \
-# 		/bin/bash <<'EOF'
-# 			$(SETUP_VNDKLITE_WORKSPACE)
-# 			$(INIT_VNDKLITE_REPO)
-# 			$(call PROCESS_VNDKLITE_IMAGE,$(1),$(2))
-# 			$(call RENAME_VNDKLITE_IMAGE,$(1),$(2))
-# EOF
+# 		/bin/bash -c '$(SETUP_VNDKLITE_WORKSPACE) && \
+# 		$(INIT_VNDKLITE_REPO) && \
+# 		$(call PROCESS_VNDKLITE_IMAGE,$(1),$(2)) && \
+# 		$(call RENAME_VNDKLITE_IMAGE,$(1),$(2))'
 # endef
 
 # Build vanilla arm64 GSI
