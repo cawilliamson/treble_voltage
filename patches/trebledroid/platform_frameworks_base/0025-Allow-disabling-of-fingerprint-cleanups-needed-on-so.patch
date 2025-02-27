@@ -1,25 +1,25 @@
-From 2a1ee059c06724737018301410ced6844e011b16 Mon Sep 17 00:00:00 2001
+From 8d722566bd472f10985094f1e4384c1c41765000 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 2 Apr 2022 18:04:01 -0400
 Subject: [PATCH 25/54] Allow disabling of fingerprint cleanups, needed on some
  Realme devices that cant enumerate
 
 ---
- .../biometrics/sensors/fingerprint/hidl/Fingerprint21.java      | 2 ++
+ .../sensors/fingerprint/aidl/FingerprintProvider.java           | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/Fingerprint21.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/Fingerprint21.java
-index ad1451e53..6edfff190 100644
---- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/Fingerprint21.java
-+++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/Fingerprint21.java
-@@ -1013,6 +1013,8 @@ public class Fingerprint21 implements IHwBinder.DeathRecipient, ServiceProvider
- 
-     private void scheduleInternalCleanup(int userId,
-             @Nullable ClientMonitorCallback callback) {
-+            final boolean mNocleanup = android.os.SystemProperties.getBoolean("persist.sys.phh.fingerprint.nocleanup", false);
-+            if(mNocleanup) return;
-             if (mCleanup) {  
+diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
+index 456591c3076f..b3d9a1c8c4d3 100644
+--- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
++++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
+@@ -673,6 +673,8 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+     @Override
+     public void scheduleInternalCleanup(int sensorId, int userId,
+             @Nullable ClientMonitorCallback callback, boolean favorHalEnrollments) {
++	final boolean mNocleanup = android.os.SystemProperties.getBoolean("persist.sys.phh.fingerprint.nocleanup", false);
++	if(mNocleanup) return;
          mHandler.post(() -> {
-             scheduleUpdateActiveUserWithoutHandler(userId);
---
-2.34.1
+             final FingerprintInternalCleanupClient client =
+                     new FingerprintInternalCleanupClient(mContext,
+-- 
+2.25.1

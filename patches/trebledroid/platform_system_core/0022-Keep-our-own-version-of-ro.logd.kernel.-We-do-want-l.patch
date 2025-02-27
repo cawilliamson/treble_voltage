@@ -1,7 +1,7 @@
-From ba54501631df4d08e45f576cc57d0b45ee4d85a4 Mon Sep 17 00:00:00 2001
+From d7b92ae01a8af84ec6094e9fb8f774039854e747 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 25 Nov 2023 09:51:14 -0500
-Subject: [PATCH 22/26] Keep our own version of ro.logd.kernel. We do want
+Subject: [PATCH 22/28] Keep our own version of ro.logd.kernel. We do want
  logcat -b kernel, unlike what OEM set from their vendor
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH 22/26] Keep our own version of ro.logd.kernel. We do want
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/init/property_service.cpp b/init/property_service.cpp
-index dbd1e61a5..b2fedebd8 100644
+index 8c0cc6442..554f61771 100644
 --- a/init/property_service.cpp
 +++ b/init/property_service.cpp
 @@ -815,7 +815,7 @@ static void LoadProperties(char* data, const char* filter, const char* filename,
@@ -22,5 +22,4 @@ index dbd1e61a5..b2fedebd8 100644
                      } else {
                          it->second = value;
 -- 
-2.34.1
-
+2.25.1

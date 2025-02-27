@@ -1,18 +1,18 @@
-From 1cdec442e37f35dcb8fcadf103c63901fb94b58c Mon Sep 17 00:00:00 2001
+From 104bc48421be99c5051ba0434608da905d8909ca Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Wed, 11 Mar 2020 14:02:35 +0100
-Subject: [PATCH 5/5] Every voldmanaged storage is adoptable
+Subject: [PATCH 5/6] Every voldmanaged storage is adoptable
 
 ---
  main.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/main.cpp b/main.cpp
-index 261f4d4..a45215f 100644
+index 078ee14b..475060dc 100644
 --- a/main.cpp
 +++ b/main.cpp
-@@ -275,7 +275,7 @@ static int process_config(VolumeManager* vm, VoldConfigs* configs) {
-             int partnum = entry.partnum;
+@@ -269,7 +269,7 @@ static int process_config(VolumeManager* vm, VoldConfigs* configs) {
+             std::string nickname(entry.label);
              int flags = 0;
  
 -            if (entry.is_encryptable()) {
@@ -20,6 +20,5 @@ index 261f4d4..a45215f 100644
                  flags |= android::vold::Disk::Flags::kAdoptable;
                  configs->has_adoptable = true;
              }
---
-2.34.1
-
+-- 
+2.25.1
