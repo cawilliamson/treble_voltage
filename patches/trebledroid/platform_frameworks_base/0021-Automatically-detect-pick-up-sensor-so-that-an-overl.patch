@@ -1,4 +1,4 @@
-From bd0c7445a8e30b1834f167e8fb6844c5eaedf2dc Mon Sep 17 00:00:00 2001
+From ce0295abf59afef0285f0d6f7917c72a0032a4c6 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 20 Mar 2021 14:31:01 +0100
 Subject: [PATCH 21/54] Automatically detect pick up sensor, so that an overlay
@@ -46,5 +46,4 @@ index 47541ca16cda..28168b9208f5 100644
      /** @hide */
      public boolean tapGestureEnabled(int user) {
 -- 
-2.34.1
-
+2.25.1

@@ -1,7 +1,7 @@
-From ce712b5cfed6a037d90daef047717e68f0ad1d2f Mon Sep 17 00:00:00 2001
+From a9ba0875b31277b28d0f3615d8c795fbcaf714de Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Fri, 28 Apr 2023 12:29:05 -0400
-Subject: [PATCH 12/26] Allow apex on > 5.0 kernels. This is needed because on
+Subject: [PATCH 12/28] Allow apex on > 5.0 kernels. This is needed because on
  Pixels, camera HAL are exclusively in vendor apex
 
 Change-Id: I334cde4c5557b0ff70d550205c5bb727d4b5dbf5
@@ -10,10 +10,10 @@ Change-Id: I334cde4c5557b0ff70d550205c5bb727d4b5dbf5
  1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/init/property_service.cpp b/init/property_service.cpp
-index eedad50f3..dbd1e61a5 100644
+index 7b3861534..8c0cc6442 100644
 --- a/init/property_service.cpp
 +++ b/init/property_service.cpp
-@@ -64,6 +64,7 @@
+@@ -61,6 +61,7 @@
  #include <selinux/android.h>
  #include <selinux/label.h>
  #include <selinux/selinux.h>
@@ -50,5 +50,4 @@ index eedad50f3..dbd1e61a5 100644
                      } else {
                          it->second = value;
 -- 
-2.34.1
-
+2.25.1
