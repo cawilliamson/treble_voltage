@@ -68,10 +68,19 @@ define COPY_MANIFEST_CONFIG
 	popd
 endef
 
-# Step 3: Perform full sources sync
+# Step 3: Perform full sources sync with retry mechanism
 define SYNC_SOURCES
 	pushd /work/src && \
-		repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags && \
+		while true; do \
+			echo "Attempting repo sync..." && \
+			if repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags; then \
+				echo "Repo sync completed successfully!" && \
+				break; \
+			else \
+				echo "Repo sync failed. Waiting 30 seconds before retrying..." && \
+				sleep 30; \
+			fi \
+		done && \
 	popd
 endef
 
