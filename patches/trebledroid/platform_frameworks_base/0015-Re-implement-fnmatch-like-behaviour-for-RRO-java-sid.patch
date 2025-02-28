@@ -7,12 +7,11 @@ T: Also apply to FrameworkParsingPackageUtils (@PeterCxy)
 
 Change-Id: Id38292a9a1453aa87b8401c1fdb390fa4e63c7d1
 ---
- core/java/android/content/pm/PackageParser.java     | 13 +++++++++++--
- .../pm/parsing/FrameworkParsingPackageUtils.java    | 13 +++++++++++--
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ core/java/android/content/pm/PackageParser.java | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/core/java/android/content/pm/PackageParser.java b/core/java/android/content/pm/PackageParser.java
-index 4b579e7db9f8..3bee878e2fc8 100644
+index af059e159..0a22ed3fc 100644
 --- a/core/java/android/content/pm/PackageParser.java
 +++ b/core/java/android/content/pm/PackageParser.java
 @@ -2545,8 +2545,17 @@ public class PackageParser {
@@ -23,31 +22,7 @@ index 4b579e7db9f8..3bee878e2fc8 100644
 -                return false;
 +            final String value = propValues[i];
 +            if(value.startsWith("+")) {
-+                final java.util.regex.Pattern regex = java.util.regex.Pattern.compile(value.substring(1, value.length()).replace("*", ".*"));
-+                java.util.regex.Matcher matcher = regex.matcher(currValue);
-+                if (!matcher.find()) {
-+                    return false;
-+                }
-+            } else {
-+                if(!value.equals(currValue)) {
-+                    return false;
-+                }
-             }
-         }
-         return true;
-diff --git a/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java b/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
-index 153dd9a93490..4eacc197b4e9 100644
---- a/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
-+++ b/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
-@@ -215,8 +215,17 @@ public class FrameworkParsingPackageUtils {
-         for (int i = 0; i < propNames.length; i++) {
-             // Check property value: make sure it is both set and equal to expected value
-             final String currValue = SystemProperties.get(propNames[i]);
--            if (!TextUtils.equals(currValue, propValues[i])) {
--                return false;
-+            final String value = propValues[i];
-+            if(value.startsWith("+")) {
-+                final java.util.regex.Pattern regex = java.util.regex.Pattern.compile(value.substring(1, value.length()).replace("*", ".*"));
++                final java.util.regex.Pattern regex = java.util.regex.Pattern.compile(value.subs>
 +                java.util.regex.Matcher matcher = regex.matcher(currValue);
 +                if (!matcher.find()) {
 +                    return false;
