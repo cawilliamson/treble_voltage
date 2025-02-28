@@ -121,4 +121,4 @@ index 6c8089926..8eabb2e23 100644
      close(open("/dev/.booting", O_WRONLY | O_CREAT | O_CLOEXEC, 0000));
  
 -- 
-2.25.1
+2.34.1

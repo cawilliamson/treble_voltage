@@ -52,4 +52,4 @@ index 45607594e17d..834425b4ef18 100644
  
      void registerLidSwitchCallbackInternal(@NonNull LidSwitchCallback callback) {
 -- 
-2.25.1
+2.34.1

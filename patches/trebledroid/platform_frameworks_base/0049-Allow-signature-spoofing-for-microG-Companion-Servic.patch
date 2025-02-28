@@ -127,4 +127,4 @@ index 4665a72b0b06..878d10835bf2 100644
          } else if ((flags & (MATCH_UNINSTALLED_PACKAGES | MATCH_ARCHIVED_PACKAGES)) != 0
                  && PackageUserStateUtils.isAvailable(state, flags)) {
 -- 
-2.25.1
+2.34.1

@@ -27,4 +27,4 @@ index 1acd63774..c3d963f6c 100644
  on property:persist.device_config.mglru_native.lru_gen_config=none
    write /sys/kernel/mm/lru_gen/enabled 0
 -- 
-2.25.1
+2.34.1

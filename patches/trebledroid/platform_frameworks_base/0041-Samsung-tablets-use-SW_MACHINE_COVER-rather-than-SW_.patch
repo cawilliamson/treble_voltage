@@ -83,4 +83,4 @@ index fd7479eb8d48..45607594e17d 100644
                  if (mSystemReady) {
                      for (int i = 0; i < mLidSwitchCallbacks.size(); i++) {
 -- 
-2.25.1
+2.34.1

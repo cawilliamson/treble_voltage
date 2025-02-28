@@ -24,4 +24,4 @@ index 2e4b9b475..9da8b58c3 100644
      { 00750, AID_ROOT,         AID_SYSTEM,       0, "system_ext/apex/com.android.tethering/bin/for-system" },
      { 00751, AID_ROOT,         AID_SHELL,        0, "system_ext/bin" },
 -- 
-2.25.1
+2.34.1

@@ -42,4 +42,4 @@ index c2f6e3072507..7213f305810b 100644
      // ro.bootanim.set_orientation_<display_id>. Four values are supported: ORIENTATION_0,
      // ORIENTATION_90, ORIENTATION_180 and ORIENTATION_270.
 -- 
-2.25.1
+2.34.1

@@ -44,4 +44,4 @@ index d80e40c5898a..5944de0c6498 100644
                          if (allowOverrideAppRestrictions) {
                              String pkgname = parser.getAttributeValue(null, "package");
 -- 
-2.25.1
+2.34.1

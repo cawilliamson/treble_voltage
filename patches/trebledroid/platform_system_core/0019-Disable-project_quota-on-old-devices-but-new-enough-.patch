@@ -28,4 +28,4 @@ index ab605123f..fa80ded08 100644
          LERROR << "Unable to " << (want_quota ? "enable" : "disable") << " quotas on " << blk_device
                 << " because " TUNE2FS_BIN " is missing";
 -- 
-2.25.1
+2.34.1

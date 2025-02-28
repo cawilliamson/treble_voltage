@@ -84,4 +84,4 @@ index ceb291e46725..71f69f51edc5 100644
  
      private void loadThermalThrottlingConfig(DisplayConfiguration config) {
 -- 
-2.25.1
+2.34.1

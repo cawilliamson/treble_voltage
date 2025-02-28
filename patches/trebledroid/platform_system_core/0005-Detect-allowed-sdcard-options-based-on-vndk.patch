@@ -39,4 +39,4 @@ index 622de5b7a..e580190e9 100644
      // handle older kernels that aren't updated yet.
      for (int i = 0; i <= new_opts_list.size(); ++i) {
 -- 
-2.25.1
+2.34.1
