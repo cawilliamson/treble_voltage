@@ -1,9 +1,4 @@
-# Makefile for VoltageOS GSI builds
-# Structured to match the GitHub pipeline with modular steps
-
-.PHONY: all clean setup build-container \
-	build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
-	build-vanilla-a64 build-microg-a64 build-gapps-a64
+.PHONY: all clean setup build-container build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanilla-a64 build-microg-a64 build-gapps-a64
 # Commented out vndklite targets - will address later
 #	build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64 \
 #	build-vndklite-vanilla-a64 build-vndklite-microg-a64 build-vndklite-gapps-a64
@@ -45,7 +40,7 @@ setup:
 
 # Build container image
 build-container:
-	podman build --no-cache -t voltage-gsi-builder -f Containerfile .
+	podman build -t voltage-gsi-builder -f Containerfile .
 
 # Clean build directories
 clean:

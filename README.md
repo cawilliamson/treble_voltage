@@ -13,34 +13,10 @@ This repository contains a containerized build system for VoltageOS GSI images u
 
 The build system uses a Makefile to orchestrate the build process. Here are the available targets:
 
-### Build Everything
+## Makefile targets
 
-```bash
-make
-```
-
-This will build the container image and all GSI variants (vanilla, microG, GApps, and vndklite).
-
-### Build Container Image Only
-
-```bash
-make build-container
-```
-
-### Build Specific GSI Variants
-
-```bash
-make build-vanilla    # Build vanilla GSI
-make build-microg     # Build microG GSI
-make build-gapps      # Build GApps GSI
-make build-vndklite   # Build vndklite variants
-```
-
-### Clean Build Directories
-
-```bash
-make clean
-```
+<!-- BEGIN_MAKE_TARGETS -->
+<!-- END_MAKE_TARGETS -->
 
 ## Configuration
 
