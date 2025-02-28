@@ -28,4 +28,4 @@ index 3927501a4..d0ab3f7bb 100644
  /dev/tty0                 0660   root       system
  /dev/graphics/*           0660   root       graphics
 -- 
-2.25.1
+2.34.1

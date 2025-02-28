@@ -80,4 +80,4 @@ index 7eba6268869c..b7a9d5f535b4 100644
  internal fun Flow<GammaBrightness>.logDiffForTable(
      tableLogBuffer: TableLogBuffer,
 -- 
-2.25.1
+2.34.1

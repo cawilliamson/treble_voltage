@@ -29,4 +29,4 @@ index ffe44065d1..e8a6ef4f87 100644
                           "Received {} event with OpCode {} without a waiting command(is the HAL "
                           "sending commands, but not handling the events?)",
 -- 
-2.25.1
+2.34.1

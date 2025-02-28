@@ -22,4 +22,4 @@ index 65a0ed3065..1319ad50af 100644
              if (FlagManager::getInstance().vrr_config()) {
                  mScheduler->getVsyncSchedule()->getTracker().onFrameMissed(
 -- 
-2.25.1
+2.34.1

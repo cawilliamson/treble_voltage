@@ -63,4 +63,4 @@ index 215932ca19be..28c23121769e 100644
              mProximityThreshold = Math.min(mProximitySensor.getMaximumRange(),
                      TYPICAL_PROXIMITY_THRESHOLD);
 -- 
-2.25.1
+2.34.1

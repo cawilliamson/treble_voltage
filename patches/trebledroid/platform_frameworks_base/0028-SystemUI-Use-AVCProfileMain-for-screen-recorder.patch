@@ -26,4 +26,4 @@ index e024710ed3eb..a73f7b2cb63b 100644
          mMediaRecorder.setVideoSize(width, height);
          mMediaRecorder.setVideoFrameRate(refreshRate);
 -- 
-2.25.1
+2.34.1

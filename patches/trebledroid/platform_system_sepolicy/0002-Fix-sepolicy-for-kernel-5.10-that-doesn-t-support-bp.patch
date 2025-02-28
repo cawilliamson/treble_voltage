@@ -27,4 +27,4 @@ index 4450e02ba..d7dda3aed 100644
  allow network_stack self:bpf map_create;
  allow network_stack { bpfloader netd network_stack system_server }:bpf { map_read map_write };
 -- 
-2.25.1
+2.34.1

@@ -27,4 +27,4 @@ index 9ce6eed77b..aff5b8dece 100644
       template <typename T>
       void beginCommand(T command, uint16_t length) {
 -- 
-2.25.1
+2.34.1
