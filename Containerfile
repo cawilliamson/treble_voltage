@@ -49,10 +49,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Create directory structure
-RUN mkdir -p /work/{repo,tmp}
+RUN mkdir -p \
+    /work/repo \
+    /work/tmp
 
 # install libncurses5
-RUN cd /work/tmp && \
+RUN cd /var/tmp && \
     curl -O http://launchpadlibrarian.net/648013231/libtinfo5_6.4-2_amd64.deb && \
     dpkg -i libtinfo5_6.4-2_amd64.deb && \
     curl -LO http://launchpadlibrarian.net/648013227/libncurses5_6.4-2_amd64.deb && \

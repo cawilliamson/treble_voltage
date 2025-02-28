@@ -15,3 +15,8 @@ repos:
   rev: 0.28.0
   hooks:
   - id: check-github-workflows
+- repo: https://github.com/shini4i/pre-commit-makefile
+  rev: v0.2.2
+  hooks:
+  - id: makefile-validator
+  - id: makefile-readme-updater
