@@ -6,23 +6,15 @@ Subject: [PATCH 06/54] Implement a persistent property to override the default
 
 Change-Id: I49b45d00bf71d7932591b3516d49a680e1b6568b
 ---
- core/java/android/hardware/Camera.java                | 6 ++++++
+ core/java/android/hardware/Camera.java                | 5 +++++
  core/java/android/hardware/camera2/CameraManager.java | 9 +++++++++
- 2 files changed, 15 insertions(+)
+ 2 files changed, 14 insertions(+)
 
 diff --git a/core/java/android/hardware/Camera.java b/core/java/android/hardware/Camera.java
-index ca3e3d2ad61b..4bef5c4d00e4 100644
+index 1d6915458..6420fe94f 100644
 --- a/core/java/android/hardware/Camera.java
 +++ b/core/java/android/hardware/Camera.java
-@@ -50,6 +50,7 @@ import android.os.Parcel;
- import android.os.Process;
- import android.os.RemoteException;
- import android.os.ServiceManager;
-+import android.os.SystemProperties;
- import android.text.TextUtils;
- import android.util.Log;
- import android.view.Surface;
-@@ -486,6 +487,11 @@ public class Camera {
+@@ -549,6 +549,11 @@ public class Camera {
       * @see #open(int)
       */
      public static Camera open() {
@@ -35,10 +27,10 @@ index ca3e3d2ad61b..4bef5c4d00e4 100644
          CameraInfo cameraInfo = new CameraInfo();
          for (int i = 0; i < numberOfCameras; i++) {
 diff --git a/core/java/android/hardware/camera2/CameraManager.java b/core/java/android/hardware/camera2/CameraManager.java
-index 21627920f598..e2aa460c1165 100644
+index b567cab16..a587d5504 100644
 --- a/core/java/android/hardware/camera2/CameraManager.java
 +++ b/core/java/android/hardware/camera2/CameraManager.java
-@@ -2424,6 +2424,15 @@ public final class CameraManager {
+@@ -2445,6 +2445,15 @@ public final class CameraManager {
                              return s1.compareTo(s2);
                          }
                      }});
@@ -52,7 +44,7 @@ index 21627920f598..e2aa460c1165 100644
 +                cameraIds[altPrimaryCamera] = origPrimary;
 +            }
          }
- 
+
          private boolean shouldHideCamera(int currentDeviceId, int devicePolicy,
--- 
+--
 2.34.1
