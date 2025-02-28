@@ -49,7 +49,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Create directory structure
-RUN mkdir -p /work/tmp /work/src /work/repo
+RUN mkdir -p /work/{repo,tmp}
 
 # install libncurses5
 RUN cd /work/tmp && \
