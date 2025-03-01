@@ -27,13 +27,13 @@ Change-Id: I9f1eac5a20b98920a5d0c8204fe4d165ba069f5a
  2 files changed, 52 insertions(+), 1 deletion(-)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index f3025ba96c3b..e4fa38ef2127 100644
+index 5b1da670f..f755d63c2 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
-@@ -239,7 +239,9 @@ java_library_static {
-         "aconfig_new_storage_flags_lib",
-         "powerstats_flags_lib",
+@@ -251,7 +251,9 @@ java_library_static {
          "locksettings_flags_lib",
+         "vendor.aospa.biometrics.face",
+         "vendor.aac.hardware.richtap.vibrator",
 -        "vendor.samsung.hardware.sysinput-V1.2-java", // HIDL
 +        // HIDL
 +        "vendor.mediatek.hardware.mtkpower-V1.1-java",
@@ -42,7 +42,7 @@ index f3025ba96c3b..e4fa38ef2127 100644
      javac_shard_size: 50,
      javacflags: [
 diff --git a/services/core/java/com/android/server/wm/DisplayPolicy.java b/services/core/java/com/android/server/wm/DisplayPolicy.java
-index 0fa1a2138e35..e9d53c4b9904 100644
+index 537a0f89e..36a406f6b 100644
 --- a/services/core/java/com/android/server/wm/DisplayPolicy.java
 +++ b/services/core/java/com/android/server/wm/DisplayPolicy.java
 @@ -219,6 +219,9 @@ public class DisplayPolicy {
@@ -122,5 +122,5 @@ index 0fa1a2138e35..e9d53c4b9904 100644
                  }
  
                  @Override
--- 
+--
 2.34.1
