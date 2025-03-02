@@ -4,15 +4,15 @@ Date: Sun, 24 Dec 2023 11:45:59 +0500
 Subject: [PATCH 1/6] Remove duplicated props
 
 ---
- config/common.mk  | 7 +------
+ config/common.mk  | 8 +-------
  config/version.mk | 1 -
- 2 files changed, 1 insertion(+), 7 deletions(-)
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
 diff --git a/config/common.mk b/config/common.mk
-index d31a6b7..5457bbc 100644
+index 2370995..232b9f9 100644
 --- a/config/common.mk
 +++ b/config/common.mk
-@@ -34,13 +34,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+@@ -32,13 +32,7 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
      persist.sys.recovery_update=true
  endif
  
@@ -22,13 +22,13 @@ index d31a6b7..5457bbc 100644
 -else
 -# Enable ADB authentication
 -PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=1
- 
+-
 +ifneq ($(TARGET_BUILD_VARIANT),eng)
  # Disable extra StrictMode features on all non-engineering builds
  PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.strictmode.disable=true
- endif
+ 
 diff --git a/config/version.mk b/config/version.mk
-index cb19a9a..eb4a20d 100644
+index e0a8771..3314fdf 100644
 --- a/config/version.mk
 +++ b/config/version.mk
 @@ -52,6 +52,5 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
@@ -38,5 +38,5 @@ index cb19a9a..eb4a20d 100644
 -  ro.voltage.device=$(VOLTAGE_BUILD) \
    ro.voltage.platform_release_or_codename=$(VOLTAGE_PLATFORM_RELEASE_OR_CODENAME) \
    org.voltage.version=$(VOLTAGEVERSION)
--- 
+--
 2.34.1
