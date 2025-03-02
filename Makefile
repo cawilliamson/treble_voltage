@@ -98,10 +98,8 @@ endef
 
 # Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
-	pushd /work/repo/src && \
-		mv -v vendor/gapps /work/tmp/ && \
-		mv -v vendor/partner_gms /work/tmp/ && \
-	popd
+	mv -v /work/repo/src/vendor/gapps /work/tmp/ && \
+	mv -v /work/repo/src/vendor/partner_gms /work/tmp/ && \
 endef
 
 # Step 7: Generate signing keys
@@ -109,7 +107,7 @@ define GENERATE_KEYS
 	pushd /work/repo/src && \
 		. build/envsetup.sh && \
 		pushd vendor/voltage-priv/keys && \
-			./gen_keys && \
+			./keys.sh && \
 		popd && \
 	popd
 endef
