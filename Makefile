@@ -107,20 +107,20 @@ endef
 # Step 6: Generate signing keys
 define GENERATE_KEYS
 	echo "Step 6: Generating signing keys..." && \
-	pushd /work/repo/src && \
-		pushd vendor/voltage-priv/keys && \
-			./keys.sh && \
-		popd && \
+	pushd /work/repo/src/vendor/voltage-priv/keys && \
+		./keys.sh || true && \
 	popd
 endef
 
 # Step 7: Generate ROM config
 define GENERATE_ROM_CONFIG
 	echo "Step 7: Generating ROM config for $(1)..." && \
-	. build/envsetup.sh && \
-	pushd /work/repo/src/device/phh/treble && \
-		cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
-		bash generate.sh voltage && \
+	pushd /work/repo/src && \
+		. build/envsetup.sh && \
+		pushd /work/repo/src/device/phh/treble && \
+			cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
+			bash generate.sh voltage && \
+		popd && \
 	popd
 endef
 
