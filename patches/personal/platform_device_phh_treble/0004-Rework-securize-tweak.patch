@@ -1,18 +1,18 @@
-From c861addd561b722d7f50126a6dba96deb212a62e Mon Sep 17 00:00:00 2001
-From: ahnet-69 <syedmusicrealise@gmail.com>
-Date: Wed, 31 May 2023 15:28:16 +0500
-Subject: [PATCH 4/11] Rework securize tweak
+From 1423a40a59b5d849e6161a3e7cdf0de003dcbad9 Mon Sep 17 00:00:00 2001
+From: Alberto Ponces <ponces26@gmail.com>
+Date: Wed, 25 Dec 2019 12:34:05 +0200
+Subject: [PATCH 2/2] Rework securize tweak
 
 ---
  base.mk      |  1 -
- rw-system.sh | 55 +++++++++++++++++++++++++++++-----------------------
- 2 files changed, 31 insertions(+), 25 deletions(-)
+ rw-system.sh | 49 ++++++++++++++++++++++++++++++-------------------
+ 2 files changed, 30 insertions(+), 20 deletions(-)
 
 diff --git a/base.mk b/base.mk
-index 9b870d2..57c554b 100644
+index 22525cd..8c0f2be 100644
 --- a/base.mk
 +++ b/base.mk
-@@ -176,7 +176,6 @@ PRODUCT_PACKAGES += \
+@@ -177,7 +177,6 @@ PRODUCT_PACKAGES += \
  	resetprop_phh
  
  PRODUCT_COPY_FILES += \
@@ -21,10 +21,10 @@ index 9b870d2..57c554b 100644
  
  PRODUCT_COPY_FILES += \
 diff --git a/rw-system.sh b/rw-system.sh
-index 5dc493f..9ea5f8b 100644
+index 1e47287..d591190 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
-@@ -739,35 +739,60 @@ copyprop() {
+@@ -768,32 +768,59 @@ copyprop() {
          resetprop_phh "$1" "$(getprop "$2")"
      fi
  }
@@ -37,14 +37,13 @@ index 5dc493f..9ea5f8b 100644
 +    copyprop ro.product.build.fingerprint ro.vendor.build.fingerprint
      copyprop ro.build.device ro.vendor.product.device
      copyprop ro.product.system.device ro.vendor.product.device
-+    copyprop ro.voltage.device ro.product.vendor.device
+     copyprop ro.product.device ro.vendor.product.device
+     copyprop ro.product.system.device ro.product.vendor.device
+     copyprop ro.product.device ro.product.vendor.device
 +    copyprop ro.product.system_ext.device ro.vendor.product.device
 +    copyprop ro.product.product.device ro.vendor.product.device
 +    copyprop ro.product.system_ext.device ro.product.vendor.device
 +    copyprop ro.product.product.device ro.product.vendor.device
-     copyprop ro.product.device ro.vendor.product.device
-     copyprop ro.product.system.device ro.product.vendor.device
-     copyprop ro.product.device ro.product.vendor.device
      copyprop ro.product.system.name ro.vendor.product.name
      copyprop ro.product.name ro.vendor.product.name
 -    copyprop ro.product.system.name ro.product.vendor.device
@@ -82,21 +81,16 @@ index 5dc493f..9ea5f8b 100644
 +    copyprop ro.product.system_ext.manufacturer ro.vendor.product.manufacturer
      copyprop ro.system.product.manufacturer ro.product.vendor.manufacturer
      copyprop ro.product.manufacturer ro.product.vendor.manufacturer
--    (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
--        [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
--    done
 +    copyprop ro.product.system.manufacturer ro.product.vendor.manufacturer
 +    copyprop ro.product.product.manufacturer ro.product.vendor.manufacturer
 +    copyprop ro.product.system_ext.manufacturer ro.product.vendor.manufacturer
+     (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
+         [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
+     done
+@@ -812,22 +839,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
  
-     resetprop_phh ro.build.tags release-keys
-     resetprop_phh ro.boot.vbmeta.device_state locked
-@@ -781,24 +806,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
-     resetprop_phh ro.build.type user
-     resetprop_phh --delete ro.build.selinux
+     resetprop_phh ro.adb.secure 1
  
--    resetprop_phh ro.adb.secure 1
--
 -    # Hide system/xbin/su
 -    mount /mnt/phh/empty_dir /system/xbin
 -    mount /mnt/phh/empty_dir /system/app/me.phh.superuser
@@ -117,4 +111,4 @@ index 5dc493f..9ea5f8b 100644
      f=/vendor/lib$abi/libstagefright_foundation.so
      if [ -f "$f" ];then
 -- 
-2.39.2
+2.34.1
