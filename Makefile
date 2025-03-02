@@ -99,8 +99,8 @@ endef
 # Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
 	pushd /work/repo/src && \
-		mv -v vendor/gapps /work/tmp/ 2>/dev/null || echo 'vendor/gapps not found' && \
-		mv -v vendor/partner_gms /work/tmp/ 2>/dev/null || echo 'vendor/partner_gms not found' && \
+		mv -v vendor/gapps /work/tmp/
+		mv -v vendor/partner_gms /work/tmp/
 	popd
 endef
 
