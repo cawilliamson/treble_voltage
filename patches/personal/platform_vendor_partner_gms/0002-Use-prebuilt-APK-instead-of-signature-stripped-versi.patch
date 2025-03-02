@@ -9,7 +9,7 @@ Subject: [PATCH 2/2] Use prebuilt APK instead of signature stripped version
  2 files changed, 2 insertions(+)
 
 diff --git a/FakeStore/Android.mk b/FakeStore/Android.mk
-index 63907ba..e457695 100644
+index 285b126..bad016c 100644
 --- a/FakeStore/Android.mk
 +++ b/FakeStore/Android.mk
 @@ -21,6 +21,7 @@ LOCAL_MODULE_CLASS := APPS
@@ -19,18 +19,18 @@ index 63907ba..e457695 100644
 +LOCAL_REPLACE_PREBUILT_APK_INSTALLED := $(LOCAL_PATH)/$(LOCAL_MODULE).apk
  LOCAL_REQUIRED_MODULES := privapp-permissions-com.android.vending.xml default-permissions-com.android.vending.xml
  LOCAL_PRODUCT_MODULE := true
- include $(BUILD_PREBUILT)
+ # this line will break builds before 19.1 so make them conditional
 diff --git a/GmsCore/Android.mk b/GmsCore/Android.mk
-index 34bc76e..dcb3d3f 100644
+index e3745b6..998cb69 100644
 --- a/GmsCore/Android.mk
 +++ b/GmsCore/Android.mk
-@@ -28,6 +28,7 @@ LOCAL_MODULE_CLASS := APPS
+@@ -39,6 +39,7 @@ LOCAL_PRODUCT_MODULE := true
  LOCAL_PRIVILEGED_MODULE := true
  LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
  LOCAL_CERTIFICATE := PRESIGNED
 +LOCAL_REPLACE_PREBUILT_APK_INSTALLED := $(LOCAL_PATH)/$(LOCAL_MODULE).apk
  LOCAL_OVERRIDES_PACKAGES := com.qualcomm.location
- LOCAL_REQUIRED_MODULES := privapp-permissions-com.google.android.gms.xml default-permissions-com.google.android.gms.xml sysconfig-com.google.android.gms.xml
+ LOCAL_REQUIRED_MODULES := privapp-permissions-com.google.android.gms.xml default-permissions-com.google.android.gms.xml sysconfig-com.google.android.gms.xml microg.xml
  # these lines will break builds before 19.1 so make them conditional
--- 
+--
 2.44.0
