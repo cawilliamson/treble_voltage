@@ -36,14 +36,14 @@ index 3c0cd63..0000000
 -include $(BUILD_PREBUILT)
 -
 diff --git a/products/gms.mk b/products/gms.mk
-index dfbd889..11d5854 100644
+index 522c678..b64361e 100644
 --- a/products/gms.mk
 +++ b/products/gms.mk
-@@ -5,5 +5,4 @@ PRODUCT_PACKAGES += \
- 	IchnaeaNlpBackend \
- 	NominatimGeocoderBackend \
- 	FDroid \
--	FDroidPrivilegedExtension \
- 	additional_repos.xml
--- 
+@@ -3,5 +3,4 @@ PRODUCT_PACKAGES += \
+        GsfProxy \
+        FakeStore \
+        FDroid \
+-       FDroidPrivilegedExtension \
+        additional_repos.xml
+--
 2.43.2
