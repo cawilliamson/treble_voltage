@@ -14,16 +14,16 @@ We don't care much about dm-verity so let's just ignore this
  1 file changed, 1 deletion(-)
 
 diff --git a/init/first_stage_mount.cpp b/init/first_stage_mount.cpp
-index c26b31e93..f23f3411e 100644
+index 6d85c58..bf10241 100644
 --- a/init/first_stage_mount.cpp
 +++ b/init/first_stage_mount.cpp
-@@ -458,7 +458,6 @@ bool FirstStageMountVBootV2::MountPartition(const Fstab::iterator& begin, bool e
-     }
-     if (!SetUpDmVerity(&(*begin))) {
-         PLOG(ERROR) << "Failed to setup verity for '" << begin->mount_point << "'";
--        return false;
-     }
- 
-     bool mounted = (fs_mgr_do_mount_one(*begin) == 0);
--- 
+@@ -460,7 +460,6 @@ bool FirstStageMountVBootV2::MountPartition(const Fstab::iterator& begin, bool e
+     if (begin->fs_mgr_flags.avb) {
+         if (!SetUpDmVerity(&(*begin))) {
+             PLOG(ERROR) << "Failed to setup verity for '" << begin->mount_point << "'";
+-            return false;
+         }
+     } else {
+         LOG(INFO) << "AVB is not enabled, skip verity setup for '" << begin->mount_point << "'";
+--
 2.34.1
