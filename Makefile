@@ -84,25 +84,19 @@ define APPLY_PATCHES
 	pushd /work/repo/src && \
 		/work/repo/patches/apply.sh . trebledroid && \
 		/work/repo/patches/apply.sh . personal && \
+		if [ '$(DEBUG_PATCHES)' = 'true' ]; then \
+			/work/repo/patches/apply.sh . debug; \
+		fi && \
 	popd
 endef
 
-# Step 5: Apply debug patches (conditional)
-define APPLY_DEBUG_PATCHES
-	if [ '$(DEBUG_PATCHES)' = 'true' ]; then \
-		pushd /work/repo/src && \
-			/work/repo/patches/apply.sh . debug && \
-		popd; \
-	fi
-endef
-
-# Step 6: Setup tmp directory and stash gapps variants
+# Step 5: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
 	mv -v /work/repo/src/vendor/gapps /work/tmp/ && \
 	mv -v /work/repo/src/vendor/partner_gms /work/tmp/
 endef
 
-# Step 7: Generate signing keys
+# Step 6: Generate signing keys
 define GENERATE_KEYS
 	pushd /work/repo/src && \
 		. build/envsetup.sh && \
@@ -112,7 +106,7 @@ define GENERATE_KEYS
 	popd
 endef
 
-# Step 8: Configure device
+# Step 7: Configure device
 define CONFIGURE_DEVICE
 	pushd /work/repo/src/device/phh/treble && \
 		cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
@@ -120,7 +114,7 @@ define CONFIGURE_DEVICE
 	popd
 endef
 
-# Step 9: Build treble app
+# Step 8: Build treble app
 define BUILD_TREBLE_APP
 	pushd /work/repo/src/treble_app/ && \
 		bash build.sh release && \
@@ -132,7 +126,7 @@ define BUILD_TREBLE_APP
 	popd
 endef
 
-# Step 10: Copy vendor files (microg/gapps)
+# Step 9: Copy vendor files (microg/gapps)
 define COPY_VENDOR_FILES
 	if [ "$(1)" = "microg" ]; then \
 		cp -Rfv /work/tmp/partner_gms /work/repo/src/vendor/; \
@@ -141,7 +135,7 @@ define COPY_VENDOR_FILES
 	fi
 endef
 
-# Step 11: Build system image
+# Step 10: Build system image
 define BUILD_SYSTEM_IMAGE
 	pushd /work/repo/src && \
 		lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
@@ -154,14 +148,14 @@ define BUILD_SYSTEM_IMAGE
 	popd
 endef
 
-# Step 12: Run vndk sepolicy tests (vanilla only)
+# Step 11: Run vndk sepolicy tests (vanilla only)
 define RUN_SEPOLICY_TESTS
 	pushd /work/repo/src && \
 		make vndk-test-sepolicy -j$(CPU_LIMIT) && \
 	popd
 endef
 
-# Step 13: Prepare output
+# Step 12: Prepare output
 define PREPARE_OUTPUT
 	pushd /work/tmp && \
 		if [ "$(1)" = "arm64" ]; then \
@@ -175,7 +169,7 @@ define PREPARE_OUTPUT
 endef
 
 # Commented out vndklite functions - will address later
-# # Step 15: Setup for vndklite build using normal build output
+# # Step 14: Setup for vndklite build using normal build output
 # define SETUP_VNDKLITE_WORKSPACE
 # 	# Create tmp directory if it doesn't exist
 # 	mkdir -p /work/tmp/ && \
@@ -185,7 +179,7 @@ endef
 # 	find . -name '*.img.xz' -exec xz -d "{}" \; 2>/dev/null || true
 # endef
 #
-# # Step 16: Initialize repo for vndklite
+# # Step 15: Initialize repo for vndklite
 # define INIT_VNDKLITE_REPO
 # 	mkdir -p src/ && cd src/ && \
 # 	repo init -u https://github.com/VoltageOS/manifest.git -b 15-qpr1 --depth=1 --git-lfs && \
@@ -194,7 +188,7 @@ endef
 # 	repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags --current-branch treble_adapter
 # endef
 #
-# # Step 17: Process vndklite image using normal build output
+# # Step 16: Process vndklite image using normal build output
 # define PROCESS_VNDKLITE_IMAGE
 # 	cd src/treble_adapter && \
 # 	# Copy the normal build image to use as input for vndklite conversion
@@ -205,7 +199,7 @@ endef
 # 	mv s.img ../../s_$(1)_$(2)_vndklite.img
 # endef
 #
-# # Step 18: Rename and compress vndklite image for output
+# # Step 17: Rename and compress vndklite image for output
 # define RENAME_VNDKLITE_IMAGE
 # 	# Rename the vndklite image to follow the naming convention
 # 	mv -v s_$(1)_$(2)_vndklite.img $(ROM_NAME)-$(1)-$(if $(filter $(2),a64),arm32_binder64,$(2))-ab-vndklite-$(ROM_VERSION)-$${BUILD_DATE}-UNOFFICIAL.img && \
@@ -225,7 +219,6 @@ define BUILD_STANDARD_GSI
 		$(COPY_MANIFEST_CONFIG) && \
 		$(SYNC_SOURCES) && \
 		$(APPLY_PATCHES) && \
-		$(APPLY_DEBUG_PATCHES) && \
 		$(SETUP_TMP_DIR) && \
 		$(GENERATE_KEYS) && \
 		$(call CONFIGURE_DEVICE,$(1)) && \
