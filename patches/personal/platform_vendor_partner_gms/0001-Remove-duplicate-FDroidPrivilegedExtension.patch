@@ -40,10 +40,10 @@ index 522c678..b64361e 100644
 --- a/products/gms.mk
 +++ b/products/gms.mk
 @@ -3,5 +3,4 @@ PRODUCT_PACKAGES += \
-        GsfProxy \
-        FakeStore \
-        FDroid \
--       FDroidPrivilegedExtension \
-        additional_repos.xml
+ 	GsfProxy \
+ 	FakeStore \
+ 	FDroid \
+-	FDroidPrivilegedExtension \
+ 	additional_repos.xml
 --
 2.43.2
