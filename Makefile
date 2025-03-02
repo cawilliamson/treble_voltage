@@ -99,7 +99,7 @@ endef
 # Step 6: Setup tmp directory and stash gapps variants
 define SETUP_TMP_DIR
 	mv -v /work/repo/src/vendor/gapps /work/tmp/ && \
-	mv -v /work/repo/src/vendor/partner_gms /work/tmp/ && \
+	mv -v /work/repo/src/vendor/partner_gms /work/tmp/ \
 endef
 
 # Step 7: Generate signing keys
