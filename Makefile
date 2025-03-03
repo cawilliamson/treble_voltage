@@ -148,7 +148,7 @@ endef
 define BUILD_SYSTEM_IMAGE
 	echo "Step 10: Building system image for $(1) ($(3))..." && \
 	pushd /work/repo/src && \
-		lunch treble_$(1)_b$(2)N-ap1a-userdebug && \
+		lunch treble_$(1)_b$(2)N-ap4a-userdebug && \
 		make systemimage -j$(CPU_LIMIT) && \
 		if [ "$(1)" = "arm64" ]; then \
 			mv -v out/target/product/tdgsi_arm64_ab/system.img /work/tmp/system_$(3)_$(1).img; \
