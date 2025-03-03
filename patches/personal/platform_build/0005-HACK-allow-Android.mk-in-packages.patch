@@ -1,0 +1,27 @@
+From 657576b2b054cf14059321fc7b0c452616333f1b Mon Sep 17 00:00:00 2001
+From: Build <build@nobody>
+Date: Sun, 2 Mar 2025 23:26:55 +0000
+Subject: [PATCH 5/5] [HACK] allow Android.mk in packages
+
+---
+ soong/ui/build/androidmk_denylist.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ui/build/androidmk_denylist.go b/ui/build/androidmk_denylist.go
+index 2ec8972..44b9738 100644
+--- a/soong/ui/build/androidmk_denylist.go
++++ b/soong/ui/build/androidmk_denylist.go
+@@ -35,9 +35,9 @@ var androidmk_denylist []string = []string{
+        "kernel/tests/",
+        "libcore/",
+        "libnativehelper/",
+-       "packages/",
++       //"packages/",
+        "pdk/",
+-       "prebuilts/",
++       //"prebuilts/",
+        "sdk/",
+        "test/",
+        "trusty/",
+--
+2.47.2
