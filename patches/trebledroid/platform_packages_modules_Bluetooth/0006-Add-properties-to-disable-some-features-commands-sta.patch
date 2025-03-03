@@ -37,10 +37,10 @@ index 426175b..6a3a393 100644
 +    //local_supported_commands_ = complete_view.GetSupportedCommands();
 +
 +    auto local_commands = complete_view.GetSupportedCommands();
-+    std::string ignored_commands = GetSystemProperty("persist.sys.bt.unsupported.commands").value_or>
++    std::string ignored_commands = GetSystemProperty("persist.sys.bt.unsupported.commands").value_or("");
 +
 +    if (ignored_commands != "") {
-+        auto s = base::SplitString(ignored_commands, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_AL>
++        auto s = base::SplitString(ignored_commands, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_ALL);
 +        for(auto command: s) {
 +            int index = std::stoi(command);
 +            log::warn("Ignoring local supported command {}", index);
@@ -63,10 +63,10 @@ index 426175b..6a3a393 100644
 +    //extended_lmp_features_array_.push_back(complete_view.GetExtendedLmpFeatures());
 +    auto lmp_features = complete_view.GetExtendedLmpFeatures();
 +
-+    std::string ignored_features = GetSystemProperty("persist.sys.bt.unsupported.ogfeatures").value_>
++    std::string ignored_features = GetSystemProperty("persist.sys.bt.unsupported.ogfeatures").value_or("");
 +
 +    if (ignored_features != "") {
-+        auto s = base::SplitString(ignored_features, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_AL>
++        auto s = base::SplitString(ignored_features, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_ALL);
 +        int offset = page_number * 64;
 +        for(auto feature: s) {
 +            int index = std::stoi(feature) - offset;
@@ -89,10 +89,10 @@ index 426175b..6a3a393 100644
 +
 +    //le_local_supported_features_ = complete_view.GetLeFeatures();
 +    auto local_features = complete_view.GetLeFeatures();
-+    std::string ignored_features = GetSystemProperty("persist.sys.bt.unsupported.lefeatures").value_>
++    std::string ignored_features = GetSystemProperty("persist.sys.bt.unsupported.lefeatures").value_or("");
 +
 +    if (ignored_features != "") {
-+        auto s = base::SplitString(ignored_features, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_AL>
++        auto s = base::SplitString(ignored_features, ",", base::TRIM_WHITESPACE, base::SPLIT_WANT_ALL);
 +        for(auto feature: s) {
 +            int index = std::stoi(feature);
 +            log::warn("Ignoring local supported feature {}", index);
