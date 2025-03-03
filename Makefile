@@ -1,3 +1,7 @@
+# Make sure Make stops if any command fails
+.SHELLFLAGS := -e -c
+.ONESHELL:
+
 .PHONY: all clean setup build-container build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanilla-a64 build-microg-a64 build-gapps-a64
 # Commented out vndklite targets - will address later
 #	build-vndklite-vanilla-arm64 build-vndklite-microg-arm64 build-vndklite-gapps-arm64 \
@@ -231,7 +235,7 @@ define BUILD_STANDARD_GSI
 		-e BUILD_TYPE="$(1)" \
 		-e ARCH="$(2)" \
 		voltage-gsi-builder \
-		/bin/bash -c '$(CLONE_MANIFEST) && \
+		/bin/bash -e -c '$(CLONE_MANIFEST) && \
 		$(COPY_MANIFEST_CONFIG) && \
 		$(SYNC_SOURCES) && \
 		$(APPLY_PATCHES) && \

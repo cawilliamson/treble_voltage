@@ -13,7 +13,7 @@ index 9b26fa9c0..89d7252c4 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 @@ -264,13 +264,17 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
-             android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ">
+             android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
          }
          if (prop.sensorLocations.length == 1 && prop.sensorLocations[0].sensorLocationX == 0) {
 -            int[] otherValues = com.android.server.biometrics.AuthService.dynamicUdfpsProps(mContext);
