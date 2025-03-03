@@ -943,7 +943,7 @@ index 4985c9328..9b26fa9c0 100644
 +
 +        android.util.Log.e("PHH-Enroll", "Got fp props -- pre");
 +        for(SensorLocation loc: prop.sensorLocations) {
-+            android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ">
++            android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
 +        }
 +        if (prop.sensorLocations.length == 1 && prop.sensorLocations[0].sensorLocationX == 0) {
 +            int[] otherValues = com.android.server.biometrics.AuthService.dynamicUdfpsProps(mContext);
@@ -958,7 +958,7 @@ index 4985c9328..9b26fa9c0 100644
 +
 +        android.util.Log.e("PHH-Enroll", "Got fp props -- post");
 +        for(SensorLocation loc: prop.sensorLocations) {
-+            android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ">
++            android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
 +        }
 +
          final Sensor sensor = new HidlToAidlSensorAdapter(this, mContext, mHandler, prop,
