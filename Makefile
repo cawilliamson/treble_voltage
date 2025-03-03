@@ -245,7 +245,6 @@ define BUILD_STANDARD_GSI
 		$(call BUILD_TREBLE_APP,$(1)) && \
 		$(call COPY_VENDOR_FILES,$(1)) && \
 		$(call BUILD_SYSTEM_IMAGE,$(2),$(3),$(1)) && \
-#		$(RUN_SEPOLICY_TESTS) && \
 		$(call PREPARE_OUTPUT,$(2),$(1))'
 endef
 # Commented out vndklite function - will address later
@@ -263,6 +262,7 @@ endef
 # 		$(call PROCESS_VNDKLITE_IMAGE,$(1),$(2)) && \
 # 		$(call RENAME_VNDKLITE_IMAGE,$(1),$(2))'
 # endef
+#		$(RUN_SEPOLICY_TESTS) && \
 
 # Build vanilla arm64 GSI
 build-vanilla-arm64: setup build-container
