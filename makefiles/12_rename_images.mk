@@ -1,5 +1,5 @@
 # Step 12: Rename image files
-rename-images: build-container
+rename-images: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c 'pushd /work/tmp && \
 		# fetch build date \

@@ -10,25 +10,25 @@ define adapt_vndklite_image
 endef
 
 # Adapt vndklite vanilla arm64 image
-adapt-vndklite-vanilla-arm64: build-container
+adapt-vndklite-vanilla-arm64: build-container create-folders
 	$(call adapt_vndklite_image,vanilla,arm64)
 
 # Adapt vndklite microg arm64 image
-adapt-vndklite-microg-arm64: build-container
+adapt-vndklite-microg-arm64: build-container create-folders
 	$(call adapt_vndklite_image,microg,arm64)
 
 # Adapt vndklite gapps arm64 image
-adapt-vndklite-gapps-arm64: build-container
+adapt-vndklite-gapps-arm64: build-container create-folders
 	$(call adapt_vndklite_image,gapps,arm64)
 
 # Adapt vndklite vanilla arm32_binder64 image
-adapt-vndklite-vanilla-a64: build-container
+adapt-vndklite-vanilla-a64: build-container create-folders
 	$(call adapt_vndklite_image,vanilla,a64)
 
 # Adapt vndklite microg arm32_binder64 image
-adapt-vndklite-microg-a64: build-container
+adapt-vndklite-microg-a64: build-container create-folders
 	$(call adapt_vndklite_image,microg,a64)
 
 # Adapt vndklite gapps arm32_binder64 image
-adapt-vndklite-gapps-a64: build-container
+adapt-vndklite-gapps-a64: build-container create-folders
 	$(call adapt_vndklite_image,gapps,a64)
