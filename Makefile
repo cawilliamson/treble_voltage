@@ -24,8 +24,6 @@ CONTAINER_RUN = podman run --rm --privileged \
 	-v "$(PWD):/work/repo:Z" \
 	-e BUILD_DATE="$(BUILD_DATE)" \
 	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
-	-e MAINTAINER="cawilliamson" \
-	-e REPO_NAME="treble_voltage" \
 	-e ROM_VERSION="$(ROM_VERSION)" \
 	-e ROM_TAG="$(ROM_TAG)"
 
