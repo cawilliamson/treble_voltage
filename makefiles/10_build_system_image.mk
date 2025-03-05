@@ -1,4 +1,4 @@
-# Step 10: Helper function to build a specific GSI variant
+ # Step 10: Helper function to build a specific GSI variant
 define build_gsi_variant
 	$(CONTAINER_RUN) \
 		-e BUILD_TYPE="$(1)" \
@@ -25,7 +25,7 @@ define build_gsi_variant
 			fi; \
 		fi && \
 		. build/envsetup.sh && \
-		lunch treble_$(2)_b$(3)N-ap1a-userdebug && \
+		lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
 		make systemimage -j$(CPU_LIMIT) && \
 		if [ "$(2)" = "arm64" ]; then \
 			mv -v out/target/product/tdgsi_arm64_ab/system.img /work/tmp/system_$(1)_$(2).img; \
