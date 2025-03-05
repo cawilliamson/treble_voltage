@@ -1,4 +1,4 @@
-# Step 11: Helper function to adapt a vndklite image
+# Step 10: Helper function to adapt a vndklite image
 define adapt_vndklite_image
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \

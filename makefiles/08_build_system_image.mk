@@ -1,4 +1,4 @@
- # Step 10: Helper function to build a specific GSI variant
+ # Step 8: Helper function to build a specific GSI variant
 define build_gsi_variant
 	$(CONTAINER_RUN) \
 		-e BUILD_TYPE="$(1)" \
