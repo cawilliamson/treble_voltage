@@ -5,12 +5,10 @@ define build_gsi_variant
 		-e ARCH="$(2)" \
 		voltage-gsi-builder \
 		/bin/bash -e -c 'pushd /work/repo/src && \
-		# copy config \
 		pushd device/phh/treble && \
 		cp -fv /work/repo/configs/voltage-$(1).mk voltage.mk && \
 		bash generate.sh voltage && \
 		popd && \
-		# copy vendor files if needed \
 		if [ "$(1)" = "microg" ]; then \
 			if [ -d "/work/tmp/partner_gms" ]; then \
 				cp -Rfv /work/tmp/partner_gms vendor/; \
@@ -34,7 +32,6 @@ define build_gsi_variant
 		else \
 			mv -v out/target/product/tdgsi_a64_ab/system.img /work/tmp/system_$(1)_$(2).img; \
 		fi && \
-		# remove vendor files to avoid contaminating next build \
 		if [ "$(1)" = "microg" ]; then \
 			rm -Rfv vendor/partner_gms; \
 		elif [ "$(1)" = "gapps" ]; then \
