@@ -1,0 +1,32 @@
+From 711ff972b0938e73cbfeff7ee696c335bdb8d461 Mon Sep 17 00:00:00 2001
+From: Christopher A. Williamson <contact@chrisaw.io>
+Date: Wed, 5 Mar 2025 15:41:48 +0000
+Subject: [PATCH] Remove lines from Samsung A30 sepolicy which are defined
+ elsewhere
+
+---
+ sepolicies/28/Samsung_A30_sepolicy.cil | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/sepolicies/28/Samsung_A30_sepolicy.cil b/sepolicies/28/Samsung_A30_sepolicy.cil
+index e99fb37..9d9fda8 100644
+--- a/sepolicies/28/Samsung_A30_sepolicy.cil
++++ b/sepolicies/28/Samsung_A30_sepolicy.cil
+@@ -25,7 +25,6 @@
+ (genfscon debugfs /ion/ (u object_r sec_debugfs ((s0) (s0))))
+ (genfscon debugfs /ion (u object_r vendor_ion_debugfs ((s0) (s0))))
+ (genfscon ecryptfs / (u object_r vfat ((s0) (s0))))
+-(genfscon iso9660 / (u object_r vfat ((s0) (s0))))
+ (genfscon proc /sys/kernel/sched_group_downmigrate (u object_r proc_sched ((s0) (s0))))
+ (genfscon proc /sys/kernel/sched_initial_task_util (u object_r proc_sched ((s0) (s0))))
+ (genfscon proc /sys/kernel/sched_sync_hint_enable (u object_r proc_sched ((s0) (s0))))
+@@ -171,7 +170,6 @@
+ (genfscon tracefs /events/header_page (u object_r debugfs_tracing ((s0) (s0))))
+ (genfscon tracefs /events/sde/enable (u object_r debugfs_tracing ((s0) (s0))))
+ (genfscon tracefs /events/drm/enable (u object_r debugfs_tracing ((s0) (s0))))
+-(genfscon udf / (u object_r vfat ((s0) (s0))))
+ (genfscon udfs / (u object_r vfat ((s0) (s0))))
+ (typealias mif_device)
+ (typealiasactual mif_device ssipc_device)
+-- 
+2.47.2
