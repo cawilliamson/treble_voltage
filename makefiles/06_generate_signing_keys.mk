@@ -3,5 +3,5 @@ generate-signing-keys: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /work/repo/src/vendor/voltage-priv/keys && \
-				./keys || true && \
+				./keys.sh || true && \
 			popd'
