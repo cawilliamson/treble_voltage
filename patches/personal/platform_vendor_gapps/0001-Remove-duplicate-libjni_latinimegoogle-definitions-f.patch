@@ -1,5 +1,5 @@
 From 5dc7948c01025ffbc972e8bcad6537e4a48fa9fb Mon Sep 17 00:00:00 2001
-From: "Christopher A. Williamson" <home@chrisaw.com>
+From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Sun, 15 Sep 2024 10:32:54 +0100
 Subject: [PATCH] Remove duplicate libjni_latinimegoogle definitions from gapps
 
