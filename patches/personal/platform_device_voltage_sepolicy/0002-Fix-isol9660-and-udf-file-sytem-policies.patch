@@ -1,0 +1,23 @@
+From f60e669fecf7e28e83e6ae56d37f83093c1af1fd Mon Sep 17 00:00:00 2001
+From: Build <build@nobody>
+Date: Wed, 5 Mar 2025 18:25:52 +0000
+Subject: [PATCH 2/2] Fix iso9660 and udf file system policies
+
+---
+ common/private/genfs_contexts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/common/private/genfs_contexts b/common/private/genfs_contexts
+index c80a02a..bba40ac 100644
+--- a/common/private/genfs_contexts
++++ b/common/private/genfs_contexts
+@@ -3,5 +3,5 @@ genfscon proc /sys/vm/dirty_bytes u:object_r:proc_dirty:s0
+ genfscon sysfs /devices/virtual/timed_output/vibrator u:object_r:sysfs_vibrator:s0
+ genfscon sysfs /module/mmcblk/parameters/perdev_minors u:object_r:sysfs_perdev_minors:s0
+ 
+-genfscon iso9660 / u:object_r:iso9660:s0
+-genfscon udf / u:object_r:udf:s0
++genfscon iso9660 / u:object_r:vfat:s0
++genfscon udf / u:object_r:vfat:s0
+-- 
+2.47.2
