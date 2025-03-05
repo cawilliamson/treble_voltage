@@ -1,5 +1,5 @@
 # Step 6: Setup tmp directory and stash gapps variants
-setup-tmp-dir: build-container
+setup-tmp-dir: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c 'mkdir -p /work/tmp/ && \
 		echo "$(BUILD_DATE)" > /work/tmp/cachedBuildDate.txt && \

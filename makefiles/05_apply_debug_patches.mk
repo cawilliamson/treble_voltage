@@ -1,5 +1,5 @@
 # Step 5: Apply debug patches (conditional)
-apply-debug-patches: build-container
+apply-debug-patches: build-container create-folders
 	$(CONTAINER_RUN) \
 		-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
 		voltage-gsi-builder \

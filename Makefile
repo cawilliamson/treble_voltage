@@ -7,7 +7,6 @@ BUILD_DATE := $(shell date "+%Y%m%d")
 APPLY_DEBUG_PATCHES ?= false
 ROM_TAG ?= 15-qpr1
 ROM_VERSION ?= 4.2
-OUTPUT_DIR := $(PWD)/out
 MAX_CPU_PERCENT ?= 100
 MAX_MEM_PERCENT ?= 100
 
@@ -20,7 +19,6 @@ CONTAINER_RUN = podman run --rm --privileged \
 	--cpus="$(CPU_LIMIT)" \
 	--memory="$(MEM_LIMIT)" \
 	--pids-limit=0 \
-	-v "$(OUTPUT_DIR):/out:Z" \
 	-v "$(PWD):/work/repo:Z" \
 	-e BUILD_DATE="$(BUILD_DATE)" \
 	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
@@ -28,7 +26,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 	-e ROM_TAG="$(ROM_TAG)"
 
 # Define all phony targets
-.PHONY: all all-images clean build-container \
+.PHONY: all all-images clean build-container create-folders \
 	clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches apply-debug-patches setup-tmp-dir generate-signing-keys \
 	build-treble-app vndk-test-sepolicy \
@@ -49,12 +47,14 @@ all-images: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanil
 
 # Clean build directories
 clean:
-	rm -rf $(OUTPUT_DIR)
-	mkdir -p $(OUTPUT_DIR)
+	rm -rfv out/ src/
 
 # Build container image
 build-container:
 	podman build -t voltage-gsi-builder -f Containerfile .
+
+create-folders:
+	mkdir -p out/ src/
 
 # Convenience targets for building all variants of a specific type
 build-vanilla: build-vanilla-arm64 build-vanilla-a64
