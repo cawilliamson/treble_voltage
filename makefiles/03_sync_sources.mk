@@ -3,5 +3,5 @@ sync-sources: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 		pushd /work/repo/src/ && \
-			repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags; && \
+			repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags && \
 		popd'
