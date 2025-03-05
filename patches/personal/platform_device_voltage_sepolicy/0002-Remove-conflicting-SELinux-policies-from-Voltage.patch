@@ -1,0 +1,30 @@
+From 6f997b6357e801f95f6521f25089472c36734681 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <contact@chrisaw.io>
+Date: Wed, 5 Mar 2025 19:29:33 +0000
+Subject: [PATCH 2/2] Remove conflicting SELinux policies from Voltage
+
+---
+ common/private/genfs_contexts | 3 ---
+ common/public/file.te         | 2 --
+ 2 files changed, 5 deletions(-)
+
+diff --git a/common/private/genfs_contexts b/common/private/genfs_contexts
+index c80a02a..653ff00 100644
+--- a/common/private/genfs_contexts
++++ b/common/private/genfs_contexts
+@@ -2,6 +2,3 @@ genfscon proc /sys/vm/dirty_background_bytes u:object_r:proc_dirty:s0
+ genfscon proc /sys/vm/dirty_bytes u:object_r:proc_dirty:s0
+ genfscon sysfs /devices/virtual/timed_output/vibrator u:object_r:sysfs_vibrator:s0
+ genfscon sysfs /module/mmcblk/parameters/perdev_minors u:object_r:sysfs_perdev_minors:s0
+-
+-genfscon iso9660 / u:object_r:iso9660:s0
+-genfscon udf / u:object_r:udf:s0
+diff --git a/common/public/file.te b/common/public/file.te
+index 00c194d..e69de29 100644
+--- a/common/public/file.te
++++ b/common/public/file.te
+@@ -1,2 +0,0 @@
+-type iso9660, sdcard_type, fs_type, mlstrustedobject;
+-type udf, sdcard_type, fs_type, mlstrustedobject;
+--
+2.47.2

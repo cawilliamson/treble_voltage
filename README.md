@@ -11,11 +11,73 @@ This repository contains a containerized build system for VoltageOS GSI images u
 
 ## Usage
 
-The build system uses a Makefile to orchestrate the build process. Here are the available targets:
+The build system uses a modular Makefile structure to orchestrate the build process. The main `Makefile` contains shared configuration and includes individual step files from the `makefiles/` directory.
+
+### Makefile Structure
+
+The build system is organized into multiple files for better maintainability:
+
+1. The main `Makefile` contains all shared configuration, variables, and common targets
+2. Individual build steps are split into separate files in the `makefiles/` directory
+3. Each step file is named with a number prefix (e.g., `01_clone_rom_manifest.mk`) to ensure they're included in the correct order
+
+This modular structure makes it easier to:
+- Understand the build process
+- Modify individual steps without affecting others
+- Add new steps in the future
+
+Here are the available targets:
 
 ## Makefile targets
 
 <!-- BEGIN_MAKE_TARGETS -->
+The build system now supports running individual steps independently, similar to GitHub Actions workflow:
+
+### Container Management
+- `build-container`: Build the container image
+- `clean`: Clean build directories
+
+### Individual Build Steps
+- `clone-rom-manifest`: Clone the ROM manifest repository
+- `copy-manifest-config`: Copy manifest configuration files
+- `sync-sources`: Sync all source code (with auto-retry)
+- `apply-patches`: Apply trebledroid and personal patches
+- `apply-debug-patches`: Apply debug patches (if APPLY_DEBUG_PATCHES=true)
+- `setup-tmp-dir`: Setup temporary directory and stash GApps variants
+- `generate-signing-keys`: Generate signing keys for the build
+- `build-treble-app`: Build the Treble app
+- `vndk-test-sepolicy`: Run VNDK sepolicy tests
+
+### Build Targets for Different Variants
+- `build-vanilla-arm64`: Build vanilla arm64 image
+- `build-microg-arm64`: Build microG arm64 image
+- `build-gapps-arm64`: Build GApps arm64 image
+- `build-vanilla-a64`: Build vanilla arm32_binder64 image
+- `build-microg-a64`: Build microG arm32_binder64 image
+- `build-gapps-a64`: Build GApps arm32_binder64 image
+
+### VNDKlite Adaptation
+- `adapt-vndklite-vanilla-arm64`: Adapt vanilla arm64 image to VNDKlite
+- `adapt-vndklite-microg-arm64`: Adapt microG arm64 image to VNDKlite
+- `adapt-vndklite-gapps-arm64`: Adapt GApps arm64 image to VNDKlite
+- `adapt-vndklite-vanilla-a64`: Adapt vanilla arm32_binder64 image to VNDKlite
+- `adapt-vndklite-microg-a64`: Adapt microG arm32_binder64 image to VNDKlite
+- `adapt-vndklite-gapps-a64`: Adapt GApps arm32_binder64 image to VNDKlite
+
+### Post-Processing
+- `rename-images`: Rename all image files to final names
+- `compress-images`: Compress all images with xz
+- `copy-to-web`: Copy all files to web directory
+- `upload-to-github`: Upload to GitHub releases
+
+### Convenience Targets
+- `build-vanilla`: Build all vanilla variants
+- `build-microg`: Build all microG variants
+- `build-gapps`: Build all GApps variants
+- `build-arm64`: Build all arm64 variants
+- `build-a64`: Build all arm32_binder64 variants
+- `full-build`: Run the complete build process
+- `all`: Default target, builds all standard variants
 <!-- END_MAKE_TARGETS -->
 
 ## Configuration
@@ -23,17 +85,14 @@ The build system uses a Makefile to orchestrate the build process. Here are the 
 You can customize the build process with the following variables:
 
 ```bash
-make ROM_NAME=VoltageOS ROM_VERSION=4.3 MAINTAINER=yourusername REPO_NAME=your-repo
+make APPLY_DEBUG_PATCHES=true
 ```
 
 Available variables:
 
 - `ROM_NAME`: Name of the ROM (default: VoltageOS)
 - `ROM_VERSION`: Version of the ROM (default: 4.2)
-- `MAINTAINER`: GitHub username of the maintainer (default: cawilliamson)
-- `REPO_NAME`: Repository name (default: treble_voltage)
-- `APPLY_DEBUG_PATCHES`: Whether to apply debug patches (default: true)
-- `OUTPUT_DIR`: Directory for output files (default: ./output)
+- `APPLY_DEBUG_PATCHES`: Whether to apply debug patches (default: false)
 - `MAX_CPU_PERCENT`: Maximum CPU usage in percent (default: 100)
 - `MAX_MEM_PERCENT`: Maximum memory usage in percent (default: 100)
 
@@ -47,9 +106,100 @@ make MAX_CPU_PERCENT=50 MAX_MEM_PERCENT=75
 
 This will use 50% of available CPU cores and 75% of available memory.
 
+## Running Independent Build Steps
+
+One of the key features of this build system is the ability to run individual build steps independently, similar to GitHub Actions workflow. This allows you to:
+
+1. Run specific parts of the build process
+2. Resume a build from a specific step if it fails
+3. Test individual components without running the entire build
+
+### Examples
+
+#### Running a Complete Build
+
+To run the complete build process:
+
+```bash
+make full-build
+```
+
+#### Building Only Specific Variants
+
+To build only the vanilla arm64 variant:
+
+```bash
+make build-vanilla-arm64
+```
+
+To build all microG variants:
+
+```bash
+make build-microg
+```
+
+#### Running Specific Steps
+
+To run the VNDK sepolicy tests:
+
+```bash
+make vndk-test-sepolicy
+```
+
+To apply patches and then build the Treble app:
+
+```bash
+make apply-patches apply-debug-patches build-treble-app
+```
+
+#### Resuming a Failed Build
+
+If a build fails at a specific step, you can resume from that step. For example, if the build fails during the source sync:
+
+```bash
+# First, ensure the container is built
+make build-container
+
+# Then resume from the sync step
+make sync-sources apply-patches setup-tmp-dir generate-signing-keys build-treble-app
+# ... continue with the remaining steps
+```
+
+### Build Process Flow
+
+The typical build process follows these steps:
+
+1. Container preparation
+   - `build-container`
+
+2. Source code preparation
+   - `clone-rom-manifest`
+   - `copy-manifest-config`
+   - `sync-sources`
+   - `apply-patches`
+   - `apply-debug-patches`
+
+3. Build preparation
+   - `setup-tmp-dir`
+   - `generate-signing-keys`
+   - `build-treble-app`
+
+4. Building images
+   - `build-vanilla-arm64` (and other variants)
+   - `vndk-test-sepolicy`
+
+5. VNDKlite adaptation
+   - `adapt-vndklite-vanilla-arm64` (and other variants)
+
+6. Post-processing
+   - `rename-images`
+   - `compress-images`
+   - `copy-to-web`
+   - `upload-to-github`
+
 ## Output
 
-The built images will be available in the `output` directory (or the directory specified by `OUTPUT_DIR`).
+The built images will be available in the `out` directory.
 
 ## Credits
 

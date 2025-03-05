@@ -1,5 +1,5 @@
 From 5b213010c65c8fed617206f0af935df63ea5eec1 Mon Sep 17 00:00:00 2001
-From: "Christopher A. Williamson" <home@chrisaw.com>
+From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Sat, 27 Jan 2024 23:00:01 +0000
 Subject: [PATCH 4/4] set ccache directory to build dir
 

@@ -1,5 +1,5 @@
 From f4afe66a02c3804f3cc8c62c225f5382125c655f Mon Sep 17 00:00:00 2001
-From: "Christopher A. Williamson" <home@chrisaw.com>
+From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Mon, 6 May 2024 15:59:11 +0100
 Subject: [PATCH 2/4] Disable enforcing unauthenticated adb
 
