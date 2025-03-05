@@ -28,7 +28,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 	-e ROM_TAG="$(ROM_TAG)"
 
 # Define all phony targets
-.PHONY: all clean build-container \
+.PHONY: all all-images clean build-container \
 	clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches apply-debug-patches setup-tmp-dir generate-signing-keys \
 	build-treble-app vndk-test-sepolicy \
@@ -38,8 +38,11 @@ CONTAINER_RUN = podman run --rm --privileged \
 	adapt-vndklite-vanilla-a64 adapt-vndklite-microg-a64 adapt-vndklite-gapps-a64 \
 	rename-images compress-images
 
-# Default target
-all: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanilla-a64 build-microg-a64 build-gapps-a64 \
+# Default target is now full-build
+all: full-build
+
+# Target for building all images without source preparation
+all-images: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	adapt-vndklite-vanilla-arm64 adapt-vndklite-microg-arm64 adapt-vndklite-gapps-arm64 \
 	adapt-vndklite-vanilla-a64 adapt-vndklite-microg-a64 adapt-vndklite-gapps-a64 \
 	rename-images compress-images
