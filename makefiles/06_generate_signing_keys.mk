@@ -1,4 +1,4 @@
-# Step 7: Generate signing keys
+# Step 6: Generate signing keys
 generate-signing-keys: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \

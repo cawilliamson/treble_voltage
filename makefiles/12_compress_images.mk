@@ -1,4 +1,4 @@
-# Step 13: Compress all images with xz
+# Step 12: Compress all images with xz
 compress-images: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
