@@ -38,7 +38,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	adapt-vndklite-vanilla-arm64 adapt-vndklite-microg-arm64 adapt-vndklite-gapps-arm64 \
 	adapt-vndklite-vanilla-a64 adapt-vndklite-microg-a64 adapt-vndklite-gapps-a64 \
-	rename-images compress-images copy-to-web upload-to-github
+	rename-images compress-images
 
 # Default target
 all: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanilla-a64 build-microg-a64 build-gapps-a64 \

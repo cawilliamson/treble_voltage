@@ -67,8 +67,6 @@ The build system now supports running individual steps independently, similar to
 ### Post-Processing
 - `rename-images`: Rename all image files to final names
 - `compress-images`: Compress all images with xz
-- `copy-to-web`: Copy all files to web directory
-- `upload-to-github`: Upload to GitHub releases
 
 ### Convenience Targets
 - `build-vanilla`: Build all vanilla variants
@@ -194,8 +192,6 @@ The typical build process follows these steps:
 6. Post-processing
    - `rename-images`
    - `compress-images`
-   - `copy-to-web`
-   - `upload-to-github`
 
 ## Output
 
