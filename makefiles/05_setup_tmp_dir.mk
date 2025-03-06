@@ -2,6 +2,6 @@
 setup-tmp-dir: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
-			mkdir -p /work/tmp/ && \
-			mv -v /work/repo/src/vendor/gapps /work/tmp/ && \
-			mv -v /work/repo/src/vendor/partner_gms /work/tmp/'
+			mkdir -p /repo/tmp/ && \
+			mv -v /repo/src/vendor/gapps /repo/tmp/ && \
+			mv -v /repo/src/vendor/partner_gms /repo/tmp/'
