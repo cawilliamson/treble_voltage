@@ -28,7 +28,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 # Define all phony targets
 .PHONY: all all-images clean build-container create-folders \
 	clone-rom-manifest copy-manifest-config sync-sources \
-	apply-patches setup-tmp-dir generate-signing-keys \
+	apply-patches stash-gapps-variants generate-signing-keys \
 	build-treble-app vndk-test-sepolicy \
 	build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
@@ -65,7 +65,7 @@ build-a64: build-vanilla-a64 build-microg-a64 build-gapps-a64
 
 # Full build process
 full-build: clone-rom-manifest copy-manifest-config sync-sources \
-	apply-patches setup-tmp-dir generate-signing-keys \
+	apply-patches stash-gapps-variants generate-signing-keys \
 	build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	vndk-test-sepolicy \
