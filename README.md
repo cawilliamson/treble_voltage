@@ -27,9 +27,7 @@ This consolidated structure makes it easier to:
 - Follow the build flow from start to finish
 - See all dependencies and relationships between targets
 
-Here are the available targets:
-
-## Makefile targets
+## Makefile Targets
 
 <!-- BEGIN_MAKE_TARGETS -->
 The build system now supports running individual steps independently, similar to GitHub Actions workflow:
@@ -77,13 +75,15 @@ The build system now supports running individual steps independently, similar to
 You can customize the build process with the following variables:
 
 ```bash
-make APPLY_DEBUG_PATCHES=true
+# Example of using multiple configuration variables
+make ROM_VERSION=4.3 ROM_TAG=16-qpr1 APPLY_DEBUG_PATCHES=true MAX_CPU_PERCENT=50 CONTAINER_RUNTIME=docker
 ```
 
 Available variables:
 
 - `ROM_NAME`: Name of the ROM (default: VoltageOS)
 - `ROM_VERSION`: Version of the ROM (default: 4.2)
+- `ROM_TAG`: Git tag/branch to use for ROM source (default: 15-qpr1)
 - `APPLY_DEBUG_PATCHES`: Whether to apply debug patches (default: false)
 - `MAX_CPU_PERCENT`: Maximum CPU usage in percent (default: 100)
 - `MAX_MEM_PERCENT`: Maximum memory usage in percent (default: 100)
@@ -111,7 +111,6 @@ You can also set this for specific targets:
 ```bash
 make CONTAINER_RUNTIME=docker build-vanilla-arm64
 ```
-This will use 50% of available CPU cores and 75% of available memory.
 
 ## Running Independent Build Steps
 
@@ -178,6 +177,7 @@ The typical build process follows these steps:
 
 1. Container preparation
    - `build-container`
+   - `create-folders`
 
 2. Source code preparation
    - `clone-rom-manifest`
@@ -193,15 +193,25 @@ The typical build process follows these steps:
 
 4. Building images
    - `build-vanilla-arm64` (and other variants)
+
+5. Testing
    - `vndk-test-sepolicy`
 
-5. Post-processing
+6. Post-processing
    - `rename-images`
    - `compress-images`
 
+The built images are initially created in the `tmp` directory and then copied to the `out` directory after compression.
+
 ## Output
 
-The built images will be available in the `out` directory.
+The built images are initially created in the `tmp` directory during the build process. After compression with xz, the final image files (with .img.xz extension) are copied to the `out` directory.
+
+The final image filenames follow this format:
+`VoltageOS-[variant]-[architecture]-ab-[version]-[build_date]-UNOFFICIAL.img.xz`
+
+For example:
+`VoltageOS-vanilla-arm64-ab-4.2-20250603-UNOFFICIAL.img.xz`
 
 ## Credits
 
