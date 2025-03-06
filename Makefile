@@ -19,7 +19,7 @@ CONTAINER_RUN = podman run --rm --privileged \
 	--cpus="$(CPU_LIMIT)" \
 	--memory="$(MEM_LIMIT)" \
 	--pids-limit=0 \
-	-v "$(PWD):/work/repo:Z" \
+	-v "$(PWD):/repo:Z" \
 	-e BUILD_DATE="$(BUILD_DATE)" \
 	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
 	-e ROM_VERSION="$(ROM_VERSION)" \
@@ -47,14 +47,14 @@ all-images: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanil
 
 # Clean build directories
 clean:
-	rm -rfv out/ src/
+	rm -rfv out/ src/ tmp/
 
 # Build container image
 build-container:
 	podman build -t voltage-gsi-builder -f Containerfile .
 
 create-folders:
-	mkdir -p out/ src/
+	mkdir -p out/ src/ tmp/
 
 # Convenience targets for building all variants of a specific type
 build-vanilla: build-vanilla-arm64 build-vanilla-a64

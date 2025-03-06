@@ -49,7 +49,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Create directory structure
-RUN mkdir -p /work/repo
+RUN mkdir -p /repo
 
 # install libncurses5
 RUN cd /var/tmp && \
@@ -68,4 +68,4 @@ RUN git config --global user.email 'androidbuild@localhost' && \
     git config --global user.name 'androidbuild'
 
 # Set up working directory
-WORKDIR /work
+WORKDIR /repo

@@ -2,11 +2,11 @@
 define adapt_vndklite_image
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
-			pushd /work/repo/src/treble_adapter && \
-				cp -v /work/tmp/system_$(1)_$(2).img standard_system_$(1)_$(2).img && \
+			pushd /repo/src/treble_adapter && \
+				cp -v /repo/tmp/system_$(1)_$(2).img standard_system_$(1)_$(2).img && \
 				sudo bash lite-adapter.sh $(if $(filter $(2),a64),32,64) standard_system_$(1)_$(2).img && \
-				sudo mv s.img /work/tmp/s_$(1)_$(2)_vndklite.img && \
-				sudo chown $$(whoami):$$(id | awk -F"[()]" "{ print \$$2 }") /work/tmp/s_$(1)_$(2)_vndklite.img && \
+				sudo mv s.img /repo/tmp/s_$(1)_$(2)_vndklite.img && \
+				sudo chown $$(whoami):$$(id | awk -F"[()]" "{ print \$$2 }") /repo/tmp/s_$(1)_$(2)_vndklite.img && \
 			popd'
 endef
 
