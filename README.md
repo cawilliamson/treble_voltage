@@ -1,10 +1,10 @@
 # VoltageOS GSI Build System
 
-This repository contains a containerized build system for VoltageOS GSI images using Podman.
+This repository contains a containerized build system for VoltageOS GSI images using container technology.
 
 ## Prerequisites
 
-- [Podman](https://podman.io/)
+- [Podman](https://podman.io/) or [Docker](https://www.docker.com/)
 - At least 200GB of free disk space
 - At least 16GB of RAM (32GB recommended)
 - A fast internet connection
@@ -87,7 +87,7 @@ Available variables:
 - `APPLY_DEBUG_PATCHES`: Whether to apply debug patches (default: false)
 - `MAX_CPU_PERCENT`: Maximum CPU usage in percent (default: 100)
 - `MAX_MEM_PERCENT`: Maximum memory usage in percent (default: 100)
-
+- `CONTAINER_RUNTIME`: Container runtime to use (default: podman, can be set to docker)
 ## Resource Limits
 
 You can limit CPU and memory usage with:
@@ -96,6 +96,21 @@ You can limit CPU and memory usage with:
 make MAX_CPU_PERCENT=50 MAX_MEM_PERCENT=75
 ```
 
+This will use 50% of available CPU cores and 75% of available memory.
+
+## Container Runtime
+
+By default, the build system uses Podman. To use Docker instead:
+
+```bash
+make CONTAINER_RUNTIME=docker
+```
+
+You can also set this for specific targets:
+
+```bash
+make CONTAINER_RUNTIME=docker build-vanilla-arm64
+```
 This will use 50% of available CPU cores and 75% of available memory.
 
 ## Running Independent Build Steps

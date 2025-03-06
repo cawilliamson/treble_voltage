@@ -2,6 +2,15 @@
 .SHELLFLAGS := -e -c
 .ONESHELL:
 
+# Define a function to print section headers
+define print_section
+	@echo ""
+	@echo "#######################"
+	@echo "# $(1)"
+	@echo "#######################"
+	@echo ""
+endef
+
 # Configuration variables
 BUILD_DATE := $(shell date "+%Y%m%d")
 APPLY_DEBUG_PATCHES ?= false
@@ -9,13 +18,14 @@ ROM_TAG ?= 15-qpr1
 ROM_VERSION ?= 4.2
 MAX_CPU_PERCENT ?= 100
 MAX_MEM_PERCENT ?= 100
+CONTAINER_RUNTIME ?= podman
 
 # Calculate resource limits
 CPU_LIMIT := $(shell echo $$(( $(shell nproc --all) * $(MAX_CPU_PERCENT) / 100 )))
 MEM_LIMIT := $(shell echo "$$(( $(shell free -m | awk '/^Mem:/{print $$2}') * $(MAX_MEM_PERCENT) / 100 ))m")
 
 # Common container parameters
-CONTAINER_RUN = podman run --rm --privileged \
+CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 	--cpus="$(CPU_LIMIT)" \
 	--memory="$(MEM_LIMIT)" \
 	--pids-limit=0 \
@@ -47,7 +57,7 @@ clean:
 
 # Build container image
 build-container:
-	podman build -t voltage-gsi-builder -f Containerfile .
+	$(CONTAINER_RUNTIME) build -t voltage-gsi-builder -f Containerfile .
 
 create-folders:
 	mkdir -p out/ src/ tmp/
@@ -73,11 +83,7 @@ full-build: clone-rom-manifest copy-manifest-config sync-sources \
 
 # Step 1: Clone ROM manifest
 clone-rom-manifest: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Clone ROM Manifest"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Clone ROM Manifest)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/ && \
@@ -86,11 +92,7 @@ clone-rom-manifest: build-container create-folders
 
 # Step 2: Copy manifest config
 copy-manifest-config: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Copy Manifest Config"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Copy Manifest Config)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			mkdir -p /repo/src/.repo/local_manifests && \
@@ -98,11 +100,7 @@ copy-manifest-config: build-container create-folders
 
 # Step 3: Perform full sources sync (with auto retry)
 sync-sources: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Sync Sources"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Sync Sources)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/ && \
@@ -114,11 +112,7 @@ sync-sources: build-container create-folders
 
 # Step 4: Apply patches (including optional debug patches)
 apply-patches: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Apply Patches"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Apply Patches)
 	$(CONTAINER_RUN) \
 		-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
 		voltage-gsi-builder \
@@ -133,11 +127,7 @@ apply-patches: build-container create-folders
 
 # Step 5: Setup tmp directory and stash gapps variants
 stash-gapps-variants: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Stash GApps Variants"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Stash GApps Variants)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			mv -v /repo/src/vendor/gapps /repo/tmp/ && \
@@ -145,11 +135,7 @@ stash-gapps-variants: build-container create-folders
 
 # Step 6: Generate signing keys
 generate-signing-keys: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Generate Signing Keys"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Generate Signing Keys)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/vendor/voltage-priv/keys && \
@@ -158,11 +144,7 @@ generate-signing-keys: build-container create-folders
 
 # Step 7: Build treble app
 build-treble-app: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Build Treble App"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Build Treble App)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src && \
@@ -221,65 +203,37 @@ endef
 
 # Build standard vanilla arm64 image
 build-vanilla-arm64: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Build Vanilla ARM64"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Build Vanilla ARM64)
 	$(call build_gsi_variant,vanilla,arm64,v)
 
 # Build standard microg arm64 image
 build-microg-arm64: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Build MicroG ARM64"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Build MicroG ARM64)
 	$(call build_gsi_variant,microg,arm64,m)
 
 # Build standard gapps arm64 image
 build-gapps-arm64: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Build GApps ARM64"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Build GApps ARM64)
 	$(call build_gsi_variant,gapps,arm64,g)
 
 # Build standard vanilla arm32_binder64 image
 build-vanilla-a64: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Build Vanilla A64"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Build Vanilla A64)
 	$(call build_gsi_variant,vanilla,a64,v)
 
 # Build standard microg arm32_binder64 image
 build-microg-a64: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Build MicroG A64"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Build MicroG A64)
 	$(call build_gsi_variant,microg,a64,m)
 
 # Build standard gapps arm32_binder64 image
 build-gapps-a64: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Build GApps A64"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Build GApps A64)
 	$(call build_gsi_variant,gapps,a64,g)
 
 # Step 9: Run vndk sepolicy tests
 vndk-test-sepolicy: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# VNDK Test SEPolicy"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,VNDK Test SEPolicy)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src && \
@@ -290,11 +244,7 @@ vndk-test-sepolicy: build-container create-folders
 
 # Step 11: Rename image files
 rename-images: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Rename Images"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Rename Images)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/tmp && \
@@ -320,11 +270,7 @@ rename-images: build-container create-folders
 
 # Step 12: Compress all images with xz
 compress-images: build-container create-folders
-	@echo ""
-	@echo "#######################"
-	@echo "# Compress Images"
-	@echo "#######################"
-	@echo ""
+	$(call print_section,Compress Images)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/tmp && \
