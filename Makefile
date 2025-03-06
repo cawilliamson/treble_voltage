@@ -32,8 +32,6 @@ CONTAINER_RUN = podman run --rm --privileged \
 	build-treble-app vndk-test-sepolicy \
 	build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
-	adapt-vndklite-vanilla-arm64 adapt-vndklite-microg-arm64 adapt-vndklite-gapps-arm64 \
-	adapt-vndklite-vanilla-a64 adapt-vndklite-microg-a64 adapt-vndklite-gapps-a64 \
 	rename-images compress-images
 
 # Default target is now full-build
@@ -41,8 +39,6 @@ all: full-build
 
 # Target for building all images without source preparation
 all-images: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanilla-a64 build-microg-a64 build-gapps-a64 \
-	adapt-vndklite-vanilla-arm64 adapt-vndklite-microg-arm64 adapt-vndklite-gapps-arm64 \
-	adapt-vndklite-vanilla-a64 adapt-vndklite-microg-a64 adapt-vndklite-gapps-a64 \
 	rename-images compress-images
 
 # Clean build directories
@@ -73,8 +69,6 @@ full-build: clone-rom-manifest copy-manifest-config sync-sources \
 	build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	vndk-test-sepolicy \
-	adapt-vndklite-vanilla-arm64 adapt-vndklite-microg-arm64 adapt-vndklite-gapps-arm64 \
-	adapt-vndklite-vanilla-a64 adapt-vndklite-microg-a64 adapt-vndklite-gapps-a64 \
 	rename-images compress-images
 
 # Include all step makefiles

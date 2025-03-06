@@ -56,13 +56,6 @@ The build system now supports running individual steps independently, similar to
 - `build-microg-a64`: Build microG arm32_binder64 image
 - `build-gapps-a64`: Build GApps arm32_binder64 image
 
-### VNDKlite Adaptation
-- `adapt-vndklite-vanilla-arm64`: Adapt vanilla arm64 image to VNDKlite
-- `adapt-vndklite-microg-arm64`: Adapt microG arm64 image to VNDKlite
-- `adapt-vndklite-gapps-arm64`: Adapt GApps arm64 image to VNDKlite
-- `adapt-vndklite-vanilla-a64`: Adapt vanilla arm32_binder64 image to VNDKlite
-- `adapt-vndklite-microg-a64`: Adapt microG arm32_binder64 image to VNDKlite
-- `adapt-vndklite-gapps-a64`: Adapt GApps arm32_binder64 image to VNDKlite
 
 ### Post-Processing
 - `rename-images`: Rename all image files to final names
@@ -186,10 +179,7 @@ The typical build process follows these steps:
    - `build-vanilla-arm64` (and other variants)
    - `vndk-test-sepolicy`
 
-5. VNDKlite adaptation
-   - `adapt-vndklite-vanilla-arm64` (and other variants)
-
-6. Post-processing
+5. Post-processing
    - `rename-images`
    - `compress-images`
 

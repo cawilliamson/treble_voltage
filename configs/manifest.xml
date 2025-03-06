@@ -53,10 +53,6 @@
   <!-- phhusson: vndk tests -->
   <project path="vendor/vndk-tests" name="vendor_vndk-tests" remote="phhusson" revision="master" clone-depth="1" />
 
-  <!-- ponces: treble_adapter -->
-  <project name="treble_adapter" path="treble_adapter" remote="ponces" revision="master" clone-depth="1" />
-  <project name="vendor_vndk" path="treble_adapter/vendor_vndk" remote="phhusson" revision="android-10.0" clone-depth="1" />
-
   <!-- trebledroid: device -->
   <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-15.0" clone-depth="1" />
 
