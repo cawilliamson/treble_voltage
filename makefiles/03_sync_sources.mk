@@ -1,5 +1,10 @@
 # Step 3: Perform full sources sync (with auto retry)
 sync-sources: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Sync Sources"
+	@echo "#######################"
+	@echo ""
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/ && \

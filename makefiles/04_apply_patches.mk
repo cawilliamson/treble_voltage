@@ -1,5 +1,10 @@
 # Step 4: Apply patches (including optional debug patches)
 apply-patches: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Apply Patches"
+	@echo "#######################"
+	@echo ""
 	$(CONTAINER_RUN) \
 		-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
 		voltage-gsi-builder \

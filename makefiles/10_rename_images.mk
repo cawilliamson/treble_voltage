@@ -1,5 +1,10 @@
 # Step 11: Rename image files
 rename-images: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Rename Images"
+	@echo "#######################"
+	@echo ""
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/tmp && \

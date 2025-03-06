@@ -1,5 +1,10 @@
 # Step 1: Clone ROM manifest
 clone-rom-manifest: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Clone ROM Manifest"
+	@echo "#######################"
+	@echo ""
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/ && \

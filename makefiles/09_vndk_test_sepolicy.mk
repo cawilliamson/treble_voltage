@@ -1,5 +1,10 @@
 # Step 9: Run vndk sepolicy tests
 vndk-test-sepolicy: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# VNDK Test SEPolicy"
+	@echo "#######################"
+	@echo ""
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src && \
