@@ -1,5 +1,10 @@
 # Step 2: Copy manifest config
 copy-manifest-config: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Copy Manifest Config"
+	@echo "#######################"
+	@echo ""
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			mkdir -p /repo/src/.repo/local_manifests && \

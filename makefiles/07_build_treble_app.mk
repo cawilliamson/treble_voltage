@@ -1,5 +1,10 @@
 # Step 7: Build treble app
 build-treble-app: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build Treble App"
+	@echo "#######################"
+	@echo ""
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src && \

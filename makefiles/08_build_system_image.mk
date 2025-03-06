@@ -43,24 +43,54 @@ endef
 
 # Build standard vanilla arm64 image
 build-vanilla-arm64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build Vanilla ARM64"
+	@echo "#######################"
+	@echo ""
 	$(call build_gsi_variant,vanilla,arm64,v)
 
 # Build standard microg arm64 image
 build-microg-arm64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build MicroG ARM64"
+	@echo "#######################"
+	@echo ""
 	$(call build_gsi_variant,microg,arm64,m)
 
 # Build standard gapps arm64 image
 build-gapps-arm64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build GApps ARM64"
+	@echo "#######################"
+	@echo ""
 	$(call build_gsi_variant,gapps,arm64,g)
 
 # Build standard vanilla arm32_binder64 image
 build-vanilla-a64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build Vanilla A64"
+	@echo "#######################"
+	@echo ""
 	$(call build_gsi_variant,vanilla,a64,v)
 
 # Build standard microg arm32_binder64 image
 build-microg-a64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build MicroG A64"
+	@echo "#######################"
+	@echo ""
 	$(call build_gsi_variant,microg,a64,m)
 
 # Build standard gapps arm32_binder64 image
 build-gapps-a64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build GApps A64"
+	@echo "#######################"
+	@echo ""
 	$(call build_gsi_variant,gapps,a64,g)
