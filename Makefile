@@ -71,5 +71,263 @@ full-build: clone-rom-manifest copy-manifest-config sync-sources \
 	vndk-test-sepolicy \
 	rename-images compress-images
 
-# Include all step makefiles
-include makefiles/*.mk
+# Step 1: Clone ROM manifest
+clone-rom-manifest: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Clone ROM Manifest"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/src/ && \
+				repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs && \
+			popd'
+
+# Step 2: Copy manifest config
+copy-manifest-config: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Copy Manifest Config"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			mkdir -p /repo/src/.repo/local_manifests && \
+			cp -v /repo/configs/*.xml /repo/src/.repo/local_manifests/'
+
+# Step 3: Perform full sources sync (with auto retry)
+sync-sources: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Sync Sources"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/src/ && \
+				until repo sync -c -j$(CPU_LIMIT) --force-sync --no-clone-bundle --no-tags; do \
+					echo "Sync failed, retrying in 30 seconds..."; \
+					sleep 30; \
+				done && \
+			popd'
+
+# Step 4: Apply patches (including optional debug patches)
+apply-patches: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Apply Patches"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) \
+		-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
+		voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/src/ && \
+				/repo/patches/apply.sh . trebledroid && \
+				/repo/patches/apply.sh . personal && \
+				if [ "$$APPLY_DEBUG_PATCHES" = "true" ]; then \
+					/repo/patches/apply.sh . debug; \
+				fi && \
+			popd'
+
+# Step 5: Setup tmp directory and stash gapps variants
+stash-gapps-variants: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Stash GApps Variants"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			mv -v /repo/src/vendor/gapps /repo/tmp/ && \
+			mv -v /repo/src/vendor/partner_gms /repo/tmp/'
+
+# Step 6: Generate signing keys
+generate-signing-keys: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Generate Signing Keys"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/src/vendor/voltage-priv/keys && \
+				./keys.sh || true && \
+			popd'
+
+# Step 7: Build treble app
+build-treble-app: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build Treble App"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/src && \
+				pushd device/phh/treble && \
+					cp -fv /repo/configs/voltage-vanilla.mk voltage.mk && \
+					bash generate.sh voltage && \
+				popd && \
+				pushd treble_app/ && \
+					bash build.sh release && \
+					cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
+				popd && \
+			popd'
+
+# Step 8: Helper function to build a specific GSI variant
+define build_gsi_variant
+	$(CONTAINER_RUN) \
+	-e BUILD_TYPE="$(1)" \
+	-e ARCH="$(2)" \
+	voltage-gsi-builder \
+	/bin/bash -e -c ' \
+		pushd /repo/src && \
+			pushd device/phh/treble && \
+				cp -fv /repo/configs/voltage-$(1).mk voltage.mk && \
+				bash generate.sh voltage && \
+			popd && \
+			if [ "$(1)" = "microg" ]; then \
+				if [ -d "/repo/tmp/partner_gms" ]; then \
+					cp -Rfv /repo/tmp/partner_gms vendor/; \
+				else \
+					echo "partner_gms not found in tmp dir"; \
+					exit 1; \
+				fi; \
+			elif [ "$(1)" = "gapps" ]; then \
+				if [ -d "/repo/tmp/gapps" ]; then \
+					cp -Rfv /repo/tmp/gapps vendor/; \
+				else \
+					echo "gapps not found in tmp dir"; \
+					exit 1; \
+				fi; \
+			fi && \
+			. build/envsetup.sh && \
+			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
+			make systemimage -j$(CPU_LIMIT) && \
+			if [ "$(2)" = "arm64" ]; then \
+				mv -v out/target/product/tdgsi_arm64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
+			else \
+				mv -v out/target/product/tdgsi_a64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
+			fi && \
+			if [ "$(1)" = "microg" ]; then \
+				rm -Rfv vendor/partner_gms; \
+			elif [ "$(1)" = "gapps" ]; then \
+				rm -Rfv vendor/gapps; \
+			fi && \
+		popd'
+endef
+
+# Build standard vanilla arm64 image
+build-vanilla-arm64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build Vanilla ARM64"
+	@echo "#######################"
+	@echo ""
+	$(call build_gsi_variant,vanilla,arm64,v)
+
+# Build standard microg arm64 image
+build-microg-arm64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build MicroG ARM64"
+	@echo "#######################"
+	@echo ""
+	$(call build_gsi_variant,microg,arm64,m)
+
+# Build standard gapps arm64 image
+build-gapps-arm64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build GApps ARM64"
+	@echo "#######################"
+	@echo ""
+	$(call build_gsi_variant,gapps,arm64,g)
+
+# Build standard vanilla arm32_binder64 image
+build-vanilla-a64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build Vanilla A64"
+	@echo "#######################"
+	@echo ""
+	$(call build_gsi_variant,vanilla,a64,v)
+
+# Build standard microg arm32_binder64 image
+build-microg-a64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build MicroG A64"
+	@echo "#######################"
+	@echo ""
+	$(call build_gsi_variant,microg,a64,m)
+
+# Build standard gapps arm32_binder64 image
+build-gapps-a64: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Build GApps A64"
+	@echo "#######################"
+	@echo ""
+	$(call build_gsi_variant,gapps,a64,g)
+
+# Step 9: Run vndk sepolicy tests
+vndk-test-sepolicy: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# VNDK Test SEPolicy"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/src && \
+				. build/envsetup.sh && \
+				lunch treble_arm64_bvN-ap4a-userdebug && \
+				make vndk-test-sepolicy -j$(CPU_LIMIT) && \
+			popd'
+
+# Step 11: Rename image files
+rename-images: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Rename Images"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/tmp && \
+				if [ -f system_vanilla_arm64.img ]; then \
+					mv -v system_vanilla_arm64.img "VoltageOS"-vanilla-arm64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
+				fi && \
+				if [ -f system_microg_arm64.img ]; then \
+					mv -v system_microg_arm64.img "VoltageOS"-microg-arm64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
+				fi && \
+				if [ -f system_gapps_arm64.img ]; then \
+					mv -v system_gapps_arm64.img "VoltageOS"-gapps-arm64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
+				fi && \
+				if [ -f system_vanilla_a64.img ]; then \
+					mv -v system_vanilla_a64.img "VoltageOS"-vanilla-arm32_binder64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
+				fi && \
+				if [ -f system_microg_a64.img ]; then \
+					mv -v system_microg_a64.img "VoltageOS"-microg-arm32_binder64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
+				fi && \
+				if [ -f system_gapps_a64.img ]; then \
+					mv -v system_gapps_a64.img "VoltageOS"-gapps-arm32_binder64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
+				fi && \
+			popd'
+
+# Step 12: Compress all images with xz
+compress-images: build-container create-folders
+	@echo ""
+	@echo "#######################"
+	@echo "# Compress Images"
+	@echo "#######################"
+	@echo ""
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/tmp && \
+				find . -maxdepth 1 -name "*.img" -exec xz -9 -T0 -v -z "{}" \; && \
+				cp -fv *.img.xz /repo/out/ && \
+			popd'

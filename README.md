@@ -11,20 +11,21 @@ This repository contains a containerized build system for VoltageOS GSI images u
 
 ## Usage
 
-The build system uses a modular Makefile structure to orchestrate the build process. The main `Makefile` contains shared configuration and includes individual step files from the `makefiles/` directory.
+The build system uses a single comprehensive Makefile to orchestrate the build process. The Makefile contains all configuration, variables, and build targets in one file for simplicity.
 
 ### Makefile Structure
 
-The build system is organized into multiple files for better maintainability:
+The build system is organized in a clear, sequential manner:
 
-1. The main `Makefile` contains all shared configuration, variables, and common targets
-2. Individual build steps are split into separate files in the `makefiles/` directory
-3. Each step file is named with a number prefix (e.g., `01_clone_rom_manifest.mk`) to ensure they're included in the correct order
+1. Configuration variables and resource limits at the top
+2. Common container parameters and phony target definitions
+3. Convenience targets for different build combinations
+4. Individual build steps in sequential order with clear headers
 
-This modular structure makes it easier to:
-- Understand the build process
-- Modify individual steps without affecting others
-- Add new steps in the future
+This consolidated structure makes it easier to:
+- Understand the entire build process at a glance
+- Follow the build flow from start to finish
+- See all dependencies and relationships between targets
 
 Here are the available targets:
 
