@@ -43,7 +43,7 @@ The build system now supports running individual steps independently, similar to
 - `sync-sources`: Sync all source code (with auto-retry)
 - `apply-patches`: Apply trebledroid and personal patches
 - `apply-debug-patches`: Apply debug patches (if APPLY_DEBUG_PATCHES=true)
-- `setup-tmp-dir`: Setup temporary directory and stash GApps variants
+- `stash-gapps-variants`: Setup temporary directory and stash GApps variants
 - `generate-signing-keys`: Generate signing keys for the build
 - `build-treble-app`: Build the Treble app
 - `vndk-test-sepolicy`: Run VNDK sepolicy tests
@@ -152,7 +152,7 @@ If a build fails at a specific step, you can resume from that step. For example,
 make build-container
 
 # Then resume from the sync step
-make sync-sources apply-patches setup-tmp-dir generate-signing-keys build-treble-app
+make sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 # ... continue with the remaining steps
 ```
 
@@ -171,7 +171,7 @@ The typical build process follows these steps:
    - `apply-debug-patches`
 
 3. Build preparation
-   - `setup-tmp-dir`
+   - `stash-gapps-variants`
    - `generate-signing-keys`
    - `build-treble-app`
 
