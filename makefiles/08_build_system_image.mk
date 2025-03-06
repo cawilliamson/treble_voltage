@@ -1,6 +1,6 @@
  # Step 8: Helper function to build a specific GSI variant
 define build_gsi_variant
- $(CONTAINER_RUN) \
+	$(CONTAINER_RUN) \
  	-e BUILD_TYPE="$(1)" \
  	-e ARCH="$(2)" \
  	voltage-gsi-builder \
