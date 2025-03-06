@@ -4,5 +4,5 @@ compress-images: build-container create-folders
 		/bin/bash -e -c ' \
 			pushd /repo/tmp && \
 				find . -maxdepth 1 -name "*.img" -exec xz -9 -T0 -v -z "{}" \; && \
-				cp -fv *.img.xz /repo/out/ && \
+					cp -fv *.img.xz /repo/out/ && \
 			popd'
