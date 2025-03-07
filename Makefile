@@ -39,7 +39,7 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 .PHONY: all all-images clean build-container create-folders \
 	clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
-	prepare-rom-config build-treble-app vndk-test-sepolicy \
+	build-treble-app vndk-test-sepolicy \
 	build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	rename-images compress-images
@@ -76,7 +76,7 @@ build-a64: build-vanilla-a64 build-microg-a64 build-gapps-a64
 # Full build process
 full-build: clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
-	prepare-rom-config build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
+	build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	vndk-test-sepolicy \
 	rename-images compress-images
@@ -144,22 +144,12 @@ generate-signing-keys: build-container create-folders
 				./keys.sh || true && \
 			popd'
 
-# Step 7: Prepare ROM config (only needs to be run once)
-prepare-rom-config: build-container create-folders
-	$(call print_section,Prepare ROM Config)
-	$(CONTAINER_RUN) voltage-gsi-builder \
-		/bin/bash -e -c ' \
-			pushd /repo/src/device/phh/treble && \
-				cp -fv /repo/configs/voltage-vanilla.mk voltage.mk && \
-				bash generate.sh voltage && \
-			popd'
-
 # Step 8: Build treble app
-build-treble-app: build-container create-folders prepare-rom-config
+build-treble-app: build-container create-folders
 	$(call print_section,Build Treble App)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
-			pushd /repo/sr/treble_app/ && \
+			pushd /repo/src/treble_app/ && \
 				bash build.sh release && \
 				cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 			popd'
@@ -172,6 +162,10 @@ define build_gsi_variant
 	voltage-gsi-builder \
 	/bin/bash -e -c ' \
 		pushd /repo/src && \
+			pushd device/phh/treble && \
+				cp -fv "/repo/configs/voltage-$(1).mk" voltage.mk && \
+				bash generate.sh voltage && \
+			popd && \
 			if [ "$(1)" = "microg" ]; then \
 				cp -Rfv /repo/tmp/partner_gms vendor/; \
 			elif [ "$(1)" = "gapps" ]; then \
@@ -194,32 +188,32 @@ define build_gsi_variant
 endef
 
 # Build standard vanilla arm64 image
-build-vanilla-arm64: build-container create-folders prepare-rom-config
+build-vanilla-arm64: build-container create-folders
 	$(call print_section,Build Vanilla ARM64)
 	$(call build_gsi_variant,vanilla,arm64,v)
 
 # Build standard microg arm64 image
-build-microg-arm64: build-container create-folders prepare-rom-config
+build-microg-arm64: build-container create-folders
 	$(call print_section,Build MicroG ARM64)
 	$(call build_gsi_variant,microg,arm64,m)
 
 # Build standard gapps arm64 image
-build-gapps-arm64: build-container create-folders prepare-rom-config
+build-gapps-arm64: build-container create-folders
 	$(call print_section,Build GApps ARM64)
 	$(call build_gsi_variant,gapps,arm64,g)
 
 # Build standard vanilla arm32_binder64 image
-build-vanilla-a64: build-container create-folders prepare-rom-config
+build-vanilla-a64: build-container create-folders
 	$(call print_section,Build Vanilla A64)
 	$(call build_gsi_variant,vanilla,a64,v)
 
 # Build standard microg arm32_binder64 image
-build-microg-a64: build-container create-folders prepare-rom-config
+build-microg-a64: build-container create-folders
 	$(call print_section,Build MicroG A64)
 	$(call build_gsi_variant,microg,a64,m)
 
 # Build standard gapps arm32_binder64 image
-build-gapps-a64: build-container create-folders prepare-rom-config
+build-gapps-a64: build-container create-folders
 	$(call print_section,Build GApps A64)
 	$(call build_gsi_variant,gapps,a64,g)
 
