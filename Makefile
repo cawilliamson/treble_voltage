@@ -130,8 +130,10 @@ stash-gapps-variants: build-container create-folders
 	$(call print_section,Stash GApps Variants)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
-			mv -v /repo/src/vendor/gapps /repo/tmp/ && \
-			mv -v /repo/src/vendor/partner_gms /repo/tmp/'
+			pushd /repo/src && \
+				mv -v endor/gapps /repo/tmp/ && \
+				mv -v vendor/partner_gms /repo/tmp/ && \
+			popd'
 
 # Step 6: Generate signing keys
 generate-signing-keys: build-container create-folders
@@ -147,11 +149,9 @@ prepare-treble-config: build-container create-folders
 	$(call print_section,Prepare Treble Config)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
-			pushd /repo/src && \
-				pushd device/phh/treble && \
-					cp -fv /repo/configs/voltage-vanilla.mk voltage.mk && \
-					bash generate.sh voltage && \
-				popd && \
+			pushd /repo/src/device/phh/treble && \
+				cp -fv /repo/configs/voltage-vanilla.mk voltage.mk && \
+				bash generate.sh voltage && \
 			popd'
 
 # Step 8: Build treble app
@@ -159,11 +159,9 @@ build-treble-app: build-container create-folders prepare-treble-config
 	$(call print_section,Build Treble App)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
-			pushd /repo/src && \
-				pushd treble_app/ && \
-					bash build.sh release && \
-					cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
-				popd && \
+			pushd /repo/sr/treble_app/ && \
+				bash build.sh release && \
+				cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 			popd'
 
 # Step 9: Helper function to build a specific GSI variant
@@ -182,15 +180,15 @@ define build_gsi_variant
 			. build/envsetup.sh && \
 			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
 			make systemimage -j$(CPU_LIMIT) && \
-			if [ "$(2)" = "arm64" ]; then \
-				mv -v out/target/product/tdgsi_arm64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
-			else \
-				mv -v out/target/product/tdgsi_a64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
-			fi && \
 			if [ "$(1)" = "microg" ]; then \
 				rm -Rfv vendor/partner_gms; \
 			elif [ "$(1)" = "gapps" ]; then \
 				rm -Rfv vendor/gapps; \
+			fi && \
+			if [ "$(2)" = "arm64" ]; then \
+				mv -v out/target/product/tdgsi_arm64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
+			else \
+				mv -v out/target/product/tdgsi_a64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
 			fi && \
 		popd'
 endef
