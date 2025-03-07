@@ -131,7 +131,7 @@ stash-gapps-variants: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src && \
-				mv -v endor/gapps /repo/tmp/ && \
+				mv -v vendor/gapps /repo/tmp/ && \
 				mv -v vendor/partner_gms /repo/tmp/ && \
 			popd'
 
