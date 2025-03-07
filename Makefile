@@ -39,7 +39,7 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 .PHONY: all all-images clean build-container create-folders \
 	clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
-	prepare-treble-config build-treble-app vndk-test-sepolicy \
+	prepare-rom-config build-treble-app vndk-test-sepolicy \
 	build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	rename-images compress-images
@@ -76,7 +76,7 @@ build-a64: build-vanilla-a64 build-microg-a64 build-gapps-a64
 # Full build process
 full-build: clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
-	prepare-treble-config build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
+	prepare-rom-config build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	vndk-test-sepolicy \
 	rename-images compress-images
@@ -144,9 +144,9 @@ generate-signing-keys: build-container create-folders
 				./keys.sh || true && \
 			popd'
 
-# Step 7: Prepare treble config (only needs to be run once)
-prepare-treble-config: build-container create-folders
-	$(call print_section,Prepare Treble Config)
+# Step 7: Prepare ROM config (only needs to be run once)
+prepare-rom-config: build-container create-folders
+	$(call print_section,Prepare ROM Config)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/device/phh/treble && \
@@ -155,7 +155,7 @@ prepare-treble-config: build-container create-folders
 			popd'
 
 # Step 8: Build treble app
-build-treble-app: build-container create-folders prepare-treble-config
+build-treble-app: build-container create-folders prepare-rom-config
 	$(call print_section,Build Treble App)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
@@ -194,32 +194,32 @@ define build_gsi_variant
 endef
 
 # Build standard vanilla arm64 image
-build-vanilla-arm64: build-container create-folders prepare-treble-config
+build-vanilla-arm64: build-container create-folders prepare-rom-config
 	$(call print_section,Build Vanilla ARM64)
 	$(call build_gsi_variant,vanilla,arm64,v)
 
 # Build standard microg arm64 image
-build-microg-arm64: build-container create-folders prepare-treble-config
+build-microg-arm64: build-container create-folders prepare-rom-config
 	$(call print_section,Build MicroG ARM64)
 	$(call build_gsi_variant,microg,arm64,m)
 
 # Build standard gapps arm64 image
-build-gapps-arm64: build-container create-folders prepare-treble-config
+build-gapps-arm64: build-container create-folders prepare-rom-config
 	$(call print_section,Build GApps ARM64)
 	$(call build_gsi_variant,gapps,arm64,g)
 
 # Build standard vanilla arm32_binder64 image
-build-vanilla-a64: build-container create-folders prepare-treble-config
+build-vanilla-a64: build-container create-folders prepare-rom-config
 	$(call print_section,Build Vanilla A64)
 	$(call build_gsi_variant,vanilla,a64,v)
 
 # Build standard microg arm32_binder64 image
-build-microg-a64: build-container create-folders prepare-treble-config
+build-microg-a64: build-container create-folders prepare-rom-config
 	$(call print_section,Build MicroG A64)
 	$(call build_gsi_variant,microg,a64,m)
 
 # Build standard gapps arm32_binder64 image
-build-gapps-a64: build-container create-folders prepare-treble-config
+build-gapps-a64: build-container create-folders prepare-rom-config
 	$(call print_section,Build GApps A64)
 	$(call build_gsi_variant,gapps,a64,g)
 
