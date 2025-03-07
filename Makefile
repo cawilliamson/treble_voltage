@@ -39,7 +39,7 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 .PHONY: all all-images clean build-container create-folders \
 	clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
-	build-treble-app vndk-test-sepolicy \
+	prepare-treble-config build-treble-app vndk-test-sepolicy \
 	build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	rename-images compress-images
@@ -76,7 +76,7 @@ build-a64: build-vanilla-a64 build-microg-a64 build-gapps-a64
 # Full build process
 full-build: clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
-	build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
+	prepare-treble-config build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
 	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
 	vndk-test-sepolicy \
 	rename-images compress-images
@@ -142,9 +142,9 @@ generate-signing-keys: build-container create-folders
 				./keys.sh || true && \
 			popd'
 
-# Step 7: Build treble app
-build-treble-app: build-container create-folders
-	$(call print_section,Build Treble App)
+# Step 7: Prepare treble config (only needs to be run once)
+prepare-treble-config: build-container create-folders
+	$(call print_section,Prepare Treble Config)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src && \
@@ -152,13 +152,21 @@ build-treble-app: build-container create-folders
 					cp -fv /repo/configs/voltage-vanilla.mk voltage.mk && \
 					bash generate.sh voltage && \
 				popd && \
+			popd'
+
+# Step 8: Build treble app
+build-treble-app: build-container create-folders prepare-treble-config
+	$(call print_section,Build Treble App)
+	$(CONTAINER_RUN) voltage-gsi-builder \
+		/bin/bash -e -c ' \
+			pushd /repo/src && \
 				pushd treble_app/ && \
 					bash build.sh release && \
 					cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 				popd && \
 			popd'
 
-# Step 8: Helper function to build a specific GSI variant
+# Step 9: Helper function to build a specific GSI variant
 define build_gsi_variant
 	$(CONTAINER_RUN) \
 	-e BUILD_TYPE="$(1)" \
@@ -166,24 +174,10 @@ define build_gsi_variant
 	voltage-gsi-builder \
 	/bin/bash -e -c ' \
 		pushd /repo/src && \
-			pushd device/phh/treble && \
-				cp -fv /repo/configs/voltage-$(1).mk voltage.mk && \
-				bash generate.sh voltage && \
-			popd && \
 			if [ "$(1)" = "microg" ]; then \
-				if [ -d "/repo/tmp/partner_gms" ]; then \
-					cp -Rfv /repo/tmp/partner_gms vendor/; \
-				else \
-					echo "partner_gms not found in tmp dir"; \
-					exit 1; \
-				fi; \
+				cp -Rfv /repo/tmp/partner_gms vendor/; \
 			elif [ "$(1)" = "gapps" ]; then \
-				if [ -d "/repo/tmp/gapps" ]; then \
-					cp -Rfv /repo/tmp/gapps vendor/; \
-				else \
-					echo "gapps not found in tmp dir"; \
-					exit 1; \
-				fi; \
+				cp -Rfv /repo/tmp/gapps vendor/; \
 			fi && \
 			. build/envsetup.sh && \
 			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
@@ -202,36 +196,36 @@ define build_gsi_variant
 endef
 
 # Build standard vanilla arm64 image
-build-vanilla-arm64: build-container create-folders
+build-vanilla-arm64: build-container create-folders prepare-treble-config
 	$(call print_section,Build Vanilla ARM64)
 	$(call build_gsi_variant,vanilla,arm64,v)
 
 # Build standard microg arm64 image
-build-microg-arm64: build-container create-folders
+build-microg-arm64: build-container create-folders prepare-treble-config
 	$(call print_section,Build MicroG ARM64)
 	$(call build_gsi_variant,microg,arm64,m)
 
 # Build standard gapps arm64 image
-build-gapps-arm64: build-container create-folders
+build-gapps-arm64: build-container create-folders prepare-treble-config
 	$(call print_section,Build GApps ARM64)
 	$(call build_gsi_variant,gapps,arm64,g)
 
 # Build standard vanilla arm32_binder64 image
-build-vanilla-a64: build-container create-folders
+build-vanilla-a64: build-container create-folders prepare-treble-config
 	$(call print_section,Build Vanilla A64)
 	$(call build_gsi_variant,vanilla,a64,v)
 
 # Build standard microg arm32_binder64 image
-build-microg-a64: build-container create-folders
+build-microg-a64: build-container create-folders prepare-treble-config
 	$(call print_section,Build MicroG A64)
 	$(call build_gsi_variant,microg,a64,m)
 
 # Build standard gapps arm32_binder64 image
-build-gapps-a64: build-container create-folders
+build-gapps-a64: build-container create-folders prepare-treble-config
 	$(call print_section,Build GApps A64)
 	$(call build_gsi_variant,gapps,a64,g)
 
-# Step 9: Run vndk sepolicy tests
+# Step 10: Run vndk sepolicy tests
 vndk-test-sepolicy: build-container create-folders
 	$(call print_section,VNDK Test SEPolicy)
 	$(CONTAINER_RUN) voltage-gsi-builder \
