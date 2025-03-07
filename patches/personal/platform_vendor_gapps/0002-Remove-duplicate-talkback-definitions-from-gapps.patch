@@ -1,0 +1,84 @@
+From 17fb09b113aff817e6372979436a2e120ef06908 Mon Sep 17 00:00:00 2001
+From: Build <build@nobody>
+Date: Fri, 7 Mar 2025 21:31:59 +0000
+Subject: [PATCH 2/2] Remove duplicate talkback definitions from gapps
+
+---
+ arm/Android.bp        | 12 ------------
+ arm/arm-vendor.mk     |  1 -
+ arm64/Android.bp      | 12 ------------
+ arm64/arm64-vendor.mk |  1 -
+ 4 files changed, 26 deletions(-)
+
+diff --git a/arm/Android.bp b/arm/Android.bp
+index f966708..f9c93b1 100644
+--- a/arm/Android.bp
++++ b/arm/Android.bp
+@@ -46,18 +46,6 @@ android_app_import {
+ 	product_specific: true,
+ }
+ 
+-android_app_import {
+-	name: "talkback",
+-	owner: "gapps",
+-	apk: "proprietary/product/app/talkback/talkback.apk",
+-	preprocessed: true,
+-	presigned: true,
+-	dex_preopt: {
+-		enabled: false,
+-	},
+-	product_specific: true,
+-}
+-
+ android_app_import {
+ 	name: "Velvet",
+ 	owner: "gapps",
+diff --git a/arm/arm-vendor.mk b/arm/arm-vendor.mk
+index 0f99e2a..695f256 100644
+--- a/arm/arm-vendor.mk
++++ b/arm/arm-vendor.mk
+@@ -14,7 +14,6 @@ ifeq ($(TARGET_IS_GROUPER),)
+ 
+ PRODUCT_PACKAGES += \
+     SpeechServicesByGoogle \
+-    talkback \
+     Velvet \
+     SetupWizard
+ endif
+diff --git a/arm64/Android.bp b/arm64/Android.bp
+index a06eee4..2ef2b92 100644
+--- a/arm64/Android.bp
++++ b/arm64/Android.bp
+@@ -58,18 +58,6 @@ android_app_import {
+ 	product_specific: true,
+ }
+ 
+-android_app_import {
+-	name: "talkback",
+-	owner: "gapps",
+-	apk: "proprietary/product/app/talkback/talkback.apk",
+-	preprocessed: true,
+-	presigned: true,
+-	dex_preopt: {
+-		enabled: false,
+-	},
+-	product_specific: true,
+-}
+-
+ android_app_import {
+ 	name: "Velvet",
+ 	owner: "gapps",
+diff --git a/arm64/arm64-vendor.mk b/arm64/arm64-vendor.mk
+index 1277c45..d65234f 100644
+--- a/arm64/arm64-vendor.mk
++++ b/arm64/arm64-vendor.mk
+@@ -15,7 +15,6 @@ ifeq ($(TARGET_IS_GROUPER),)
+ PRODUCT_PACKAGES += \
+     MarkupGoogle_v2 \
+     SpeechServicesByGoogle \
+-    talkback \
+     Velvet \
+     SetupWizard
+ endif
+-- 
+2.47.2
