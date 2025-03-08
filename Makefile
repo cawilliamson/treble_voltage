@@ -189,34 +189,52 @@ define build_gsi_variant
 endef
 
 # Build standard vanilla arm64 image
-build-vanilla-arm64: build-container create-folders
+build-vanilla-arm64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 	$(call print_section,Build Vanilla ARM64)
 	$(call build_gsi_variant,vanilla,arm64,v)
+	$(call vndk-test-sepolicy)
+	$(call rename-images)
+	$(call compress-images)
 
 # Build standard microg arm64 image
-build-microg-arm64: build-container create-folders
+build-microg-arm64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 	$(call print_section,Build MicroG ARM64)
 	$(call build_gsi_variant,microg,arm64,m)
+	$(call vndk-test-sepolicy)
+	$(call rename-images)
+	$(call compress-images)
 
 # Build standard gapps arm64 image
-build-gapps-arm64: build-container create-folders
+build-gapps-arm64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 	$(call print_section,Build GApps ARM64)
 	$(call build_gsi_variant,gapps,arm64,g)
+	$(call vndk-test-sepolicy)
+	$(call rename-images)
+	$(call compress-images)
 
 # Build standard vanilla arm32_binder64 image
-build-vanilla-a64: build-container create-folders
+build-vanilla-a64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 	$(call print_section,Build Vanilla A64)
 	$(call build_gsi_variant,vanilla,a64,v)
+	$(call vndk-test-sepolicy)
+	$(call rename-images)
+	$(call compress-images)
 
 # Build standard microg arm32_binder64 image
-build-microg-a64: build-container create-folders
+build-microg-a64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 	$(call print_section,Build MicroG A64)
 	$(call build_gsi_variant,microg,a64,m)
+	$(call vndk-test-sepolicy)
+	$(call rename-images)
+	$(call compress-images)
 
 # Build standard gapps arm32_binder64 image
-build-gapps-a64: build-container create-folders
+build-gapps-a64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 	$(call print_section,Build GApps A64)
 	$(call build_gsi_variant,gapps,a64,g)
+	$(call vndk-test-sepolicy)
+	$(call rename-images)
+	$(call compress-images)
 
 # Step 10: Run vndk sepolicy tests
 vndk-test-sepolicy: build-container create-folders
