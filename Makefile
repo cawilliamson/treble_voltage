@@ -184,6 +184,7 @@ define build_gsi_variant
 			else \
 				mv -v out/target/product/tdgsi_a64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
 			fi && \
+                        rm -rf out/target/product/tdgsi_arm64_ab/ && \
 		popd'
 endef
 
