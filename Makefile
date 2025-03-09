@@ -20,6 +20,7 @@ BUILD_DATE := $(shell date "+%Y%m%d")
 APPLY_DEBUG_PATCHES ?= false
 ROM_TAG ?= 15-qpr1
 ROM_VERSION ?= 4.2
+VERIFY_SEPOLICY ?= true
 
 # Resource configuration
 MAX_CPU_PERCENT ?= 100
@@ -45,7 +46,8 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 	-e BUILD_DATE="$(BUILD_DATE)" \
 	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
 	-e ROM_VERSION="$(ROM_VERSION)" \
-	-e ROM_TAG="$(ROM_TAG)"
+	-e ROM_TAG="$(ROM_TAG)" \
+	-e VERIFY_SEPOLICY="$(VERIFY_SEPOLICY)"
 
 #######################
 # Define all phony targets
@@ -201,13 +203,15 @@ define build_gsi_variant
 			. build/envsetup.sh && \
 			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
 			make systemimage -j$(CPU_LIMIT) && \
+			if [ "$VERIFY_SEPOLICY" = "true" ]; then \
+				make vndk-test-sepolicy -j$(CPU_LIMIT); \
+			fi && \
 			if [ "$(1)" = "microg" ]; then \
 				rm -Rfv vendor/partner_gms; \
 			elif [ "$(1)" = "gapps" ]; then \
 				rm -Rfv vendor/gapps; \
 			fi && \
 			mv -v out/target/product/tdgsi_$(2)_ab/system.img /repo/tmp/system_$(1)_$(2).img && \
-			make vndk-test-sepolicy -j$(CPU_LIMIT) && \
 		popd'
 endef
 
