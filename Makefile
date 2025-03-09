@@ -1,3 +1,9 @@
+# VoltageOS GSI Builder Makefile
+#
+# This Makefile automates the process of building VoltageOS GSI images for various
+# architectures and configurations (vanilla, microG, GApps).
+# It handles the entire build process from source preparation to final image compression.
+#
 # Make sure Make stops if any command fails
 .SHELLFLAGS := -e -c
 .ONESHELL:
@@ -15,27 +21,29 @@ endef
 # Configuration variables
 #######################
 
-# Build configuration
-BUILD_DATE := $(shell date "+%Y%m%d")
+# ROM configuration
 APPLY_DEBUG_PATCHES ?= false
+BUILD_DATE := $(shell date "+%Y%m%d")
 ROM_TAG ?= 15-qpr1
 ROM_VERSION ?= 4.2
 VERIFY_SEPOLICY ?= true
 
+# Build variants configuration
+ARCHITECTURES := arm64 a64
+ARCH_DISPLAY_NAMES := arm64 arm32_binder64
+BUILD_TYPES := vanilla microg gapps
+BUILD_TYPE_CODES := v m g
+
 # Resource configuration
 MAX_CPU_PERCENT ?= 100
 MAX_MEM_PERCENT ?= 100
-CPU_LIMIT := $(shell echo $$(( $(shell nproc --all) * $(MAX_CPU_PERCENT) / 100 )))
-MEM_LIMIT := $(shell echo "$$(( $(shell free -m | awk '/^Mem:/{print $$2}') * $(MAX_MEM_PERCENT) / 100 ))m")
 
 # Container configuration
 CONTAINER_RUNTIME ?= podman
 
-# Build variants configuration
-BUILD_TYPES := vanilla microg gapps
-ARCHITECTURES := arm64 a64
-ARCH_DISPLAY_NAMES := arm64 arm32_binder64
-BUILD_TYPE_CODES := v m g
+# System variables
+CPU_LIMIT := $(shell echo $$(( $(shell nproc --all) * $(MAX_CPU_PERCENT) / 100 )))
+MEM_LIMIT := $(shell echo "$$(( $(shell free -m | awk '/^Mem:/{print $$2}') * $(MAX_MEM_PERCENT) / 100 ))m")
 
 # Common container parameters
 CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
@@ -51,34 +59,33 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 #######################
 # Define all phony targets
 #######################
-.PHONY: all all-images clean build-container create-folders \
-	clone-rom-manifest copy-manifest-config sync-sources \
-	apply-patches stash-gapps-variants generate-signing-keys \
-	build-treble-app \
-	build-prerequisites post-build \
+.PHONY: all all-images apply-patches build-container build-prerequisites build-treble-app \
+	clean clone-rom-manifest compress-images copy-manifest-config create-folders \
+	full-build generate-signing-keys post-build rename-images \
+	stash-gapps-variants sync-sources \
 	$(foreach type,$(BUILD_TYPES),build-$(type)) \
 	$(foreach arch,$(ARCHITECTURES),build-$(arch)) \
-	$(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),build-$(type)-$(arch))) \
-	rename-images compress-images full-build
+	$(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),build-$(type)-$(arch)))
 
 #######################
 # Main targets
 #######################
 
-# Default target is now full-build
+# Default target - runs the full build process from source preparation to image compression
 all: full-build
 
-# Target for building all images without source preparation
+# Build all image variants without repeating source preparation steps
 all-images: $(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),build-$(type)-$(arch))) post-build
 
-# Clean build directories
+# Clean all build directories to start fresh
 clean:
 	rm -rfv out/ src/ tmp/
 
-# Build container image
+# Build the container image used for all build operations
 build-container:
 	$(CONTAINER_RUNTIME) build -t voltage-gsi-builder -f Containerfile .
 
+# Create necessary directories for the build process
 create-folders:
 	mkdir -p out/ src/ tmp/
 
@@ -88,6 +95,16 @@ build-$(1): $(foreach arch,$(ARCHITECTURES),build-$(1)-$(arch))
 endef
 
 $(foreach type,$(BUILD_TYPES),$(eval $(call build_type_target,$(type))))
+
+# Define a function to generate build targets - Creates build targets for each variant/architecture combination
+define generate_build_target
+build-$(1)-$(2): build-prerequisites
+	$$(call print_section,Build $(shell echo $(1) | sed 's/.*/\u&/') $(shell echo $(2) | tr 'a-z' 'A-Z'))
+	$$(call build_gsi_variant,$(1),$(2),$(word $(shell expr $(shell echo $(BUILD_TYPES) | tr ' ' '\n' | grep -n "^$(1)$$" | cut -d: -f1) + 0),$(BUILD_TYPE_CODES)),$(VERIFY_SEPOLICY))
+endef
+
+# Generate all build targets - Creates all variant/architecture combinations dynamically
+$(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),$(eval $(call generate_build_target,$(type),$(arch)))))
 
 # Build all variants of a specific architecture
 build-arm64: $(foreach type,$(BUILD_TYPES),build-$(type)-arm64)
@@ -108,7 +125,7 @@ post-build: rename-images compress-images
 # Build steps
 #######################
 
-# Step 1: Clone ROM manifest
+# Step 1: Clone ROM manifest - Initialize the repo with VoltageOS manifest at the specified tag
 clone-rom-manifest: build-container create-folders
 	$(call print_section,Clone ROM Manifest)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -117,7 +134,7 @@ clone-rom-manifest: build-container create-folders
 				repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs && \
 			popd'
 
-# Step 2: Copy manifest config
+# Step 2: Copy manifest config - Add local manifest files to customize the source tree
 copy-manifest-config: build-container create-folders
 	$(call print_section,Copy Manifest Config)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -125,7 +142,7 @@ copy-manifest-config: build-container create-folders
 			mkdir -p /repo/src/.repo/local_manifests && \
 			cp -v /repo/configs/*.xml /repo/src/.repo/local_manifests/'
 
-# Step 3: Perform full sources sync (with auto retry)
+# Step 3: Perform full sources sync - Download all source code with automatic retry on failure
 sync-sources: build-container create-folders
 	$(call print_section,Sync Sources)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -137,11 +154,10 @@ sync-sources: build-container create-folders
 				done && \
 			popd'
 
-# Step 4: Apply patches (including optional debug patches)
+# Step 4: Apply patches - Apply trebledroid, personal, and optional debug patches to the source
 apply-patches: build-container create-folders
 	$(call print_section,Apply Patches)
 	$(CONTAINER_RUN) \
-		-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
 		voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/ && \
@@ -152,7 +168,7 @@ apply-patches: build-container create-folders
 				fi && \
 			popd'
 
-# Step 5: Setup tmp directory and stash gapps variants
+# Step 5: Setup tmp directory and stash gapps variants - Move GApps files to tmp for selective inclusion later
 stash-gapps-variants: build-container create-folders
 	$(call print_section,Stash GApps Variants)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -162,7 +178,7 @@ stash-gapps-variants: build-container create-folders
 				mv -v vendor/partner_gms /repo/tmp/ && \
 			popd'
 
-# Step 6: Generate signing keys
+# Step 6: Generate signing keys - Create keys for signing the build (continues even if key generation fails)
 generate-signing-keys: build-container create-folders
 	$(call print_section,Generate Signing Keys)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -171,7 +187,7 @@ generate-signing-keys: build-container create-folders
 				./keys.sh || true && \
 			popd'
 
-# Step 7: Build treble app
+# Step 7: Build treble app - Compile the Treble App and copy it to the overlay directory
 build-treble-app: build-container create-folders
 	$(call print_section,Build Treble App)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -181,7 +197,7 @@ build-treble-app: build-container create-folders
 				cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 			popd'
 
-# Step 8: Helper function to build a specific GSI variant
+# Step 8: Helper function to build a specific GSI variant - Core function that builds each ROM variant
 define build_gsi_variant
 	$(CONTAINER_RUN) \
 	-e BUILD_TYPE="$(1)" \
@@ -214,17 +230,7 @@ define build_gsi_variant
 		popd'
 endef
 
-# Define a function to generate build targets
-define generate_build_target
-build-$(1)-$(2): build-prerequisites
-	$$(call print_section,Build $(shell echo $(1) | sed 's/.*/\u&/') $(shell echo $(2) | tr 'a-z' 'A-Z'))
-	$$(call build_gsi_variant,$(1),$(2),$(word $(shell expr $(shell echo $(BUILD_TYPES) | tr ' ' '\n' | grep -n "^$(1)$$" | cut -d: -f1) + 0),$(BUILD_TYPE_CODES)),$(VERIFY_SEPOLICY))
-endef
-
-# Generate all build targets
-$(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),$(eval $(call generate_build_target,$(type),$(arch)))))
-
-# Step 9: Rename image files
+# Step 9: Rename image files - Convert temporary image names to final release filenames
 rename-images: build-container create-folders
 	$(call print_section,Rename Images)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -244,7 +250,7 @@ rename-images: build-container create-folders
 			done && \
 			popd'
 
-# Step 10: Compress all images with xz
+# Step 10: Compress all images with xz - Reduce image size for distribution and copy to output directory
 compress-images: build-container create-folders
 	$(call print_section,Compress Images)
 	$(CONTAINER_RUN) voltage-gsi-builder \
