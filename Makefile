@@ -201,13 +201,13 @@ define build_gsi_variant
 			. build/envsetup.sh && \
 			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
 			make systemimage -j$(CPU_LIMIT) && \
-			make vndk-test-sepolicy -j$(CPU_LIMIT) && \
 			if [ "$(1)" = "microg" ]; then \
 				rm -Rfv vendor/partner_gms; \
 			elif [ "$(1)" = "gapps" ]; then \
 				rm -Rfv vendor/gapps; \
 			fi && \
 			mv -v out/target/product/tdgsi_$(2)_ab/system.img /repo/tmp/system_$(1)_$(2).img && \
+			make vndk-test-sepolicy -j$(CPU_LIMIT) && \
 		popd'
 endef
 
