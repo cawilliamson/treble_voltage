@@ -181,10 +181,11 @@ define build_gsi_variant
 			fi && \
 			if [ "$(2)" = "arm64" ]; then \
 				mv -v out/target/product/tdgsi_arm64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
+				rm -rfv out/target/product/tdgsi_arm64_ab/; \
 			else \
 				mv -v out/target/product/tdgsi_a64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
+				rm -rfv out/target/product/tdgsi_a64_ab/; \
 			fi && \
-            rm -rfv out/target/product/tdgsi_arm64_ab/ && \
 		popd'
 endef
 
