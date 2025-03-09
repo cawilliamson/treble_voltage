@@ -46,8 +46,7 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 	-e BUILD_DATE="$(BUILD_DATE)" \
 	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
 	-e ROM_VERSION="$(ROM_VERSION)" \
-	-e ROM_TAG="$(ROM_TAG)" \
-	-e VERIFY_SEPOLICY="$(VERIFY_SEPOLICY)"
+	-e ROM_TAG="$(ROM_TAG)"
 
 #######################
 # Define all phony targets
@@ -203,7 +202,7 @@ define build_gsi_variant
 			. build/envsetup.sh && \
 			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
 			make systemimage -j$(CPU_LIMIT) && \
-			if [ "$VERIFY_SEPOLICY" = "true" ]; then \
+			if [ "$(4)" = "true" ]; then \
 				make vndk-test-sepolicy -j$(CPU_LIMIT); \
 			fi && \
 			if [ "$(1)" = "microg" ]; then \
@@ -219,7 +218,7 @@ endef
 define generate_build_target
 build-$(1)-$(2): build-prerequisites
 	$$(call print_section,Build $(shell echo $(1) | sed 's/.*/\u&/') $(shell echo $(2) | tr 'a-z' 'A-Z'))
-	$$(call build_gsi_variant,$(1),$(2),$(word $(shell expr $(shell echo $(BUILD_TYPES) | tr ' ' '\n' | grep -n "^$(1)$$" | cut -d: -f1) + 0),$(BUILD_TYPE_CODES)))
+	$$(call build_gsi_variant,$(1),$(2),$(word $(shell expr $(shell echo $(BUILD_TYPES) | tr ' ' '\n' | grep -n "^$(1)$$" | cut -d: -f1) + 0),$(BUILD_TYPE_CODES)),$(VERIFY_SEPOLICY))
 endef
 
 # Generate all build targets
