@@ -30,18 +30,18 @@ This consolidated structure makes it easier to:
 ## Makefile Targets
 
 <!-- BEGIN_MAKE_TARGETS -->
-The build system now supports running individual steps independently, similar to GitHub Actions workflow:
+The build system supports running individual steps independently, similar to GitHub Actions workflow:
 
 ### Container Management
 - `build-container`: Build the container image
 - `clean`: Clean build directories
+- `create-folders`: Create necessary build directories
 
 ### Individual Build Steps
 - `clone-rom-manifest`: Clone the ROM manifest repository
 - `copy-manifest-config`: Copy manifest configuration files
 - `sync-sources`: Sync all source code (with auto-retry)
-- `apply-patches`: Apply trebledroid and personal patches
-- `apply-debug-patches`: Apply debug patches (if APPLY_DEBUG_PATCHES=true)
+- `apply-patches`: Apply trebledroid and personal patches (includes debug patches if APPLY_DEBUG_PATCHES=true)
 - `stash-gapps-variants`: Setup temporary directory and stash GApps variants
 - `generate-signing-keys`: Generate signing keys for the build
 - `build-treble-app`: Build the Treble app
@@ -55,7 +55,6 @@ The build system now supports running individual steps independently, similar to
 - `build-microg-a64`: Build microG arm32_binder64 image
 - `build-gapps-a64`: Build GApps arm32_binder64 image
 
-
 ### Post-Processing
 - `rename-images`: Rename all image files to final names
 - `compress-images`: Compress all images with xz
@@ -66,8 +65,10 @@ The build system now supports running individual steps independently, similar to
 - `build-gapps`: Build all GApps variants
 - `build-arm64`: Build all arm64 variants
 - `build-a64`: Build all arm32_binder64 variants
-- `full-build`: Run the complete build process
-- `all`: Default target, builds all standard variants
+- `all-images`: Build all images without source preparation
+- `build-prerequisites`: Run all build prerequisites (container, folders, clone, sync, patches, etc.)
+- `post-build`: Run all post-build steps (testing, renaming, compression)
+- `full-build`: Run the complete build process (default target)
 <!-- END_MAKE_TARGETS -->
 
 ## Configuration
@@ -163,14 +164,23 @@ make apply-patches apply-debug-patches build-treble-app
 If a build fails at a specific step, you can resume from that step. For example, if the build fails during the source sync:
 
 ```bash
-# First, ensure the container is built
-make build-container
+# First, ensure the container and folders are ready
+make build-container create-folders
 
 # Then resume from the sync step
 make sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 # ... continue with the remaining steps
 ```
 
+Alternatively, you can use the convenience targets:
+
+```bash
+# If you need to resume after the prerequisites
+make build-prerequisites all-images post-build
+
+# Or if you just need to rebuild the images
+make all-images post-build
+```
 ### Build Process Flow
 
 The typical build process follows these steps:
@@ -183,8 +193,7 @@ The typical build process follows these steps:
    - `clone-rom-manifest`
    - `copy-manifest-config`
    - `sync-sources`
-   - `apply-patches`
-   - `apply-debug-patches`
+   - `apply-patches` (includes debug patches if APPLY_DEBUG_PATCHES=true)
 
 3. Build preparation
    - `stash-gapps-variants`
@@ -193,12 +202,17 @@ The typical build process follows these steps:
 
 4. Building images
    - `build-vanilla-arm64` (and other variants)
+   - Or use `all-images` to build all variants
 
-5. Testing
+5. Post-build processing
    - `vndk-test-sepolicy`
-
-6. Post-processing
    - `rename-images`
+   - `compress-images`
+   - Or use `post-build` to run all post-build steps
+
+For convenience, you can use:
+- `build-prerequisites`: Run all steps from container preparation through build preparation
+- `full-build`: Run the complete build process (default target)
    - `compress-images`
 
 The built images are initially created in the `tmp` directory and then copied to the `out` directory after compression.
