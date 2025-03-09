@@ -11,18 +11,30 @@ define print_section
 	@echo ""
 endef
 
+#######################
 # Configuration variables
+#######################
+
+# Build configuration
 BUILD_DATE := $(shell date "+%Y%m%d")
 APPLY_DEBUG_PATCHES ?= false
 ROM_TAG ?= 15-qpr1
 ROM_VERSION ?= 4.2
+
+# Resource configuration
 MAX_CPU_PERCENT ?= 100
 MAX_MEM_PERCENT ?= 100
-CONTAINER_RUNTIME ?= podman
-
-# Calculate resource limits
 CPU_LIMIT := $(shell echo $$(( $(shell nproc --all) * $(MAX_CPU_PERCENT) / 100 )))
 MEM_LIMIT := $(shell echo "$$(( $(shell free -m | awk '/^Mem:/{print $$2}') * $(MAX_MEM_PERCENT) / 100 ))m")
+
+# Container configuration
+CONTAINER_RUNTIME ?= podman
+
+# Build variants configuration
+BUILD_TYPES := vanilla microg gapps
+ARCHITECTURES := arm64 a64
+ARCH_DISPLAY_NAMES := arm64 arm32_binder64
+BUILD_TYPE_CODES := v m g
 
 # Common container parameters
 CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
@@ -35,21 +47,28 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 	-e ROM_VERSION="$(ROM_VERSION)" \
 	-e ROM_TAG="$(ROM_TAG)"
 
+#######################
 # Define all phony targets
+#######################
 .PHONY: all all-images clean build-container create-folders \
 	clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
 	build-treble-app vndk-test-sepolicy \
-	build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
-	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
-	rename-images compress-images
+	build-prerequisites post-build \
+	$(foreach type,$(BUILD_TYPES),build-$(type)) \
+	$(foreach arch,$(ARCHITECTURES),build-$(arch)) \
+	$(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),build-$(type)-$(arch))) \
+	rename-images compress-images full-build
+
+#######################
+# Main targets
+#######################
 
 # Default target is now full-build
 all: full-build
 
 # Target for building all images without source preparation
-all-images: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 build-vanilla-a64 build-microg-a64 build-gapps-a64 \
-	rename-images compress-images
+all-images: $(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),build-$(type)-$(arch))) post-build
 
 # Clean build directories
 clean:
@@ -63,23 +82,26 @@ create-folders:
 	mkdir -p out/ src/ tmp/
 
 # Convenience targets for building all variants of a specific type
-build-vanilla: build-vanilla-arm64 build-vanilla-a64
-build-microg: build-microg-arm64 build-microg-a64
-build-gapps: build-gapps-arm64 build-gapps-a64
+$(foreach type,$(BUILD_TYPES),build-$(type): $(foreach arch,$(ARCHITECTURES),build-$(type)-$(arch)))
 
-# Build all arm64 variants
-build-arm64: build-vanilla-arm64 build-microg-arm64 build-gapps-arm64
-
-# Build all arm32_binder64 variants
-build-a64: build-vanilla-a64 build-microg-a64 build-gapps-a64
+# Build all variants of a specific architecture
+build-arm64: $(foreach type,$(BUILD_TYPES),build-$(type)-arm64)
+build-a64: $(foreach type,$(BUILD_TYPES),build-$(type)-a64)
 
 # Full build process
 full-build: clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
-	build-treble-app build-vanilla-arm64 build-microg-arm64 build-gapps-arm64 \
-	build-vanilla-a64 build-microg-a64 build-gapps-a64 \
-	vndk-test-sepolicy \
-	rename-images compress-images
+	build-treble-app all-images
+
+# Common build prerequisites
+build-prerequisites: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
+
+# Post-build steps
+post-build: vndk-test-sepolicy rename-images compress-images
+
+#######################
+# Build steps
+#######################
 
 # Step 1: Clone ROM manifest
 clone-rom-manifest: build-container create-folders
@@ -144,7 +166,7 @@ generate-signing-keys: build-container create-folders
 				./keys.sh || true && \
 			popd'
 
-# Step 8: Build treble app
+# Step 7: Build treble app
 build-treble-app: build-container create-folders
 	$(call print_section,Build Treble App)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -154,7 +176,7 @@ build-treble-app: build-container create-folders
 				cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 			popd'
 
-# Step 9: Helper function to build a specific GSI variant
+# Step 8: Helper function to build a specific GSI variant
 define build_gsi_variant
 	$(CONTAINER_RUN) \
 	-e BUILD_TYPE="$(1)" \
@@ -179,65 +201,22 @@ define build_gsi_variant
 			elif [ "$(1)" = "gapps" ]; then \
 				rm -Rfv vendor/gapps; \
 			fi && \
-			if [ "$(2)" = "arm64" ]; then \
-				mv -v out/target/product/tdgsi_arm64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
-				rm -rfv out/target/product/tdgsi_arm64_ab/; \
-			else \
-				mv -v out/target/product/tdgsi_a64_ab/system.img /repo/tmp/system_$(1)_$(2).img; \
-				rm -rfv out/target/product/tdgsi_a64_ab/; \
-			fi && \
+			mv -v out/target/product/tdgsi_$(2)_ab/system.img /repo/tmp/system_$(1)_$(2).img && \
+			rm -rfv out/target/product/tdgsi_$(2)_ab/ && \
 		popd'
 endef
 
-# Build standard vanilla arm64 image
-build-vanilla-arm64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
-	$(call print_section,Build Vanilla ARM64)
-	$(call build_gsi_variant,vanilla,arm64,v)
-	$(call vndk-test-sepolicy)
-	$(call rename-images)
-	$(call compress-images)
+# Define a function to generate build targets
+define generate_build_target
+build-$(1)-$(2): build-prerequisites
+	$$(call print_section,Build $(shell echo $(1) | sed 's/.*/\u&/') $(shell echo $(2) | tr 'a-z' 'A-Z'))
+	$$(call build_gsi_variant,$(1),$(2),$(word $(shell expr $(shell echo $(BUILD_TYPES) | tr ' ' '\n' | grep -n "^$(1)$$" | cut -d: -f1) + 0),$(BUILD_TYPE_CODES)))
+endef
 
-# Build standard microg arm64 image
-build-microg-arm64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
-	$(call print_section,Build MicroG ARM64)
-	$(call build_gsi_variant,microg,arm64,m)
-	$(call vndk-test-sepolicy)
-	$(call rename-images)
-	$(call compress-images)
+# Generate all build targets
+$(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),$(eval $(call generate_build_target,$(type),$(arch)))))
 
-# Build standard gapps arm64 image
-build-gapps-arm64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
-	$(call print_section,Build GApps ARM64)
-	$(call build_gsi_variant,gapps,arm64,g)
-	$(call vndk-test-sepolicy)
-	$(call rename-images)
-	$(call compress-images)
-
-# Build standard vanilla arm32_binder64 image
-build-vanilla-a64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
-	$(call print_section,Build Vanilla A64)
-	$(call build_gsi_variant,vanilla,a64,v)
-	$(call vndk-test-sepolicy)
-	$(call rename-images)
-	$(call compress-images)
-
-# Build standard microg arm32_binder64 image
-build-microg-a64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
-	$(call print_section,Build MicroG A64)
-	$(call build_gsi_variant,microg,a64,m)
-	$(call vndk-test-sepolicy)
-	$(call rename-images)
-	$(call compress-images)
-
-# Build standard gapps arm32_binder64 image
-build-gapps-a64: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
-	$(call print_section,Build GApps A64)
-	$(call build_gsi_variant,gapps,a64,g)
-	$(call vndk-test-sepolicy)
-	$(call rename-images)
-	$(call compress-images)
-
-# Step 10: Run vndk sepolicy tests
+# Step 9: Run vndk sepolicy tests
 vndk-test-sepolicy: build-container create-folders
 	$(call print_section,VNDK Test SEPolicy)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -248,33 +227,27 @@ vndk-test-sepolicy: build-container create-folders
 				make vndk-test-sepolicy -j$(CPU_LIMIT) && \
 			popd'
 
-# Step 11: Rename image files
+# Step 10: Rename image files
 rename-images: build-container create-folders
 	$(call print_section,Rename Images)
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/tmp && \
-				if [ -f system_vanilla_arm64.img ]; then \
-					mv -v system_vanilla_arm64.img "VoltageOS"-vanilla-arm64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
-				fi && \
-				if [ -f system_microg_arm64.img ]; then \
-					mv -v system_microg_arm64.img "VoltageOS"-microg-arm64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
-				fi && \
-				if [ -f system_gapps_arm64.img ]; then \
-					mv -v system_gapps_arm64.img "VoltageOS"-gapps-arm64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
-				fi && \
-				if [ -f system_vanilla_a64.img ]; then \
-					mv -v system_vanilla_a64.img "VoltageOS"-vanilla-arm32_binder64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
-				fi && \
-				if [ -f system_microg_a64.img ]; then \
-					mv -v system_microg_a64.img "VoltageOS"-microg-arm32_binder64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
-				fi && \
-				if [ -f system_gapps_a64.img ]; then \
-					mv -v system_gapps_a64.img "VoltageOS"-gapps-arm32_binder64-ab-"$${ROM_VERSION}"-"$${BUILD_DATE}"-UNOFFICIAL.img; \
-				fi && \
+			variants=("vanilla" "microg" "gapps"); \
+			archs=("arm64" "a64"); \
+			arch_names=("arm64" "arm32_binder64"); \
+			for i in $${!variants[@]}; do \
+				for j in $${!archs[@]}; do \
+					src="system_$${variants[i]}_$${archs[j]}.img"; \
+					if [ -f "$$src" ]; then \
+						dest="VoltageOS-$${variants[i]}-$${arch_names[j]}-ab-$${ROM_VERSION}-$${BUILD_DATE}-UNOFFICIAL.img"; \
+						mv -v "$$src" "$$dest"; \
+					fi; \
+				done; \
+			done && \
 			popd'
 
-# Step 12: Compress all images with xz
+# Step 11: Compress all images with xz
 compress-images: build-container create-folders
 	$(call print_section,Compress Images)
 	$(CONTAINER_RUN) voltage-gsi-builder \
