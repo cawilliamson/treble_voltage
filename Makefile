@@ -197,6 +197,7 @@ define build_gsi_variant
 			elif [ "$(1)" = "gapps" ]; then \
 				cp -Rfv /repo/tmp/gapps vendor/; \
 			fi && \
+			rm -rfv out/target/product/tdgsi_$(2)_ab/ && \
 			. build/envsetup.sh && \
 			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
 			make systemimage -j$(CPU_LIMIT) && \
@@ -206,7 +207,6 @@ define build_gsi_variant
 				rm -Rfv vendor/gapps; \
 			fi && \
 			mv -v out/target/product/tdgsi_$(2)_ab/system.img /repo/tmp/system_$(1)_$(2).img && \
-			rm -rfv out/target/product/tdgsi_$(2)_ab/ && \
 		popd'
 endef
 
