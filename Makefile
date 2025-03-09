@@ -82,7 +82,11 @@ create-folders:
 	mkdir -p out/ src/ tmp/
 
 # Convenience targets for building all variants of a specific type
-$(foreach type,$(BUILD_TYPES),build-$(type): $(foreach arch,$(ARCHITECTURES),build-$(type)-$(arch)))
+define build_type_target
+build-$(1): $(foreach arch,$(ARCHITECTURES),build-$(1)-$(arch))
+endef
+
+$(foreach type,$(BUILD_TYPES),$(eval $(call build_type_target,$(type))))
 
 # Build all variants of a specific architecture
 build-arm64: $(foreach type,$(BUILD_TYPES),build-$(type)-arm64)
