@@ -53,7 +53,7 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 .PHONY: all all-images clean build-container create-folders \
 	clone-rom-manifest copy-manifest-config sync-sources \
 	apply-patches stash-gapps-variants generate-signing-keys \
-	build-treble-app vndk-test-sepolicy \
+	build-treble-app \
 	build-prerequisites post-build \
 	$(foreach type,$(BUILD_TYPES),build-$(type)) \
 	$(foreach arch,$(ARCHITECTURES),build-$(arch)) \
@@ -101,7 +101,7 @@ full-build: clone-rom-manifest copy-manifest-config sync-sources \
 build-prerequisites: build-container create-folders clone-rom-manifest copy-manifest-config sync-sources apply-patches stash-gapps-variants generate-signing-keys build-treble-app
 
 # Post-build steps
-post-build: vndk-test-sepolicy rename-images compress-images
+post-build: rename-images compress-images
 
 #######################
 # Build steps
@@ -201,6 +201,7 @@ define build_gsi_variant
 			. build/envsetup.sh && \
 			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
 			make systemimage -j$(CPU_LIMIT) && \
+			make vndk-test-sepolicy -j$(CPU_LIMIT) && \
 			if [ "$(1)" = "microg" ]; then \
 				rm -Rfv vendor/partner_gms; \
 			elif [ "$(1)" = "gapps" ]; then \
@@ -220,18 +221,7 @@ endef
 # Generate all build targets
 $(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),$(eval $(call generate_build_target,$(type),$(arch)))))
 
-# Step 9: Run vndk sepolicy tests
-vndk-test-sepolicy: build-container create-folders
-	$(call print_section,VNDK Test SEPolicy)
-	$(CONTAINER_RUN) voltage-gsi-builder \
-		/bin/bash -e -c ' \
-			pushd /repo/src && \
-				. build/envsetup.sh && \
-				lunch treble_arm64_bvN-ap4a-userdebug && \
-				make vndk-test-sepolicy -j$(CPU_LIMIT) && \
-			popd'
-
-# Step 10: Rename image files
+# Step 9: Rename image files
 rename-images: build-container create-folders
 	$(call print_section,Rename Images)
 	$(CONTAINER_RUN) voltage-gsi-builder \
@@ -251,7 +241,7 @@ rename-images: build-container create-folders
 			done && \
 			popd'
 
-# Step 11: Compress all images with xz
+# Step 10: Compress all images with xz
 compress-images: build-container create-folders
 	$(call print_section,Compress Images)
 	$(CONTAINER_RUN) voltage-gsi-builder \
