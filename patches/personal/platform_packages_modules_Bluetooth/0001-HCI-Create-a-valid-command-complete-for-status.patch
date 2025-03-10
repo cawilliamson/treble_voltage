@@ -1,7 +1,7 @@
 From c267fb4e7b8863a9c094c4156379d57032c6a944 Mon Sep 17 00:00:00 2001
 From: Myles Watson <mylesgw@google.com>
 Date: Fri, 22 Mar 2024 06:36:59 -0700
-Subject: [PATCH 2/2] HCI: Create a valid command complete for status
+Subject: [PATCH 1/1] HCI: Create a valid command complete for status
 
 Some controllers don't support vendor-specific commands and return
 a command status instead of a command complete.  Build a new
