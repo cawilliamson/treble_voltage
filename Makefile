@@ -28,6 +28,7 @@ BUILD_DATE := $(shell date "+%Y%m%d")
 ROM_TAG ?= 15-qpr1
 ROM_VERSION ?= 4.2
 VERIFY_SEPOLICY ?= true
+UPLOAD_TO_GITHUB ?= false
 
 # Build variants configuration
 ARCHITECTURES := arm64 a64
@@ -63,7 +64,7 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 .PHONY: all all-images apply-patches build-container build-prerequisites build-treble-app \
 	clean clone-rom-manifest compress-images copy-manifest-config create-folders \
 	full-build generate-signing-keys post-build rename-images \
-	stash-gapps-variants sync-sources \
+	stash-gapps-variants sync-sources upload-to-github \
 	$(foreach type,$(BUILD_TYPES),build-$(type)) \
 	$(foreach arch,$(ARCHITECTURES),build-$(arch)) \
 	$(foreach type,$(BUILD_TYPES),$(foreach arch,$(ARCHITECTURES),build-$(type)-$(arch)))
@@ -121,6 +122,9 @@ build-prerequisites: build-container create-folders clone-rom-manifest copy-mani
 
 # Post-build steps
 post-build: rename-images compress-images
+	@if [ "$(UPLOAD_TO_GITHUB)" = "true" ]; then \
+		$(MAKE) upload-to-github; \
+	fi
 
 #######################
 # Build steps
@@ -260,3 +264,18 @@ compress-images: build-container create-folders
 				find . -maxdepth 1 -name "*.img" -exec xz -9 -T0 -v -z "{}" \; && \
 				cp -fv *.img.xz /repo/out/ && \
 			popd'
+
+# Step 11: Upload images to GitHub - Create a GitHub release and upload the compressed images (run on local machine)
+upload-to-github: create-folders
+	$(call print_section,Upload to GitHub)
+	@if ! command -v gh &> /dev/null; then \
+		echo "Error: GitHub CLI (gh) is not installed. Please install it first." >&2; \
+		exit 1; \
+	fi
+	@cd $(PWD)/out/ && \
+		git init && \
+		git remote add origin "https://github.com/cawilliamson/treble_voltage.git" && \
+		gh repo set-default "cawilliamson/treble_voltage" && \
+		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-$(BUILD_DATE)" "$(ROM_VERSION)-$(BUILD_DATE)" && \
+		gh release upload "$(ROM_VERSION)-$(BUILD_DATE)" --clobber -- *.img.xz && \
+		rm -rf .git/

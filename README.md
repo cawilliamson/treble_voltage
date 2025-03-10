@@ -58,6 +58,7 @@ The build system supports running individual steps independently, similar to Git
 ### Post-Processing
 - `rename-images`: Rename all image files to final names
 - `compress-images`: Compress all images with xz
+- `upload-to-github`: Upload compressed images to GitHub releases (requires GitHub CLI)
 
 ### Convenience Targets
 - `build-vanilla`: Build all vanilla variants
@@ -78,6 +79,9 @@ You can customize the build process with the following variables:
 ```bash
 # Example of using multiple configuration variables
 make ROM_VERSION=4.3 ROM_TAG=16-qpr1 ANDROID_VERSION_TAG=ap4b APPLY_DEBUG_PATCHES=true VERIFY_SEPOLICY=true MAX_CPU_PERCENT=50 CONTAINER_RUNTIME=docker
+
+# Example with GitHub upload enabled
+make ROM_VERSION=4.3 MAINTAINER="your-github-username" REPO_NAME="VoltageOS-GSI" UPLOAD_TO_GITHUB=true
 ```
 
 Available variables:
@@ -90,6 +94,9 @@ Available variables:
 - `MAX_CPU_PERCENT`: Maximum CPU usage in percent (default: 100)
 - `MAX_MEM_PERCENT`: Maximum memory usage in percent (default: 100)
 - `CONTAINER_RUNTIME`: Container runtime to use (default: podman, can be set to docker)
+- `MAINTAINER`: GitHub username for uploading releases (required for GitHub uploads)
+- `REPO_NAME`: GitHub repository name for uploading releases (default: VoltageOS-GSI)
+- `UPLOAD_TO_GITHUB`: Whether to automatically upload to GitHub after build (default: false)
 ## Android Version Tag
 
 The `ANDROID_VERSION_TAG` variable specifies the Android version tag used for the build. This affects how the ROM is built and which Android version features are included.
@@ -123,6 +130,35 @@ You can also set this for specific targets:
 ```bash
 make CONTAINER_RUNTIME=docker build-vanilla-arm64
 ```
+
+## GitHub Release Upload
+
+The build system can automatically upload the built images to GitHub releases. This requires:
+
+1. The GitHub CLI (`gh`) to be installed in the container (automatically included)
+2. Setting your GitHub username and repository name
+3. Being authenticated with GitHub (you'll be prompted to login if needed)
+
+To upload images to GitHub after building:
+
+```bash
+make MAINTAINER="your-github-username" UPLOAD_TO_GITHUB=true
+```
+
+You can also run the upload step separately after building:
+
+```bash
+make MAINTAINER="your-github-username" upload-to-github
+```
+
+The upload process:
+1. Creates a Git repository in the output directory
+2. Sets up the remote to your GitHub repository
+3. Creates a draft release with the version and build date
+4. Uploads all .img.xz files to the release
+5. Cleans up the temporary Git repository
+
+The release title will be in the format: `VoltageOS 4.2-20250603`
 
 ## Running Independent Build Steps
 
@@ -219,6 +255,7 @@ The typical build process follows these steps:
    - `vndk-test-sepolicy`
    - `rename-images`
    - `compress-images`
+   - `upload-to-github` (optional, when UPLOAD_TO_GITHUB=true)
    - Or use `post-build` to run all post-build steps
 
 For convenience, you can use:
