@@ -17,12 +17,12 @@ Change-Id: I2d6779734cde337caa394ed8c050ec2d5bf848bb
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/libsepol/cil/src/cil_post.c b/libsepol/cil/src/cil_post.c
-index 5428005..3d76417 100644
+index d05f748..40293f1 100644
 --- a/libsepol/cil/src/cil_post.c
 +++ b/libsepol/cil/src/cil_post.c
-@@ -511,7 +511,11 @@ static int cil_post_genfscon_context_compare(const void *a, const void *b)
+@@ -527,7 +527,11 @@ static int cil_post_genfscon_context_compare(const void *a, const void *b)
           */
- 		if(strcmp(a_genfscon->path_str, "/sys/vm/watermark_scale_factor") == 0)
+ 		if(strcmp(a_genfscon->path_str, "/sys/vm/compaction_proactiveness") == 0)
  			bypass = 1;
 -		if(strcmp(a_genfscon->fs_str, "exfat") == 0 || strcmp(a_genfscon->fs_str, "esdfs") == 0 || strcmp(a_genfscon->fs_str, "fuseblk") == 0) {
 +		if(strcmp(a_genfscon->fs_str, "exfat") == 0 ||
@@ -33,5 +33,5 @@ index 5428005..3d76417 100644
              if(strcmp(a_genfscon->path_str, "/") == 0)
                  bypass = 1;
          }
--- 
+--
 2.34.1
