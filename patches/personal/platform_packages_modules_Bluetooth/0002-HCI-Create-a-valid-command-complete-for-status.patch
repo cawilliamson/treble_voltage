@@ -1,0 +1,118 @@
+From c267fb4e7b8863a9c094c4156379d57032c6a944 Mon Sep 17 00:00:00 2001
+From: Myles Watson <mylesgw@google.com>
+Date: Fri, 22 Mar 2024 06:36:59 -0700
+Subject: [PATCH 2/2] HCI: Create a valid command complete for status
+
+Some controllers don't support vendor-specific commands and return
+a command status instead of a command complete.  Build a new
+command complete event and pass that up with the status.
+
+@mytja (backported from A15 to A14):
+We need to call status_view.IsValid() in order to set was_validated_ to true.
+In case this isn't done, the following fatal error will be caused
+due to an error in assertion:
+
+F bt_shim_hci: assertion 'was_validated_' failed
+
+The error was difficult to track down. In addition, I've added
+logging of events to debug future problems easier.
+
+Co-authored-by: mytja <mitja@severkar.eu>
+Signed-off-by: mytja <mitja@severkar.eu>
+---
+ system/gd/hci/hci_layer.cc          | 25 +++++++++++++++++++++----
+ system/gd/hci/hci_layer_unittest.cc | 24 ++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+), 4 deletions(-)
+
+diff --git a/system/gd/hci/hci_layer.cc b/system/gd/hci/hci_layer.cc
+index f1a08e7d97..aa293fa7c8 100644
+--- a/system/gd/hci/hci_layer.cc
++++ b/system/gd/hci/hci_layer.cc
+@@ -30,6 +30,7 @@
+ #include "os/queue.h"
+ #include "osi/include/stack_power_telemetry.h"
+ #include "packet/packet_builder.h"
++#include "packet/raw_builder.h"
+ #include "storage/storage_module.h"
+ 
+ namespace bluetooth {
+@@ -207,15 +208,31 @@ struct HciLayer::impl {
+ 
+     bool is_vendor_specific = static_cast<int>(op_code) & (0x3f << 10);
+     CommandStatusView status_view = CommandStatusView::Create(event);
++
++    LOG_INFO("Received event opcode:%s, waiting_for_status_:%i, is_status:%i, is_valid:%i",
++        OpCodeText(op_code).c_str(),
++        command_queue_.front().waiting_for_status_,
++        is_status,
++        status_view.IsValid());
++
+     if (command_queue_.front().waiting_for_status_ != is_status) {
+       // If this is a command status of a vendor specific command, and command complete is expected,
+       // we can't treat this as hard failure since we have no way of probing this lack of support at
+       // earlier time. Instead we let the command complete handler handle a empty Command Complete
+       // packet, which will be interpreted as invalid response.
+-      CommandCompleteView command_complete_view = CommandCompleteView::Create(
+-          EventView::Create(PacketView<kLittleEndian>(std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>()))));
+-      command_queue_.front().GetCallback<CommandCompleteView>()->Invoke(
+-          std::move(command_complete_view));
++
++      auto payload = std::make_unique<packet::RawBuilder>();
++      payload->AddOctets1(static_cast<uint8_t>(status_view.GetStatus()));
++      auto complete_event_builder = CommandCompleteBuilder::Create(
++          status_view.GetNumHciCommandPackets(),
++          status_view.GetCommandOpCode(),
++          std::move(payload));
++      auto complete =
++          std::make_shared<std::vector<std::uint8_t>>(complete_event_builder->SerializeToBytes());
++      CommandCompleteView command_complete_view =
++          CommandCompleteView::Create(EventView::Create(PacketView<kLittleEndian>(complete)));
++      ASSERT(command_complete_view.IsValid());
++      command_queue_.front().GetCallback<CommandCompleteView>()->Invoke(command_complete_view);
+     } else {
+       command_queue_.front().GetCallback<TResponse>()->Invoke(std::move(response_view));
+     }
+diff --git a/system/gd/hci/hci_layer_unittest.cc b/system/gd/hci/hci_layer_unittest.cc
+index adfa8a12f0..3678f098a0 100644
+--- a/system/gd/hci/hci_layer_unittest.cc
++++ b/system/gd/hci/hci_layer_unittest.cc
+@@ -20,6 +20,7 @@
+ 
+ #include <chrono>
+ #include <future>
++#include <memory>
+ 
+ #include "common/bind.h"
+ #include "common/init_flags.h"
+@@ -432,6 +433,29 @@ TEST_F(HciLayerTest, our_command_status_callback_is_invoked) {
+   hal_->InjectEvent(ReadClockOffsetStatusBuilder::Create(ErrorCode::SUCCESS, 1));
+ }
+ 
++TEST_F(HciLayerTest, vendor_specific_status_instead_of_complete) {
++  std::promise<OpCode> callback_promise;
++  auto callback_future = callback_promise.get_future();
++  FailIfResetNotSent();
++  hal_->InjectEvent(ResetCompleteBuilder::Create(1, ErrorCode::SUCCESS));
++  hci_->EnqueueCommand(
++      LeGetVendorCapabilitiesBuilder::Create(),
++      hci_handler_->BindOnce(
++          [](std::promise<OpCode> promise, CommandCompleteView view) {
++            ASSERT_TRUE(view.IsValid());
++            promise.set_value(view.GetCommandOpCode());
++          },
++          std::move(callback_promise)));
++  hal_->InjectEvent(CommandStatusBuilder::Create(
++      ErrorCode::UNKNOWN_HCI_COMMAND,
++      1,
++      OpCode::LE_GET_VENDOR_CAPABILITIES,
++      std::make_unique<RawBuilder>()));
++
++  ASSERT_EQ(std::future_status::ready, callback_future.wait_for(std::chrono::seconds(1)));
++  ASSERT_EQ(OpCode::LE_GET_VENDOR_CAPABILITIES, callback_future.get());
++}
++
+ TEST_F(
+     HciLayerDeathTest,
+     command_complete_callback_is_invoked_with_an_opcode_that_does_not_match_command_queue) {
+-- 
+2.34.1

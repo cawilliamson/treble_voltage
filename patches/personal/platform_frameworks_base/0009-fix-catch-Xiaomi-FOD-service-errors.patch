@@ -1,0 +1,28 @@
+From 2fcaeaa53af77513e793e43fa76c980caa4cd414 Mon Sep 17 00:00:00 2001
+From: mytja <mitja@severkar.eu>
+Date: Thu, 26 Dec 2024 12:58:26 +0100
+Subject: [PATCH 9/9] fix: catch Xiaomi FOD service errors
+
+---
+ .../SystemUI/src/com/android/systemui/biometrics/UdfpsView.kt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsView.kt b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsView.kt
+index 642ac53d4..a48369fc6 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsView.kt
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsView.kt
+@@ -378,8 +378,12 @@ class UdfpsView(
+             };
+             fodFileObserver?.startWatching();
+         } else if(hasXiaomiLhbm) {
++            try {
+             IXiaomiFingerprint.getService().extCmd(android.os.SystemProperties.getInt("persist.phh.xiaomi.fod.enrollment.id", 4), 0);
++            } catch (t: Throwable) {}
++            try {
+             ITouchFeature.getService().setTouchMode(0, 10, 0);
++            } catch (t: Throwable) {}
+         } else if(hasNubiaHbm) {
+             Log.d("PHH-Enroll", "Nubia Restore brightness")
+             File(nubiaHbmState).writeText(File("/sys/class/backlight/panel0-backlight/brightness").readText())
+-- 
+2.34.1

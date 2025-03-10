@@ -1,0 +1,66 @@
+From add187c9a66b37ca94ad903eb4cb5471d096fa8f Mon Sep 17 00:00:00 2001
+From: mytja <mitja@severkar.eu>
+Date: Sun, 27 Oct 2024 20:32:36 +0100
+Subject: [PATCH 8/9] feat: add a setting to force a specific number of SIM
+ slots
+
+Some device models seemingly report a wrong number of SIM slots.
+This patch should in combination with another one inside frameworks/base be a temporary mitigation.
+---
+ .../android/telephony/TelephonyManager.java   | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/telephony/java/android/telephony/TelephonyManager.java b/telephony/java/android/telephony/TelephonyManager.java
+index 4ac056a15..02259545e 100644
+--- a/telephony/java/android/telephony/TelephonyManager.java
++++ b/telephony/java/android/telephony/TelephonyManager.java
+@@ -465,6 +465,8 @@ public class TelephonyManager {
+             "cache_key.telephony.phone_account_to_subid";
+     private static final int CACHE_MAX_SIZE = 4;
+ 
++    private final int supported = SystemProperties.getInt("persist.sys.phh.sim_slots", -1);
++
+     /**
+      * A {@link PropertyInvalidatedCache} which lives in an app's {@link TelephonyManager} instance.
+      * Caches any queries for a mapping between {@link PhoneAccountHandle} and {@code subscription
+@@ -641,6 +643,15 @@ public class TelephonyManager {
+     public MultiSimVariants getMultiSimConfiguration() {
+         String mSimConfig =
+                 TelephonyProperties.multi_sim_config().orElse("");
++        
++        if (supported == 0 || supported == 1) {
++            return MultiSimVariants.UNKNOWN;
++        } else if (supported == 2) {
++            return MultiSimVariants.DSDS;
++        } else if (supported == 3) {
++            return MultiSimVariants.TSTS;
++        }
++
+         if (mSimConfig.equals("dsds")) {
+             return MultiSimVariants.DSDS;
+         } else if (mSimConfig.equals("dsda")) {
+@@ -675,6 +686,11 @@ public class TelephonyManager {
+      */
+     public int getActiveModemCount() {
+         int modemCount = 1;
++
++        if (supported != -1) {
++            return supported;
++        }
++
+         switch (getMultiSimConfiguration()) {
+             case UNKNOWN:
+                 modemCount = 1;
+@@ -702,6 +718,10 @@ public class TelephonyManager {
+      * {@link #getActiveModemCount} returns 1 while this API returns 2.
+      */
+     public int getSupportedModemCount() {
++        if (supported != -1) {
++            return supported;
++        }
++        
+         return TelephonyProperties.max_active_modems().orElse(getActiveModemCount());
+     }
+ 
+-- 
+2.34.1
