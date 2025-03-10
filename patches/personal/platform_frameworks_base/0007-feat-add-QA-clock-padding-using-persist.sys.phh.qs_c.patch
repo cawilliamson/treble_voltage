@@ -1,0 +1,39 @@
+From dfacc99142b62fb4f73a4072cdc0ad0767595f22 Mon Sep 17 00:00:00 2001
+From: mytja <mitja@severkar.eu>
+Date: Fri, 11 Oct 2024 21:24:03 +0200
+Subject: [PATCH 7/9] feat: add QS clock padding using
+ persist.sys.phh.qs_clock_*_padding
+
+---
+ .../com/android/systemui/shade/ShadeHeaderController.kt  | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/shade/ShadeHeaderController.kt b/packages/SystemUI/src/com/android/systemui/shade/ShadeHeaderController.kt
+index f0c9082e7..c7cd68374 100644
+--- a/packages/SystemUI/src/com/android/systemui/shade/ShadeHeaderController.kt
++++ b/packages/SystemUI/src/com/android/systemui/shade/ShadeHeaderController.kt
+@@ -25,6 +25,7 @@ import android.content.Intent
+ import android.content.res.Configuration
+ import android.graphics.Insets
+ import android.os.Bundle
++import android.os.SystemProperties
+ import android.os.Trace
+ import android.os.Trace.TRACE_TAG_APP
+ import android.os.UserHandle;
+@@ -605,10 +606,10 @@ constructor(
+     }
+ 
+     private fun updateQQSPaddings() {
+-        val clockPaddingStart =
+-            resources.getDimensionPixelSize(R.dimen.status_bar_left_clock_starting_padding)
+-        val clockPaddingEnd =
+-            resources.getDimensionPixelSize(R.dimen.status_bar_left_clock_end_padding)
++        var clockPaddingStart = SystemProperties.getInt("persist.sys.phh.qs_clock_left_padding", -1);
++        if(clockPaddingStart == -1) clockPaddingStart = resources.getDimensionPixelSize(R.dimen.status_bar_left_clock_starting_padding);
++        var clockPaddingEnd = SystemProperties.getInt("persist.sys.phh.qs_clock_right_padding", -1);
++        if(clockPaddingEnd == -1) clockPaddingEnd = resources.getDimensionPixelSize(R.dimen.status_bar_left_clock_end_padding);
+         clock.setPaddingRelative(
+             clockPaddingStart,
+             clock.paddingTop,
+-- 
+2.34.1

@@ -1,0 +1,34 @@
+From bc100792c5912c78c2a3a5f5effc3d84bf6ec317 Mon Sep 17 00:00:00 2001
+From: William Escande <wescande@google.com>
+Date: Wed, 26 Jun 2024 13:39:38 -0700
+Subject: [PATCH 1/2] HeadsetService: Notify device changed at stop
+
+Notify the active device changed to null when the HeadsetService stops.
+
+Bug: 328847267
+Fix: 328847267
+Flag: Exempt shutdown cleanup
+Test: None
+Change-Id: Ia6ceee3b715f594bb057bac179cff61dcbd1231b
+---
+ .../app/src/com/android/bluetooth/hfp/HeadsetService.java    | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/android/app/src/com/android/bluetooth/hfp/HeadsetService.java b/android/app/src/com/android/bluetooth/hfp/HeadsetService.java
+index d6354ddd0b..37d0a45ff9 100644
+--- a/android/app/src/com/android/bluetooth/hfp/HeadsetService.java
++++ b/android/app/src/com/android/bluetooth/hfp/HeadsetService.java
+@@ -225,7 +225,10 @@ public class HeadsetService extends ProfileService {
+         unregisterReceiver(mHeadsetReceiver);
+         synchronized (mStateMachines) {
+             // Reset active device to null
+-            mActiveDevice = null;
++            if (mActiveDevice != null) {
++                mActiveDevice = null;
++                broadcastActiveDevice(null);
++            }
+             mInbandRingingRuntimeDisable = false;
+             mForceScoAudio = false;
+             mAudioRouteAllowed = true;
+-- 
+2.34.1

@@ -1,0 +1,31 @@
+From fa3f1128bd0026b860d98e87be49d1520e66f195 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Mitja=20=C5=A0everkar?= <mytja@protonmail.com>
+Date: Mon, 23 Sep 2024 18:09:42 +0000
+Subject: [PATCH 2/2] fix: announce exfat support with alternative drivers
+
+Linux kernel has only since 5.4 (GKI 1.0) included native exfat drivers. Samsung has (and still includes) included their own "sdfat" driver. Sony has similarly included a "texfat" driver.
+
+LineageOS seems to include additional checks which I do not want to properly implement, therefore we can just fake exfat support when sdfat or texfat are available and deal with that crap later with phh's AOSP patches.
+---
+ Utils.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Utils.cpp b/Utils.cpp
+index d0c40ad..41b3535 100644
+--- a/Utils.cpp
++++ b/Utils.cpp
+@@ -1056,6 +1056,12 @@ bool IsFilesystemSupported(const std::string& fsType) {
+         return false;
+     }
+ 
++    if (fsType == "exfat") {
++        return supported.find("sdfat\n") != std::string::npos ||
++            supported.find("texfat\n") != std::string::npos ||
++            supported.find("exfat\n") != std::string::npos;
++    }
++
+     /* fuse filesystems */
+     supported.append("fuse\tntfs\n");
+ 
+-- 
+2.34.1
