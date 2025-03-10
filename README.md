@@ -1,6 +1,6 @@
 # VoltageOS GSI Build System
 
-This repository contains a containerized build system for VoltageOS GSI images using container technology.
+This repository contains a containerized build system for VoltageOS GSI (Generic System Image) images using container technology. It automates the entire build process from source preparation to final image compression.
 
 ## Prerequisites
 
@@ -77,18 +77,29 @@ You can customize the build process with the following variables:
 
 ```bash
 # Example of using multiple configuration variables
-make ROM_VERSION=4.3 ROM_TAG=16-qpr1 APPLY_DEBUG_PATCHES=true MAX_CPU_PERCENT=50 CONTAINER_RUNTIME=docker
+make ROM_VERSION=4.3 ROM_TAG=16-qpr1 ANDROID_VERSION_TAG=ap4b APPLY_DEBUG_PATCHES=true VERIFY_SEPOLICY=true MAX_CPU_PERCENT=50 CONTAINER_RUNTIME=docker
 ```
 
 Available variables:
 
-- `ROM_NAME`: Name of the ROM (default: VoltageOS)
 - `ROM_VERSION`: Version of the ROM (default: 4.2)
 - `ROM_TAG`: Git tag/branch to use for ROM source (default: 15-qpr1)
+- `ANDROID_VERSION_TAG`: Android version tag for the build (default: ap4a)
 - `APPLY_DEBUG_PATCHES`: Whether to apply debug patches (default: false)
+- `VERIFY_SEPOLICY`: Whether to verify SELinux policy during build (default: true)
 - `MAX_CPU_PERCENT`: Maximum CPU usage in percent (default: 100)
 - `MAX_MEM_PERCENT`: Maximum memory usage in percent (default: 100)
 - `CONTAINER_RUNTIME`: Container runtime to use (default: podman, can be set to docker)
+## Android Version Tag
+
+The `ANDROID_VERSION_TAG` variable specifies the Android version tag used for the build. This affects how the ROM is built and which Android version features are included.
+
+```bash
+make ANDROID_VERSION_TAG=ap4b
+```
+
+The default value is `ap4a` which corresponds to Android 15.
+
 ## Resource Limits
 
 You can limit CPU and memory usage with:
@@ -147,10 +158,10 @@ make build-microg
 
 #### Running Specific Steps
 
-To run the VNDK sepolicy tests:
+To run the VNDK sepolicy tests (which can be controlled with the VERIFY_SEPOLICY variable):
 
 ```bash
-make vndk-test-sepolicy
+make VERIFY_SEPOLICY=true vndk-test-sepolicy
 ```
 
 To apply patches and then build the Treble app:
@@ -224,8 +235,31 @@ The built images are initially created in the `tmp` directory during the build p
 The final image filenames follow this format:
 `VoltageOS-[variant]-[architecture]-ab-[version]-[build_date]-UNOFFICIAL.img.xz`
 
+Where:
+- `[variant]` is one of: vanilla, microg, or gapps
+- `[architecture]` is one of: arm64 or arm32_binder64
+- `[version]` is the ROM version (e.g., 4.2)
+- `[build_date]` is the date of the build in YYYYMMDD format
+
 For example:
 `VoltageOS-vanilla-arm64-ab-4.2-20250603-UNOFFICIAL.img.xz`
+
+## Patches
+
+The build system applies several sets of patches to the VoltageOS source code:
+
+### Trebledroid Patches
+These patches come from the TrebleDroid project and provide essential fixes and improvements for GSI compatibility across various devices. They address issues with hardware support, SELinux policies, and vendor compatibility.
+
+### Personal Patches
+These are custom patches that enhance the ROM with additional features and fixes specific to this build system. They include:
+- UI/UX improvements
+- Performance optimizations
+- Additional device support
+- Feature enhancements
+
+### Debug Patches (Optional)
+When enabled with `APPLY_DEBUG_PATCHES=true`, these patches add debugging capabilities that can help troubleshoot issues on specific devices.
 
 ## Credits
 
@@ -233,4 +267,5 @@ For example:
 - [Phhusson](https://github.com/phhusson)
 - [AndyYan](https://github.com/AndyCGYan)
 - [Ponces](https://github.com/ponces)
+- [TrebleDroid Project](https://github.com/TrebleDroid)
 - And all other contributors to the project

@@ -22,6 +22,7 @@ endef
 #######################
 
 # ROM configuration
+ANDROID_VERSION_TAG ?= ap4a
 APPLY_DEBUG_PATCHES ?= false
 BUILD_DATE := $(shell date "+%Y%m%d")
 ROM_TAG ?= 15-qpr1
@@ -100,7 +101,7 @@ $(foreach type,$(BUILD_TYPES),$(eval $(call build_type_target,$(type))))
 define generate_build_target
 build-$(1)-$(2): build-prerequisites
 	$$(call print_section,Build $(shell echo $(1) | sed 's/.*/\u&/') $(shell echo $(2) | tr 'a-z' 'A-Z'))
-	$$(call build_gsi_variant,$(1),$(2),$(word $(shell expr $(shell echo $(BUILD_TYPES) | tr ' ' '\n' | grep -n "^$(1)$$" | cut -d: -f1) + 0),$(BUILD_TYPE_CODES)),$(VERIFY_SEPOLICY))
+	$$(call build_gsi_variant,$(1),$(2),$(word $(shell expr $(shell echo $(BUILD_TYPES) | tr ' ' '\n' | grep -n "^$(1)$$" | cut -d: -f1) + 0),$(BUILD_TYPE_CODES)),$(VERIFY_SEPOLICY),$(ANDROID_VERSION_TAG))
 endef
 
 # Generate all build targets - Creates all variant/architecture combinations dynamically
@@ -216,7 +217,7 @@ define build_gsi_variant
 			fi && \
 			rm -rfv out/target/product/tdgsi_$(2)_ab/ && \
 			. build/envsetup.sh && \
-			lunch treble_$(2)_b$(3)N-ap4a-userdebug && \
+			lunch treble_$(2)_b$(3)N-$(5)-userdebug && \
 			make systemimage -j$(CPU_LIMIT) && \
 			if [ "$(4)" = "true" ]; then \
 				make vndk-test-sepolicy -j$(CPU_LIMIT); \
