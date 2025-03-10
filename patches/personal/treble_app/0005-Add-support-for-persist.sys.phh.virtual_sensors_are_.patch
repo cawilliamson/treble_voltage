@@ -20,7 +20,7 @@ index 5fa810a..452cd54 100644
              }
 +            MiscSettings.treatVirtualSensorsAsReal -> {
 +                val value = sp.getBoolean(key, false)
-+                SystemProperties.set("persist.sys.phh.virtual_sensors_are_real", value)
++                SystemProperties.set("persist.sys.phh.virtual_sensors_are_real", if (value) "1" else "0")
 +            }
          }
      }
