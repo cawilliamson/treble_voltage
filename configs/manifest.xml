@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
   <remote name="andycgyan" fetch="https://github.com/AndyCGYan/" />
-  <remote name="calyxos" fetch="https://github.com/CalyxOS/" />
-  <remote name="divested-mobile" fetch="https://gitlab.com/divested-mobile/" />
   <remote name="grapheneos" fetch="https://github.com/GrapheneOS/" />
   <remote name="lineageos4microg" fetch="https://github.com/lineageos4microg/" />
   <remote name="lineageos" fetch="https://github.com/LineageOS/" />
@@ -17,12 +15,6 @@
 
   <!-- aosp: vndk-v28 -->
   <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" clone-depth="1" />
-
-  <!-- calyxos: aurora store extension -->
-  <project path="packages/apps/AuroraStorePrivilegedExtension" name="platform_packages_apps_AuroraStorePrivilegedExtension" remote="calyxos" revision="android15-qpr1" clone-depth="1" />
-
-  <!-- calyxos: f-droid extension -->
-  <project path="packages/apps/F-DroidPrivilegedExtension" name="platform_packages_apps_F-DroidPrivilegedExtension" remote="calyxos" revision="android15-qpr1" clone-depth="1" />
 
   <!-- grapheneos: app store -->
   <project path="external/Apps" name="platform_external_AppStore" remote="grapheneos" revision="15" clone-depth="1" />
