@@ -1,7 +1,7 @@
 From 8f38f2eff4eeaa71e70c02ff7c3443ec86c7e797 Mon Sep 17 00:00:00 2001
 From: Daniel Zhang <danielzhang130@gmail.com>
 Date: Fri, 7 Feb 2025 21:02:10 -0500
-Subject: [PATCH 4/9] Fix fingerprint sensor
+Subject: [PATCH 4/8] Fix fingerprint sensor
 
 Change-Id: I9877def6c7e81902adbf5ae46c316fb8aa9333ae
 Signed-off-by: Daniel Zhang <danielzhang130@gmail.com>
