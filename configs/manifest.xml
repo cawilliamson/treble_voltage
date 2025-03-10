@@ -24,14 +24,6 @@
   <!-- calyxos: f-droid extension -->
   <project path="packages/apps/F-DroidPrivilegedExtension" name="platform_packages_apps_F-DroidPrivilegedExtension" remote="calyxos" revision="android15-qpr1" clone-depth="1" />
 
-  <!-- divested mobile: mulch webview -->
-  <remove-project name="LineageOS/android_external_chromium-webview_patches" />
-  <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_arm" />
-  <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_arm64" />
-  <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_x86" />
-  <remove-project name="LineageOS/android_external_chromium-webview_prebuilt_x86_64" />
-  <project path="external/mulch-webview" name="mulch" remote="divested-mobile" revision="master" clone-depth="1" />
-
   <!-- grapheneos: app store -->
   <project path="external/Apps" name="platform_external_AppStore" remote="grapheneos" revision="15" clone-depth="1" />
 
