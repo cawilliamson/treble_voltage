@@ -18,7 +18,7 @@ index 5fa810a..452cd54 100644
                  val value = sp.getBoolean(key, false)
                  SystemProperties.set("persist.sys.phh.adb_secure", if (value) "1" else "0")
              }
-+            MiscSettings.treatVirtualFpAsReal -> {
++            MiscSettings.treatVirtualSensorsAsReal -> {
 +                val value = sp.getBoolean(key, false)
 +                SystemProperties.set("persist.sys.phh.virtual_sensors_are_real", value)
 +            }
@@ -33,7 +33,7 @@ index eb08e90..a990a3c 100644
      val bluetooth = "key_misc_bluetooth"
      val securize = "key_misc_securize"
      val secureAdb = "key_misc_secure_adb"
-+    val treatVirtualFpAsReal = "key_misc_treat_virtual_fp_as_real"
++    val treatVirtualSensorsAsReal = "key_misc_treat_virtual_sensors_as_real"
      val removeTelephony = "key_misc_removetelephony"
      val remotectl = "key_misc_remotectl"
      val disableAudioEffects = "key_misc_disable_audio_effects"
@@ -47,8 +47,8 @@ index 191d2fb..273c4ab 100644
              android:summary="Computer requires approval" />
 +        <SwitchPreference
 +            android:defaultValue="false"
-+            android:key="key_misc_treat_virtual_fp_as_real"
-+            android:title="Treat Virtual FP as real"
++            android:key="key_misc_treat_virtual_sensors_as_real"
++            android:title="Treat virtual sensors as real"
 +            android:summary="Treat all virtual fingerprint sensors as real" />
      </PreferenceCategory>
      <PreferenceCategory android:title="Debugging">
