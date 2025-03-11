@@ -1,0 +1,40 @@
+From 512325a61bbd18d5838a1a450aa0ffdb7227a827 Mon Sep 17 00:00:00 2001
+From: Christopher A. Williamson <contact@chrisaw.io>
+Date: Tue, 11 Mar 2025 13:02:40 +0000
+Subject: [PATCH 1/1] Add support for mac randomization prop
+
+---
+ .../com/android/server/wifi/util/ApConfigUtil.java    | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/service/java/com/android/server/wifi/util/ApConfigUtil.java b/service/java/com/android/server/wifi/util/ApConfigUtil.java
+index 3da0bf1..36bd855 100644
+--- a/service/java/com/android/server/wifi/util/ApConfigUtil.java
++++ b/service/java/com/android/server/wifi/util/ApConfigUtil.java
+@@ -50,6 +50,7 @@ import android.net.wifi.WifiManager;
+ import android.net.wifi.WifiScanner;
+ import android.net.wifi.nl80211.DeviceWiphyCapabilities;
+ import android.net.wifi.util.WifiResourceCache;
++import android.os.SystemProperties;
+ import android.text.TextUtils;
+ import android.util.Log;
+ import android.util.SparseArray;
+@@ -1179,8 +1180,14 @@ public class ApConfigUtil {
+      * @return true if supported, false otherwise.
+      */
+     public static boolean isApMacRandomizationSupported(@NonNull WifiContext context) {
+-        return context.getResourceCache().getBoolean(
+-                    R.bool.config_wifi_ap_mac_randomization_supported);
++        boolean isMacRandomizationEnabled = SystemProperties.getBoolean("persist.sys.phh.mac_randomization", true);
++
++        if (!isMacRandomizationEnabled) {
++            return false;
++        } else {
++            return context.getResourceCache().getBoolean(
++                        R.bool.config_wifi_ap_mac_randomization_supported);
++        }
+     }
+ 
+     /**
+-- 
+2.47.2
