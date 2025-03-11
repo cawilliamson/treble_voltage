@@ -1,0 +1,90 @@
+From 47e5b0ac3ebb5c3affe56c490fd90d696642612a Mon Sep 17 00:00:00 2001
+From: mytja <mitja@severkar.eu>
+Date: Sun, 27 Oct 2024 20:29:53 +0100
+Subject: [PATCH 6/7] treble_app: add a setting to force a specific number of
+ SIM slots
+
+Some device models seemingly report a wrong number of SIM slots.
+This patch should in combination with another one inside frameworks/base be a temporary mitigation.
+
+Change-Id: I54cd19f02c7633912f0d272c7a038093182975c7
+---
+ app/src/main/java/me/phh/treble/app/Misc.kt       |  4 ++++
+ .../main/java/me/phh/treble/app/MiscSettings.kt   |  1 +
+ app/src/main/res/values/pref_misc.xml             | 15 +++++++++++++++
+ app/src/main/res/xml/pref_misc.xml                |  7 +++++++
+ 4 files changed, 27 insertions(+)
+
+diff --git a/app/src/main/java/me/phh/treble/app/Misc.kt b/app/src/main/java/me/phh/treble/app/Misc.kt
+index 532c3d6..1f64904 100644
+--- a/app/src/main/java/me/phh/treble/app/Misc.kt
++++ b/app/src/main/java/me/phh/treble/app/Misc.kt
+@@ -187,6 +187,10 @@ object Misc: EntryStartup {
+                     }
+                 }
+             }
++            MiscSettings.simSlots -> {
++                val value = sp.getString(key, "-1").toInt()
++                SystemProperties.set("persist.sys.phh.sim_slots", value.toString())
++            }
+             MiscSettings.displayFps -> {
+                 val thisModeIndex = sp.getString(key, "-1").toInt()
+                 val displayInfo = displayManager.displays[0]
+diff --git a/app/src/main/java/me/phh/treble/app/MiscSettings.kt b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
+index 5fa3b6b..8e32c9d 100644
+--- a/app/src/main/java/me/phh/treble/app/MiscSettings.kt
++++ b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
+@@ -25,6 +25,7 @@ object MiscSettings : Settings {
+     val secureAdb = "key_misc_secure_adb"
+     val treatVirtualSensorsAsReal = "key_misc_treat_virtual_sensors_as_real"
+     val removeTelephony = "key_misc_removetelephony"
++    val simSlots = "key_misc_sim_slots"
+     val remotectl = "key_misc_remotectl"
+     val disableAudioEffects = "key_misc_disable_audio_effects"
+     val disableFastAudio = "key_misc_disable_fast_audio"
+diff --git a/app/src/main/res/values/pref_misc.xml b/app/src/main/res/values/pref_misc.xml
+index ae3ae4f..8e38cb2 100644
+--- a/app/src/main/res/values/pref_misc.xml
++++ b/app/src/main/res/values/pref_misc.xml
+@@ -37,6 +37,21 @@
+       <item>"huawei"</item>
+     </array>
+ 
++    <array name="pref_misc_sim_slots">
++      <item>"Don't force"</item>
++      <item>"No SIM slot"</item>
++      <item>"One SIM slot"</item>
++      <item>"Two SIM slots"</item>
++      <item>"Three SIM slots"</item>
++    </array>
++    <array name="pref_misc_sim_slots_values">
++      <item>"-1"</item>
++      <item>"0"</item>
++      <item>"1"</item>
++      <item>"2"</item>
++      <item>"3"</item>
++    </array>
++
+     <array name="pref_misc_display_fps">
+       <item>"Don't force"</item>
+       <item>"60fps"</item>
+diff --git a/app/src/main/res/xml/pref_misc.xml b/app/src/main/res/xml/pref_misc.xml
+index 34de959..31ee2f9 100644
+--- a/app/src/main/res/xml/pref_misc.xml
++++ b/app/src/main/res/xml/pref_misc.xml
+@@ -213,6 +213,13 @@
+             android:title="Automatically restart RIL" />
+         <Preference android:title="@string/remove_telephony_subsystem"
+             android:key="key_misc_removetelephony" />
++        <ListPreference
++            android:defaultValue="-1"
++            android:entries="@array/pref_misc_sim_slots"
++            android:entryValues="@array/pref_misc_sim_slots_values"
++            android:key="key_misc_sim_slots"
++            android:title="Force a specific number of SIM slots"
++            android:summary="Might lead to instability of system\nRequires a reboot" />
+     </PreferenceCategory>
+     <PreferenceCategory android:title="Other">
+         <SwitchPreference
+-- 
+2.34.1
