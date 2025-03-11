@@ -278,6 +278,6 @@ upload-to-github: create-folders
 		git init && \
 		git remote add origin "https://github.com/cawilliamson/treble_voltage.git" && \
 		gh repo set-default "cawilliamson/treble_voltage" && \
-		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-$(BUILD_NUMBER)" "$(ROM_VERSION)-$(BUILD_NUMBER)" && \
-		gh release upload "$(ROM_VERSION)-$(BUILD_NUMBER)" --clobber -- *.img.xz && \
+		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-$${BUILD_NUMBER}" "$(ROM_VERSION)-$${BUILD_NUMBER}" && \
+		gh release upload "$(ROM_VERSION)-$${BUILD_NUMBER}" --clobber -- *.img.xz && \
 		rm -rf .git/
