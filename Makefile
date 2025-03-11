@@ -45,6 +45,7 @@ MAX_MEM_PERCENT ?= 100
 CONTAINER_RUNTIME ?= podman
 
 # System variables
+BUILD_NUMBER := $(BUILD_DATE).$(BUILD_TIME)
 CPU_LIMIT := $(shell echo $$(( $(shell nproc --all) * $(MAX_CPU_PERCENT) / 100 )))
 MEM_LIMIT := $(shell echo "$$(( $(shell free -m | awk '/^Mem:/{print $$2}') * $(MAX_MEM_PERCENT) / 100 ))m")
 
@@ -55,10 +56,8 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 	--pids-limit=0 \
 	-v "$(PWD):/repo:Z" \
 	-e BUILD_DATE="$(BUILD_DATE)" \
-	-e BUILD_NUMBER="$(BUILD_DATE).$(BUILD_TIME)" \
-	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
-	-e ROM_VERSION="$(ROM_VERSION)" \
-	-e ROM_TAG="$(ROM_TAG)"
+	-e BUILD_NUMBER="$(BUILD_NUMBER)" \
+	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)"
 
 #######################
 # Define all phony targets
@@ -138,7 +137,7 @@ clone-rom-manifest: build-container create-folders
 	$(CONTAINER_RUN) voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/ && \
-				repo init -u https://github.com/VoltageOS/manifest.git -b ${ROM_TAG} --depth=1 --git-lfs && \
+				repo init -u https://github.com/VoltageOS/manifest.git -b $(ROM_TAG) --depth=1 --git-lfs && \
 			popd'
 
 # Step 2: Copy manifest config - Add local manifest files to customize the source tree
@@ -250,7 +249,7 @@ rename-images: build-container create-folders
 				for j in $${!archs[@]}; do \
 					src="system_$${variants[i]}_$${archs[j]}.img"; \
 					if [ -f "$$src" ]; then \
-						dest="VoltageOS-$${variants[i]}-$${arch_names[j]}-ab-$${ROM_VERSION}-$${BUILD_NUMBER}-UNOFFICIAL.img"; \
+						dest="VoltageOS-$${variants[i]}-$${arch_names[j]}-ab-$(ROM_VERSION)-$$BUILD_NUMBER-UNOFFICIAL.img"; \
 						mv -v "$$src" "$$dest"; \
 					fi; \
 				done; \
@@ -278,6 +277,6 @@ upload-to-github: create-folders
 		git init && \
 		git remote add origin "https://github.com/cawilliamson/treble_voltage.git" && \
 		gh repo set-default "cawilliamson/treble_voltage" && \
-		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-${BUILD_NUMBER}" "$(ROM_VERSION)-${BUILD_NUMBER}" && \
-		gh release upload "$(ROM_VERSION)-${BUILD_NUMBER}" --clobber -- *.img.xz && \
+		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-$(BUILD_NUMBER)" "$(ROM_VERSION)-$(BUILD_NUMBER)" && \
+		gh release upload "$(ROM_VERSION)-$(BUILD_NUMBER)" --clobber -- *.img.xz && \
 		rm -rf .git/
