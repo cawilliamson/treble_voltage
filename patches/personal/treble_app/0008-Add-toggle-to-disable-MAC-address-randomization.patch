@@ -48,7 +48,7 @@ index 4e23d3b..d95f6c1 100644
 +            android:defaultValue="true"
 +            android:key="key_misc_mac_randomization"
 +            android:title="MAC address randomization support"
-+            android:summary="Enable MAC address randomization" />
++            android:summary="Enable MAC address randomization\nRequires a reboot" />
          <SwitchPreference
              android:defaultValue="false"
              android:key="key_misc_treat_virtual_sensors_as_real"
