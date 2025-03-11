@@ -18,7 +18,7 @@ index 88f36fa..f14b2e1 100644
                  SystemProperties.set("persist.sys.phh.adb_secure", if (value) "1" else "0")
              }
 +            MiscSettings.macRandomization -> {
-+                val value = sp.getBoolean(key, true)
++                val value = sp.getBoolean(key, false)
 +                SystemProperties.set("persist.sys.phh.mac_randomization", if (value) "1" else "0")
 +            }
              MiscSettings.treatVirtualSensorsAsReal -> {
@@ -32,7 +32,7 @@ index 5851b9d..169b214 100644
      val bluetooth = "key_misc_bluetooth"
      val securize = "key_misc_securize"
      val secureAdb = "key_misc_secure_adb"
-+    val macRandomization = "key_mac_randomization"
++    val macRandomization = "key_misc_mac_randomization"
      val treatVirtualSensorsAsReal = "key_misc_treat_virtual_sensors_as_real"
      val removeTelephony = "key_misc_removetelephony"
      val simSlots = "key_misc_sim_slots"
