@@ -25,6 +25,7 @@ endef
 ANDROID_VERSION_TAG ?= ap4a
 APPLY_DEBUG_PATCHES ?= false
 BUILD_DATE := $(shell date "+%Y%m%d")
+BUILD_NUMBER_SUFFIX := 0
 ROM_TAG ?= 15-qpr1
 ROM_VERSION ?= 4.2
 VERIFY_SEPOLICY ?= true
@@ -54,6 +55,7 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 	--pids-limit=0 \
 	-v "$(PWD):/repo:Z" \
 	-e BUILD_DATE="$(BUILD_DATE)" \
+	-e BUILD_NUMBER="${BUILD_DATE}.${BUILD_NUMBER_SUFFIX}" \
 	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)" \
 	-e ROM_VERSION="$(ROM_VERSION)" \
 	-e ROM_TAG="$(ROM_TAG)"
@@ -248,7 +250,7 @@ rename-images: build-container create-folders
 				for j in $${!archs[@]}; do \
 					src="system_$${variants[i]}_$${archs[j]}.img"; \
 					if [ -f "$$src" ]; then \
-						dest="VoltageOS-$${variants[i]}-$${arch_names[j]}-ab-$${ROM_VERSION}-$${BUILD_DATE}-UNOFFICIAL.img"; \
+						dest="VoltageOS-$${variants[i]}-$${arch_names[j]}-ab-$${ROM_VERSION}-$${BUILD_DATE}.${BUILD_NUMBER_SUFFIX}-UNOFFICIAL.img"; \
 						mv -v "$$src" "$$dest"; \
 					fi; \
 				done; \
@@ -276,6 +278,6 @@ upload-to-github: create-folders
 		git init && \
 		git remote add origin "https://github.com/cawilliamson/treble_voltage.git" && \
 		gh repo set-default "cawilliamson/treble_voltage" && \
-		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-$(BUILD_DATE)" "$(ROM_VERSION)-$(BUILD_DATE)" && \
-		gh release upload "$(ROM_VERSION)-$(BUILD_DATE)" --clobber -- *.img.xz && \
+		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-$(BUILD_DATE).${BUILD_NUMBER_SUFFIX}" "$(ROM_VERSION)-$(BUILD_DATE).${BUILD_NUMBER_SUFFIX}" && \
+		gh release upload "$(ROM_VERSION)-$(BUILD_DATE).${BUILD_NUMBER_SUFFIX}" --clobber -- *.img.xz && \
 		rm -rf .git/
