@@ -49,7 +49,7 @@ index 191d2fb..273c4ab 100644
 +            android:defaultValue="false"
 +            android:key="key_misc_treat_virtual_sensors_as_real"
 +            android:title="Treat virtual sensors as real"
-+            android:summary="Treat all virtual fingerprint sensors as real\nRequires a reboot" />
++            android:summary="Treat all virtual fingerprint sensors as real\nWarning: This can cause bootloops - use with extreme care\nRequires a reboot" />
      </PreferenceCategory>
      <PreferenceCategory android:title="Debugging">
          <Preference android:title="Debug Sensors">
