@@ -1,0 +1,45 @@
+From a62b87acab5e84aa414f8a28c6485d522ee86cd3 Mon Sep 17 00:00:00 2001
+From: Christopher A. Williamson <contact@chrisaw.io>
+Date: Wed, 12 Mar 2025 19:35:38 +0000
+Subject: [PATCH 9/9] Remove prototype device alert
+
+---
+ .../server/am/ActivityManagerService.java     | 23 -------------------
+ 1 file changed, 23 deletions(-)
+
+diff --git a/services/core/java/com/android/server/am/ActivityManagerService.java b/services/core/java/com/android/server/am/ActivityManagerService.java
+index a2f6dc36f..4277bbcc0 100644
+--- a/services/core/java/com/android/server/am/ActivityManagerService.java
++++ b/services/core/java/com/android/server/am/ActivityManagerService.java
+@@ -5235,29 +5235,6 @@ public class ActivityManagerService extends IActivityManager.Stub
+     }
+ 
+     private static boolean isPrototypeDevice() {
+-        switch (Build.BRAND) {
+-            case "google":
+-                break;
+-            default:
+-                // Other OEMs may deal with hardware revisions differently
+-                return false;
+-        }
+-
+-        if (!SystemProperties.get("ro.revision").contains("MP")) {
+-            // MP1.0 is what all 3rd generation and newer Pixel devices have as their mass
+-            // production revision.
+-            // Account for future mass production device revisions by only checking for "MP".
+-            return true;
+-        }
+-
+-        if (!SystemProperties.get("ro.boot.secure_boot").equals("PRODUCTION")) {
+-            // All devices with a blown secure boot fuse will have the bootloader report
+-            // ro.boot.secure_boot as being in PRODUCTION mode.
+-            // Engineering devices typically don't have a blown secure boot fuse as they are used
+-            // for firmware development.
+-            return true;
+-        }
+-
+         return false;
+     }
+ 
+-- 
+2.47.2

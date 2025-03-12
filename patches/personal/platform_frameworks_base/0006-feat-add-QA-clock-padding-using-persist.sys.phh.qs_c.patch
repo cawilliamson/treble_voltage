@@ -1,7 +1,7 @@
 From dfacc99142b62fb4f73a4072cdc0ad0767595f22 Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Fri, 11 Oct 2024 21:24:03 +0200
-Subject: [PATCH 6/8] feat: add QS clock padding using
+Subject: [PATCH 6/0] feat: add QS clock padding using
  persist.sys.phh.qs_clock_*_padding
 
 ---
