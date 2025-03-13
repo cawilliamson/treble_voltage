@@ -1,7 +1,7 @@
 From 0b9c20f5e8a1d16f8995220ad78bb6ba07e425c2 Mon Sep 17 00:00:00 2001
 From: ChonDoit <thphantomblog@gmail.com>
 Date: Sun, 27 Oct 2024 21:52:42 +0100
-Subject: [PATCH 3/8] Make status bar paddings overridables
+Subject: [PATCH 3/9] Make status bar paddings overridables
 
 with
 persist.sys.phh.status_bar_padding_top
