@@ -917,7 +917,7 @@ index 1cf00db66..069addb4e 100644
 +    }
  }
 diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-index 4985c9328..9b26fa9c0 100644
+index 4985c9328..840bb87b0 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 @@ -38,6 +38,7 @@ import android.hardware.biometrics.SensorLocationInternal;
@@ -936,7 +936,7 @@ index 4985c9328..9b26fa9c0 100644
              for (SensorProps sensorConfig: props) {
                  addHidlSensors(sensorConfig, gestureAvailabilityDispatcher, workaroundLocations,
                          resetLockoutRequiresHardwareAuthToken);
-@@ -256,6 +258,27 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+@@ -279,6 +281,27 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
              @NonNull List<SensorLocationInternal> workaroundLocations,
              boolean resetLockoutRequiresHardwareAuthToken) {
          final int sensorId = prop.commonProps.sensorId;
@@ -961,8 +961,8 @@ index 4985c9328..9b26fa9c0 100644
 +            android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
 +        }
 +
-         final Sensor sensor = new HidlToAidlSensorAdapter(this, mContext, mHandler, prop,
-                 mLockoutResetDispatcher, mBiometricContext, workaroundLocations,
-                 resetLockoutRequiresHardwareAuthToken,
+         final Sensor sensor = new Sensor(this, mContext, mHandler, prop, mBiometricContext,
+                 workaroundLocations, resetLockoutRequiresHardwareAuthToken);
+         sensor.init(gestureAvailabilityDispatcher, mLockoutResetDispatcher);
 --
 2.34.1
