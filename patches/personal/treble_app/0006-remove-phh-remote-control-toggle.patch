@@ -1,7 +1,7 @@
 From 0b45739bb77f8f3bbdb0c27a4dab67464b50ccc8 Mon Sep 17 00:00:00 2001
 From: Christopher A. Williamson <contact@chrisaw.io>
 Date: Tue, 11 Mar 2025 05:29:45 +0000
-Subject: [PATCH 7/8] Remove phh remote control toggle
+Subject: [PATCH 6/6] Remove phh remote control toggle
 
 ---
  app/src/main/java/me/phh/treble/app/Misc.kt         | 4 ----
