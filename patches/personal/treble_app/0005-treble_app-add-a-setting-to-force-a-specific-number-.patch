@@ -16,7 +16,7 @@ Change-Id: I54cd19f02c7633912f0d272c7a038093182975c7
  4 files changed, 27 insertions(+)
 
 diff --git a/app/src/main/java/me/phh/treble/app/Misc.kt b/app/src/main/java/me/phh/treble/app/Misc.kt
-index 532c3d6..1f64904 100644
+index 5fa810a..8038e65 100644
 --- a/app/src/main/java/me/phh/treble/app/Misc.kt
 +++ b/app/src/main/java/me/phh/treble/app/Misc.kt
 @@ -187,6 +187,10 @@ object Misc: EntryStartup {
@@ -31,12 +31,12 @@ index 532c3d6..1f64904 100644
                  val thisModeIndex = sp.getString(key, "-1").toInt()
                  val displayInfo = displayManager.displays[0]
 diff --git a/app/src/main/java/me/phh/treble/app/MiscSettings.kt b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-index 5fa3b6b..8e32c9d 100644
+index b374fae..a023297 100644
 --- a/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 +++ b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-@@ -25,6 +25,7 @@ object MiscSettings : Settings {
-     val secureAdb = "key_misc_secure_adb"
+@@ -24,6 +24,7 @@ object MiscSettings : Settings {
      val securize = "key_misc_securize"
+     val secureAdb = "key_misc_secure_adb"
      val removeTelephony = "key_misc_removetelephony"
 +    val simSlots = "key_misc_sim_slots"
      val remotectl = "key_misc_remotectl"
@@ -69,7 +69,7 @@ index ae3ae4f..8e38cb2 100644
        <item>"Don't force"</item>
        <item>"60fps"</item>
 diff --git a/app/src/main/res/xml/pref_misc.xml b/app/src/main/res/xml/pref_misc.xml
-index 34de959..31ee2f9 100644
+index e9db275..6339fde 100644
 --- a/app/src/main/res/xml/pref_misc.xml
 +++ b/app/src/main/res/xml/pref_misc.xml
 @@ -213,6 +213,13 @@
