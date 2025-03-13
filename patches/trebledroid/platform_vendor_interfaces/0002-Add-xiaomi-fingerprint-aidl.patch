@@ -1,0 +1,132 @@
+From b29cc95bb27591ab010bb6b60f6e6f9942234465 Mon Sep 17 00:00:00 2001
+From: Pierre-Hugues Husson <phh@phh.me>
+Date: Wed, 23 Oct 2024 08:05:04 -0400
+Subject: [PATCH 2/3] Add xiaomi fingerprint aidl
+
+---
+ .../hardware/fingerprintextension/Android.bp  | 28 +++++++++++++++++++
+ .../1/.hash                                   |  1 +
+ .../IXiaomiFingerprint.aidl                   | 23 +++++++++++++++
+ .../IXiaomiFingerprint.aidl                   | 23 +++++++++++++++
+ .../IXiaomiFingerprint.aidl                   |  7 +++++
+ 5 files changed, 82 insertions(+)
+ create mode 100644 aidl/vendor/xiaomi/hardware/fingerprintextension/Android.bp
+ create mode 100644 aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/.hash
+ create mode 100644 aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+ create mode 100644 aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/current/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+ create mode 100644 aidl/vendor/xiaomi/hardware/fingerprintextension/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+
+diff --git a/aidl/vendor/xiaomi/hardware/fingerprintextension/Android.bp b/aidl/vendor/xiaomi/hardware/fingerprintextension/Android.bp
+new file mode 100644
+index 0000000..f829ac8
+--- /dev/null
++++ b/aidl/vendor/xiaomi/hardware/fingerprintextension/Android.bp
+@@ -0,0 +1,28 @@
++aidl_interface {
++    name: "vendor.xiaomi.hardware.fingerprintextension",
++    vendor_available: true,
++    srcs: [
++        "vendor/xiaomi/hardware/fingerprintextension/*.aidl",
++    ],
++    stability: "vintf",
++    backend: {
++        java: {
++            sdk_version: "module_current",
++            min_sdk_version: "30",
++            lint: {
++                // Disable linter to avoid error about fixed size arrays.
++                // Interface will only be accessed on devices >= U.
++                enabled: false,
++            },
++        },
++    },
++    owner: "phh",
++    frozen: true,
++    versions_with_info: [
++        {
++            version: "1",
++            imports: [],
++        },
++    ],
++
++}
+diff --git a/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/.hash b/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/.hash
+new file mode 100644
+index 0000000..e926708
+--- /dev/null
++++ b/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/.hash
+@@ -0,0 +1 @@
++84fced4622efa28151ac0a386f04546cac24b800
+diff --git a/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl b/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+new file mode 100644
+index 0000000..52a3891
+--- /dev/null
++++ b/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+@@ -0,0 +1,23 @@
++///////////////////////////////////////////////////////////////////////////////
++// THIS FILE IS IMMUTABLE. DO NOT EDIT IN ANY CASE.                          //
++///////////////////////////////////////////////////////////////////////////////
++
++// This file is a snapshot of an AIDL file. Do not edit it manually. There are
++// two cases:
++// 1). this is a frozen version file - do not edit this in any case.
++// 2). this is a 'current' file. If you make a backwards compatible change to
++//     the interface (from the latest frozen version), the build system will
++//     prompt you to update this file with `m <name>-update-api`.
++//
++// You must not make a backward incompatible change to any AIDL file built
++// with the aidl_interface module type with versions property set. The module
++// type is used to build AIDL files in a way that they can be used across
++// independently updatable components of the system. If a device is shipped
++// with such a backward incompatible change, it has a high risk of breaking
++// later when a module using the interface is updated, e.g., Mainline modules.
++
++package vendor.xiaomi.hardware.fingerprintextension;
++@VintfStability
++interface IXiaomiFingerprint {
++  int extCmd(in int cmd, in int param);
++}
+diff --git a/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/current/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl b/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/current/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+new file mode 100644
+index 0000000..52a3891
+--- /dev/null
++++ b/aidl/vendor/xiaomi/hardware/fingerprintextension/aidl_api/vendor.xiaomi.hardware.fingerprintextension/current/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+@@ -0,0 +1,23 @@
++///////////////////////////////////////////////////////////////////////////////
++// THIS FILE IS IMMUTABLE. DO NOT EDIT IN ANY CASE.                          //
++///////////////////////////////////////////////////////////////////////////////
++
++// This file is a snapshot of an AIDL file. Do not edit it manually. There are
++// two cases:
++// 1). this is a frozen version file - do not edit this in any case.
++// 2). this is a 'current' file. If you make a backwards compatible change to
++//     the interface (from the latest frozen version), the build system will
++//     prompt you to update this file with `m <name>-update-api`.
++//
++// You must not make a backward incompatible change to any AIDL file built
++// with the aidl_interface module type with versions property set. The module
++// type is used to build AIDL files in a way that they can be used across
++// independently updatable components of the system. If a device is shipped
++// with such a backward incompatible change, it has a high risk of breaking
++// later when a module using the interface is updated, e.g., Mainline modules.
++
++package vendor.xiaomi.hardware.fingerprintextension;
++@VintfStability
++interface IXiaomiFingerprint {
++  int extCmd(in int cmd, in int param);
++}
+diff --git a/aidl/vendor/xiaomi/hardware/fingerprintextension/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl b/aidl/vendor/xiaomi/hardware/fingerprintextension/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+new file mode 100644
+index 0000000..87c7db2
+--- /dev/null
++++ b/aidl/vendor/xiaomi/hardware/fingerprintextension/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+@@ -0,0 +1,7 @@
++package vendor.xiaomi.hardware.fingerprintextension;
++
++@VintfStability
++interface IXiaomiFingerprint {
++// Maybe cf vendor/xiaomi/hardware/fingerprintextension/1.0/IXiaomiFingerprint.hal
++int extCmd(in int cmd, in int param);
++}
+-- 
+2.34.1

@@ -1,0 +1,24 @@
+From 9199d38035ca66c753ea1fa394e1559bf2e8fef3 Mon Sep 17 00:00:00 2001
+From: Alberto Ponces <ponces26@gmail.com>
+Date: Wed, 7 Aug 2024 08:58:45 +0000
+Subject: [PATCH 6/6] Prefer Aperture over Camera2
+
+---
+ target/product/handheld_product.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/target/product/handheld_product.mk b/target/product/handheld_product.mk
+index b2ce4c5..3864555 100644
+--- a/target/product/handheld_product.mk
++++ b/target/product/handheld_product.mk
+@@ -35,7 +35,7 @@ PRODUCT_PACKAGES += \
+ 
+ ifeq ($(LINEAGE_BUILD),)
+ PRODUCT_PACKAGES += \
+-    Camera2 \
++    Aperture \
+     LatinIME
+ endif
+ 
+-- 
+2.34.1
