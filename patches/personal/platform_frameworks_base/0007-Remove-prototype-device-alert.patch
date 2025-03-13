@@ -1,7 +1,7 @@
 From a62b87acab5e84aa414f8a28c6485d522ee86cd3 Mon Sep 17 00:00:00 2001
 From: Christopher A. Williamson <contact@chrisaw.io>
 Date: Wed, 12 Mar 2025 19:35:38 +0000
-Subject: [PATCH 7/7] Remove prototype device alert
+Subject: [PATCH 7/8] Remove prototype device alert
 
 ---
  .../server/am/ActivityManagerService.java     | 23 -------------------
