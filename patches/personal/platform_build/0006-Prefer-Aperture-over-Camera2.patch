@@ -8,17 +8,18 @@ Subject: [PATCH 6/6] Prefer Aperture over Camera2
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/target/product/handheld_product.mk b/target/product/handheld_product.mk
-index b2ce4c5..3864555 100644
+index b6c7a90..2816555 100644
 --- a/target/product/handheld_product.mk
 +++ b/target/product/handheld_product.mk
-@@ -35,7 +35,7 @@ PRODUCT_PACKAGES += \
+@@ -22,8 +22,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/media_product.mk)
  
- ifeq ($(LINEAGE_BUILD),)
+ # /product packages
  PRODUCT_PACKAGES += \
--    Camera2 \
 +    Aperture \
-     LatinIME
- endif
- 
--- 
+     Calendar \
+-    Camera2 \
+     Contacts \
+     DeskClock \
+     Gallery2 \
+--
 2.34.1
