@@ -1,7 +1,7 @@
 From cdd975b0bddd4b0babe933b68df45954d887b0d6 Mon Sep 17 00:00:00 2001
 From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
 Date: Mon, 20 Nov 2023 21:59:29 +0800
-Subject: [PATCH] Revert "gd: hci: Allow disabling selected local commands"
+Subject: [PATCH 1/1] Revert "gd: hci: Allow disabling selected local commands"
 
 This reverts commit 543afb3dd2e2b5aa4f1931a973eb7c7df634aa69.
 ---
