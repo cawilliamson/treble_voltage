@@ -17,7 +17,7 @@
   <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" clone-depth="1" />
 
   <!-- grapheneos: app store -->
-  <project path="external/Apps" name="platform_external_AppStore" remote="grapheneos" revision="15" clone-depth="1" />
+  <project path="external/Apps" name="platform_external_AppStore" remote="grapheneos" revision="15-qpr2" clone-depth="1" />
 
   <!-- lineageos4microg: microg -->
   <project path="vendor/partner_gms" name="android_vendor_partner_gms" remote="lineageos4microg" revision="master" clone-depth="1" />
