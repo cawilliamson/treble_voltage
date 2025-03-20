@@ -5,14 +5,14 @@ Subject: [PATCH 13/13] Rework securize tweak
 
 ---
  base.mk      |  1 -
- rw-system.sh | 49 ++++++++++++++++++++++++++++++-------------------
- 2 files changed, 30 insertions(+), 20 deletions(-)
+ rw-system.sh | 52 ++++++++++++++++++++++++++++++----------------------
+ 2 files changed, 30 insertions(+), 23 deletions(-)
 
 diff --git a/base.mk b/base.mk
-index 22525cd..8c0f2be 100644
+index 8e47774..e67a1f4 100644
 --- a/base.mk
 +++ b/base.mk
-@@ -177,7 +177,6 @@ PRODUCT_PACKAGES += \
+@@ -171,7 +171,6 @@ PRODUCT_PACKAGES += \
  	resetprop_phh
  
  PRODUCT_COPY_FILES += \
@@ -21,10 +21,10 @@ index 22525cd..8c0f2be 100644
  
  PRODUCT_COPY_FILES += \
 diff --git a/rw-system.sh b/rw-system.sh
-index 1e47287..d591190 100644
+index 1be5340..869818a 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
-@@ -768,32 +768,59 @@ copyprop() {
+@@ -779,35 +779,59 @@ copyprop() {
          resetprop_phh "$1" "$(getprop "$2")"
      fi
  }
@@ -81,13 +81,16 @@ index 1e47287..d591190 100644
 +    copyprop ro.product.system_ext.manufacturer ro.vendor.product.manufacturer
      copyprop ro.system.product.manufacturer ro.product.vendor.manufacturer
      copyprop ro.product.manufacturer ro.product.vendor.manufacturer
+-    (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
+-        [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
+-    done
 +    copyprop ro.product.system.manufacturer ro.product.vendor.manufacturer
 +    copyprop ro.product.product.manufacturer ro.product.vendor.manufacturer
 +    copyprop ro.product.system_ext.manufacturer ro.product.vendor.manufacturer
-     (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
-         [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
-     done
-@@ -812,22 +839,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
+
+     resetprop_phh ro.build.user nobody
+     resetprop_phh ro.build.host android-build
+@@ -833,22 +857,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
  
      resetprop_phh ro.adb.secure 1
  
@@ -110,5 +113,5 @@ index 1e47287..d591190 100644
  for abi in "" 64;do
      f=/vendor/lib$abi/libstagefright_foundation.so
      if [ -f "$f" ];then
--- 
+--
 2.34.1
