@@ -9,7 +9,7 @@ This reverts commit 543afb3dd2e2b5aa4f1931a973eb7c7df634aa69.
  1 file changed, 12 deletions(-)
 
 diff --git a/system/gd/hci/controller.cc b/system/gd/hci/controller.cc
-index cd9ef66..7662c36 100644
+index 458a4e6..5dff571 100644
 --- a/system/gd/hci/controller.cc
 +++ b/system/gd/hci/controller.cc
 @@ -16,7 +16,6 @@
@@ -20,19 +20,19 @@ index cd9ef66..7662c36 100644
  #include <bluetooth/log.h>
  #include <com_android_bluetooth_flags.h>
  
-@@ -45,8 +44,6 @@ constexpr uint8_t kMinEncryptionKeySize = 7;  // #define MIN_ENCRYPTION_KEY_SIZE
+@@ -48,8 +47,6 @@ constexpr uint8_t kMinEncryptionKeySize = 7;  // #define MIN_ENCRYPTION_KEY_SIZE
  constexpr bool kDefaultVendorCapabilitiesEnabled = true;
  static const std::string kPropertyVendorCapabilitiesEnabled =
-         "bluetooth.core.le.vendor_capabilities.enabled";
+     "bluetooth.core.le.vendor_capabilities.enabled";
 -static const char kPropertyDisabledCommands[] =
--        "bluetooth.hci.disabled_commands";
+-    "bluetooth.hci.disabled_commands";
  
  constexpr bool kDefaultErroneousDataReportingEnabled = true;
  static const std::string kPropertyErroneousDataReportingEnabled =
-@@ -361,15 +358,6 @@ struct Controller::impl {
-     ErrorCode status = complete_view.GetStatus();
-     log::assert_that(status == ErrorCode::SUCCESS, "Status {}", ErrorCodeText(status));
-     local_supported_commands_ = complete_view.GetSupportedCommands();
+@@ -380,15 +377,6 @@ struct Controller::impl {
+     }
+ 
+     local_supported_commands_ = local_commands;
 -
 -    if (auto disabledCommands = os::GetSystemProperty(kPropertyDisabledCommands)) {
 -      for (const auto& command : android::base::Split(*disabledCommands, ",")) {
@@ -45,5 +45,5 @@ index cd9ef66..7662c36 100644
    }
  
    void read_local_extended_features_complete_handler(std::promise<void> promise,
--- 
+--
 2.34.1
