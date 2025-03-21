@@ -5,8 +5,8 @@ Subject: [PATCH 13/13] Rework securize tweak
 
 ---
  base.mk      |  1 -
- rw-system.sh | 52 ++++++++++++++++++++++++++++++----------------------
- 2 files changed, 30 insertions(+), 23 deletions(-)
+ rw-system.sh | 54 ++++++++++++++++++++++++++++++++--------------------
+ 2 files changed, 33 insertions(+), 22 deletions(-)
 
 diff --git a/base.mk b/base.mk
 index 8e47774..e67a1f4 100644
@@ -21,14 +21,17 @@ index 8e47774..e67a1f4 100644
  
  PRODUCT_COPY_FILES += \
 diff --git a/rw-system.sh b/rw-system.sh
-index 1be5340..869818a 100644
+index 1be5340..004febd 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
-@@ -779,35 +779,59 @@ copyprop() {
+@@ -779,35 +779,62 @@ copyprop() {
          resetprop_phh "$1" "$(getprop "$2")"
      fi
  }
 -if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
++
++# Do not spoof props if full gapps build - breaks ROM spoofing
++if [ ! -f /system/priv-app/Velvet.apk ]; then
      copyprop ro.build.device ro.vendor.build.device
      copyprop ro.system.build.fingerprint ro.vendor.build.fingerprint
      copyprop ro.bootimage.build.fingerprint ro.vendor.build.fingerprint
@@ -87,13 +90,14 @@ index 1be5340..869818a 100644
 +    copyprop ro.product.system.manufacturer ro.product.vendor.manufacturer
 +    copyprop ro.product.product.manufacturer ro.product.vendor.manufacturer
 +    copyprop ro.product.system_ext.manufacturer ro.product.vendor.manufacturer
-
+ 
      resetprop_phh ro.build.user nobody
      resetprop_phh ro.build.host android-build
-@@ -833,22 +857,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
+@@ -832,21 +859,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
+     resetprop_phh --delete ro.build.selinux
  
      resetprop_phh ro.adb.secure 1
- 
+-
 -    # Hide system/xbin/su
 -    mount /mnt/phh/empty_dir /system/xbin
 -    mount /mnt/phh/empty_dir /system/app/me.phh.superuser
@@ -108,10 +112,8 @@ index 1be5340..869818a 100644
 -    chcon u:object_r:system_file:s0 /mnt/phh/xbin/su
 -
 -    mount -o bind /mnt/phh/xbin /system/xbin
--fi
--
+ fi
+ 
  for abi in "" 64;do
-     f=/vendor/lib$abi/libstagefright_foundation.so
-     if [ -f "$f" ];then
 --
 2.34.1
