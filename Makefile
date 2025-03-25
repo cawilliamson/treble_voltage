@@ -207,7 +207,6 @@ build-treble-app: build-container create-folders
 		/bin/bash -e -c ' \
 			pushd /repo/src/treble_app/ && \
 				bash build.sh release && \
-				cp -v TrebleApp.apk ../vendor/hardware_overlay/TrebleApp/app.apk && \
 			popd'
 
 # Step 8: Helper function to build a specific GSI variant - Core function that builds each ROM variant
