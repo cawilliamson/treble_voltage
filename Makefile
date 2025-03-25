@@ -45,7 +45,13 @@ MAX_MEM_PERCENT ?= 100
 CONTAINER_RUNTIME ?= podman
 
 # System variables
-BUILD_NUMBER := $(BUILD_DATE).$(BUILD_TIME)
+# Store BUILD_NUMBER in a file to ensure consistency across make invocations
+BUILD_NUMBER_FILE := tmp/.build_number
+$(shell mkdir -p tmp)
+ifeq ($(wildcard $(BUILD_NUMBER_FILE)),)
+    $(shell echo "$(BUILD_DATE).$(BUILD_TIME)" > $(BUILD_NUMBER_FILE))
+endif
+BUILD_NUMBER := $(shell cat $(BUILD_NUMBER_FILE))
 CPU_LIMIT := $(shell echo $$(( $(shell nproc --all) * $(MAX_CPU_PERCENT) / 100 )))
 MEM_LIMIT := $(shell echo "$$(( $(shell free -m | awk '/^Mem:/{print $$2}') * $(MAX_MEM_PERCENT) / 100 ))m")
 
@@ -57,6 +63,7 @@ CONTAINER_RUN = $(CONTAINER_RUNTIME) run --rm --privileged \
 	-v "$(PWD):/repo:Z" \
 	-e BUILD_DATE="$(BUILD_DATE)" \
 	-e BUILD_NUMBER="$(BUILD_NUMBER)" \
+	-e BUILD_NUMBER_FILE="$(BUILD_NUMBER_FILE)" \
 	-e APPLY_DEBUG_PATCHES="$(APPLY_DEBUG_PATCHES)"
 
 #######################
@@ -245,11 +252,12 @@ rename-images: build-container create-folders
 			variants=("vanilla" "microg" "gapps"); \
 			archs=("arm64" "a64"); \
 			arch_names=("arm64" "arm32_binder64"); \
+			BUILD_NUMBER_VAL=$$(cat /repo/$$BUILD_NUMBER_FILE); \
 			for i in $${!variants[@]}; do \
 				for j in $${!archs[@]}; do \
 					src="system_$${variants[i]}_$${archs[j]}.img"; \
 					if [ -f "$$src" ]; then \
-						dest="VoltageOS-$${variants[i]}-$${arch_names[j]}-ab-$(ROM_VERSION)-$$BUILD_NUMBER-UNOFFICIAL.img"; \
+						dest="VoltageOS-$${variants[i]}-$${arch_names[j]}-ab-$(ROM_VERSION)-$$BUILD_NUMBER_VAL-UNOFFICIAL.img"; \
 						mv -v "$$src" "$$dest"; \
 					fi; \
 				done; \
@@ -277,6 +285,7 @@ upload-to-github: create-folders
 		git init && \
 		git remote add origin "https://github.com/cawilliamson/treble_voltage.git" && \
 		gh repo set-default "cawilliamson/treble_voltage" && \
-		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-$(BUILD_NUMBER)" "$(ROM_VERSION)-$(BUILD_NUMBER)" && \
-		gh release upload "$(ROM_VERSION)-$(BUILD_NUMBER)" --clobber -- *.img.xz && \
+		BUILD_NUMBER_VAL=$$(cat $(PWD)/$(BUILD_NUMBER_FILE)) && \
+		gh release create -d -n "" -t "VoltageOS $(ROM_VERSION)-$$BUILD_NUMBER_VAL" "$(ROM_VERSION)-$$BUILD_NUMBER_VAL" && \
+		gh release upload "$(ROM_VERSION)-$$BUILD_NUMBER_VAL" --clobber -- *.img.xz && \
 		rm -rf .git/
