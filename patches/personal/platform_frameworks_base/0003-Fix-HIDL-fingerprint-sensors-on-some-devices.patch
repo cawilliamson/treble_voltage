@@ -1,0 +1,56 @@
+From e0299a9b696756c8d9dd447d1222de365a7fb728 Mon Sep 17 00:00:00 2001
+From: TBM13 <mateotrueba@gmail.com>
+Date: Tue, 25 Mar 2025 22:27:30 -0300
+Subject: [PATCH 3/11] Fix HIDL fingerprint sensors on some devices
+
+Fixes the fingerprint sensor on some devices like the Galaxy A20s
+---
+ .../server/biometrics/AuthService.java        | 25 +++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
+index 7383afb19..57c04f7d2 100644
+--- a/services/core/java/com/android/server/biometrics/AuthService.java
++++ b/services/core/java/com/android/server/biometrics/AuthService.java
+@@ -1103,16 +1103,37 @@ public class AuthService extends SystemService {
+     /**
+      * This method is invoked on {@link BiometricHandlerProvider.mFingerprintHandler}.
+      */
+-    private static void registerFingerprintSensors(final String[] fingerprintAidlInstances,
+-            final String[] hidlConfigStrings, final Context context,
++    private static void registerFingerprintSensors(String[] fingerprintAidlInstances,
++            String[] hidlConfigStrings, final Context context,
+             final IFingerprintService fingerprintService,
+             final BiometricHandlerProvider handlerProvider) {
++
++        if (hidlConfigStrings == null || hidlConfigStrings.length == 0) {
++            if (!mInjector.isHidlDisabled(getContext())) {
++                // For backwards compatibility with R where biometrics could work without being
++                // configured in config_biometric_sensors. In the absence of a vendor provided
++                // configuration, we assume the weakest biometric strength (i.e. convenience).
++                Slog.w(TAG, "Found vendor partition without config_biometric_sensors");
++                hidlConfigStrings = generateRSdkCompatibleConfiguration();
++            }
++        }
++
+         if ((hidlConfigStrings == null || hidlConfigStrings.length == 0)
+                 && (fingerprintAidlInstances == null || fingerprintAidlInstances.length == 0)) {
+             Slog.d(TAG, "No fingerprint sensors.");
+             return;
+         }
+ 
++        if (!SystemProperties.getBoolean("persist.sys.phh.virtual_sensors_are_real", false)) {
++            if (hidlConfigStrings != null && hidlConfigStrings.length > 0
++                    && fingerprintAidlInstances != null && fingerprintAidlInstances.length == 1
++                    && fingerprintAidlInstances[0].contains("virtual")) {
++
++                Slog.w(TAG, "Preferring HIDL fingerprint sensor over virtual AIDL sensor");
++                fingerprintAidlInstances = null;
++            }
++        }
++
+         handlerProvider.getFingerprintHandler().post(() -> {
+             final FingerprintSensorConfigurations mFingerprintSensorConfigurations =
+                     new FingerprintSensorConfigurations(fingerprintAidlInstances != null
+-- 
+2.48.1.windows.1
