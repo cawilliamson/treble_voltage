@@ -1,7 +1,7 @@
 From e0299a9b696756c8d9dd447d1222de365a7fb728 Mon Sep 17 00:00:00 2001
 From: TBM13 <mateotrueba@gmail.com>
 Date: Tue, 25 Mar 2025 22:27:30 -0300
-Subject: [PATCH 3/11] Fix HIDL fingerprint sensors on some devices
+Subject: [PATCH 10/11] Fix HIDL fingerprint sensors on some devices
 
 Fixes the fingerprint sensor on some devices like the Galaxy A20s
 ---

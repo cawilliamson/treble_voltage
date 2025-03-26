@@ -1,7 +1,7 @@
 From add187c9a66b37ca94ad903eb4cb5471d096fa8f Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Sun, 27 Oct 2024 20:32:36 +0100
-Subject: [PATCH 6/11] feat: add a setting to force a specific number of SIM
+Subject: [PATCH 5/11] feat: add a setting to force a specific number of SIM
  slots
 
 Some device models seemingly report a wrong number of SIM slots.
