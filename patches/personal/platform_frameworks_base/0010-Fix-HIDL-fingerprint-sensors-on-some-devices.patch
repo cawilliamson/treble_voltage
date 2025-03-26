@@ -5,20 +5,29 @@ Subject: [PATCH 10/11] Fix HIDL fingerprint sensors on some devices
 
 Fixes the fingerprint sensor on some devices like the Galaxy A20s
 ---
- .../server/biometrics/AuthService.java        | 25 +++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ .../server/biometrics/AuthService.java        | 27 ++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
 diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
-index 7383afb19..57c04f7d2 100644
+index c9b1569a6..73d83083f 100644
 --- a/services/core/java/com/android/server/biometrics/AuthService.java
 +++ b/services/core/java/com/android/server/biometrics/AuthService.java
-@@ -1103,16 +1103,37 @@ public class AuthService extends SystemService {
+@@ -1051,7 +1051,7 @@ public class AuthService extends SystemService {
+     /**
+      * This method is invoked on {@link BiometricHandlerProvider.mFaceHandler}.
+      */
+-    private static void registerFaceSensors(final String[] faceAidlInstances,
++    private void registerFaceSensors(final String[] faceAidlInstances,
+             final String[] hidlConfigStrings, final Context context,
+             final IFaceService faceService, final BiometricHandlerProvider handlerProvider) {
+         if ((hidlConfigStrings == null || hidlConfigStrings.length == 0)
+@@ -1107,16 +1107,37 @@ public class AuthService extends SystemService {
      /**
       * This method is invoked on {@link BiometricHandlerProvider.mFingerprintHandler}.
       */
 -    private static void registerFingerprintSensors(final String[] fingerprintAidlInstances,
 -            final String[] hidlConfigStrings, final Context context,
-+    private static void registerFingerprintSensors(String[] fingerprintAidlInstances,
++    private void registerFingerprintSensors(String[] fingerprintAidlInstances,
 +            String[] hidlConfigStrings, final Context context,
              final IFingerprintService fingerprintService,
              final BiometricHandlerProvider handlerProvider) {
@@ -52,5 +61,5 @@ index 7383afb19..57c04f7d2 100644
          handlerProvider.getFingerprintHandler().post(() -> {
              final FingerprintSensorConfigurations mFingerprintSensorConfigurations =
                      new FingerprintSensorConfigurations(fingerprintAidlInstances != null
--- 
+--
 2.48.1.windows.1
