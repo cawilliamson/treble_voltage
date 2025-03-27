@@ -98,6 +98,7 @@ build-container:
 # Create necessary directories for the build process
 create-folders:
 	mkdir -p out/ src/ tmp/
+	rm -rf tmp/*
 
 # Convenience targets for building all variants of a specific type
 define build_type_target
