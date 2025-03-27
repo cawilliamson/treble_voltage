@@ -5,11 +5,11 @@ Subject: [PATCH 10/11] Fix HIDL fingerprint sensors on some devices
 
 Fixes the fingerprint sensor on some devices like the Galaxy A20s
 ---
- .../server/biometrics/AuthService.java        | 31 +++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
+ .../server/biometrics/AuthService.java        | 32 +++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
 diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
-index c9b1569a6..e205ebe44 100644
+index c9b1569a6..d21fe942f 100644
 --- a/services/core/java/com/android/server/biometrics/AuthService.java
 +++ b/services/core/java/com/android/server/biometrics/AuthService.java
 @@ -992,8 +992,24 @@ public class AuthService extends SystemService {
@@ -38,7 +38,7 @@ index c9b1569a6..e205ebe44 100644
                  mInjector.getFingerprintService(), handlerProvider);
          registerFaceSensors(mInjector.getFaceAidlInstances(),
                  mInjector.getFaceConfiguration(getContext()), getContext(),
-@@ -1117,12 +1133,23 @@ public class AuthService extends SystemService {
+@@ -1117,12 +1133,24 @@ public class AuthService extends SystemService {
              return;
          }
  
@@ -52,6 +52,7 @@ index c9b1569a6..e205ebe44 100644
 +                preferHidlSensor = true;
 +            }
 +        }
++        final boolean preferHidlSensorFinal = preferHidlSensor;
 +
          handlerProvider.getFingerprintHandler().post(() -> {
              final FingerprintSensorConfigurations mFingerprintSensorConfigurations =
@@ -59,7 +60,7 @@ index c9b1569a6..e205ebe44 100644
                              && fingerprintAidlInstances.length > 0);
  
 -            if (fingerprintAidlInstances != null && fingerprintAidlInstances.length > 0) {
-+            if (fingerprintAidlInstances != null && fingerprintAidlInstances.length > 0 && !preferHidlSensor) {
++            if (fingerprintAidlInstances != null && fingerprintAidlInstances.length > 0 && !preferHidlSensorFinal) {
                  mFingerprintSensorConfigurations.addAidlSensors(fingerprintAidlInstances);
              } else if (hidlConfigStrings != null && hidlConfigStrings.length > 0) {
                  mFingerprintSensorConfigurations.addHidlSensors(hidlConfigStrings, context);
