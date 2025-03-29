@@ -24,7 +24,7 @@ index c9b1569a6..a21f1f768 100644
 +            Slog.w(TAG, "Found vendor partition without config_biometric_sensors");
 +            hidlConfigStrings = generateRSdkCompatibleConfiguration();
 +        }
-+        Slog.i("PHH", "config_biometric_sensors for fingerprint " + hidlConfigStrings);
++        Slog.i("PHH", "config_biometric_sensors for fingerprint " + Arrays.toString(hidlConfigStrings));
 +
          registerFingerprintSensors(mInjector.getFingerprintAidlInstances(),
 -                mInjector.getFingerprintConfiguration(getContext()), getContext(),
