@@ -1,0 +1,38 @@
+From 0fd5422d12482dfa2a21a59d5f45a8dfb745ce12 Mon Sep 17 00:00:00 2001
+From: mytja <mitja@severkar.eu>
+Date: Sun, 30 Mar 2025 19:41:14 +0200
+Subject: [PATCH 2/2] fix: additional NetBpfLoad error ignores
+
+Change-Id: I9f2cef66621988bd9a0aba769b5058ff8abe0616
+---
+ bpf/loader/NetBpfLoad.cpp | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/bpf/loader/NetBpfLoad.cpp b/bpf/loader/NetBpfLoad.cpp
+index a3c7fda..2aa11fc 100644
+--- a/bpf/loader/NetBpfLoad.cpp
++++ b/bpf/loader/NetBpfLoad.cpp
+@@ -1607,7 +1607,9 @@ static int doLoad(char** argv, char * const envp[]) {
+     //  which could otherwise fail with ENOENT during object pinning or renaming,
+     //  due to ordering issues)
+     for (const auto& location : locations) {
+-        if (createSysFsBpfSubDir(location.prefix)) return 1;
++        if (createSysFsBpfSubDir(location.prefix)) {
++            failed = true;
++        }
+     }
+ 
+     // Note: there's no actual src dir for fs_bpf_loader .o's,
+@@ -1615,7 +1617,9 @@ static int doLoad(char** argv, char * const envp[]) {
+     // This is because this is primarily meant for triggering genfscon rules,
+     // and as such this will likely always be the case.
+     // Thus we need to manually create the /sys/fs/bpf/loader subdirectory.
+-    if (createSysFsBpfSubDir("loader")) return 1;
++    if (createSysFsBpfSubDir("loader")) {
++        failed = true;
++    }
+ 
+     // Load all ELF objects, create programs and maps, and pin them
+     for (const auto& location : locations) {
+-- 
+2.34.1

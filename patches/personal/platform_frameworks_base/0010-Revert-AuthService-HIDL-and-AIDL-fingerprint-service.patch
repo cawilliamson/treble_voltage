@@ -1,0 +1,37 @@
+From 8f60e7ce4249131483db3e31c71e91a7a060cdde Mon Sep 17 00:00:00 2001
+From: mytja <mitja@severkar.eu>
+Date: Sun, 22 Dec 2024 22:37:50 +0100
+Subject: [PATCH 10/11] Revert "AuthService: HIDL and AIDL fingerprint services
+ are mutually exclusive"
+
+Restores the HIDL FP sensor. I presume the virtual AIDL causes the HIDL not to register.
+---
+ .../com/android/server/biometrics/AuthService.java     | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
+index 893475455..2fbe8c19d 100644
+--- a/services/core/java/com/android/server/biometrics/AuthService.java
++++ b/services/core/java/com/android/server/biometrics/AuthService.java
+@@ -1133,13 +1133,15 @@ public class AuthService extends SystemService {
+ 
+         handlerProvider.getFingerprintHandler().post(() -> {
+             final FingerprintSensorConfigurations mFingerprintSensorConfigurations =
+-                    new FingerprintSensorConfigurations(fingerprintAidlInstances != null
+-                            && fingerprintAidlInstances.length > 0);
++                    new FingerprintSensorConfigurations(!(hidlConfigStrings != null
++                            && hidlConfigStrings.length > 0));
++
++            if (hidlConfigStrings != null && hidlConfigStrings.length > 0) {
++                mFingerprintSensorConfigurations.addHidlSensors(hidlConfigStrings, context);
++            }
+ 
+             if (fingerprintAidlInstances != null && fingerprintAidlInstances.length > 0) {
+                 mFingerprintSensorConfigurations.addAidlSensors(fingerprintAidlInstances);
+-            } else if (hidlConfigStrings != null && hidlConfigStrings.length > 0) {
+-                mFingerprintSensorConfigurations.addHidlSensors(hidlConfigStrings, context);
+             }
+ 
+             if (fingerprintService != null) {
+-- 
+2.34.1
