@@ -214,8 +214,6 @@ This reverts commit c8e77687288263848d9a92936c0138fefe0fdb8d.
 
 diff --git a/base.mk b/base.mk
 index 94f2bc6..c194b9c 100644
-diff --git a/base.mk b/base.mk
-index 94f2bc6..c194b9c 100644
 --- a/base.mk
 +++ b/base.mk
 @@ -50,10 +50,6 @@ PRODUCT_COPY_FILES += \
