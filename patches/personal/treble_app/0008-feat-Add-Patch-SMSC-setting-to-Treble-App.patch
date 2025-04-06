@@ -14,10 +14,10 @@ Change-Id: I5595648430907090e7a6784a56898a60fd21998f
  3 files changed, 10 insertions(+)
 
 diff --git a/app/src/main/java/me/phh/treble/app/Misc.kt b/app/src/main/java/me/phh/treble/app/Misc.kt
-index 7c0c1c9..9183f32 100644
+index 49c6e76..2a74e6d 100644
 --- a/app/src/main/java/me/phh/treble/app/Misc.kt
 +++ b/app/src/main/java/me/phh/treble/app/Misc.kt
-@@ -242,6 +242,10 @@ object Misc: EntryStartup {
+@@ -244,6 +244,10 @@ object Misc: EntryStartup {
                  val value = sp.getBoolean(key, false)
                  SystemProperties.set("persist.sys.phh.restart_ril", if (value) "true" else "false")
              }
@@ -29,7 +29,7 @@ index 7c0c1c9..9183f32 100644
                  val value = sp.getBoolean(key, false)
                  SystemProperties.set("persist.sys.overlay.minimal_brightness", if (value) "true" else "false")
 diff --git a/app/src/main/java/me/phh/treble/app/MiscSettings.kt b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-index e80012a..2a434ea 100644
+index bd799e1..7f973c5 100644
 --- a/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 +++ b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 @@ -34,6 +34,7 @@ object MiscSettings : Settings {
@@ -41,10 +41,10 @@ index e80012a..2a434ea 100644
      val aod = "key_misc_aod"
      val dt2w = "key_misc_dt2w"
 diff --git a/app/src/main/res/xml/pref_misc.xml b/app/src/main/res/xml/pref_misc.xml
-index a8221a7..4d56605 100644
+index 059345e..9cd6c0e 100644
 --- a/app/src/main/res/xml/pref_misc.xml
 +++ b/app/src/main/res/xml/pref_misc.xml
-@@ -179,6 +179,11 @@
+@@ -216,6 +216,11 @@
              android:defaultValue="false"
              android:key="key_misc_restart_ril"
              android:title="Automatically restart RIL" />
@@ -55,5 +55,6 @@ index a8221a7..4d56605 100644
 +            android:summary="If you can't send messages, primarily on Samsung devices, turn off SMSC patching" />
          <Preference android:title="@string/remove_telephony_subsystem"
              android:key="key_misc_removetelephony" />
-     </PreferenceCategory>
+         <ListPreference
 --
+2.47.2
