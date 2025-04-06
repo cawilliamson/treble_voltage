@@ -5,31 +5,30 @@ Subject: [PATCH 13/13] Rework securize tweak
 
 ---
  base.mk      |  1 -
- rw-system.sh | 51 +++++++++++++++++++++++++++++++++------------------
- 2 files changed, 33 insertions(+), 19 deletions(-)
+ rw-system.sh | 50 ++++++++++++++++++++++++++++++++------------------
+ 2 files changed, 32 insertions(+), 19 deletions(-)
 
 diff --git a/base.mk b/base.mk
-index 8e47774..e67a1f4 100644
+index bbf2ef0..47b45f6 100644
 --- a/base.mk
 +++ b/base.mk
-@@ -171,7 +171,6 @@ PRODUCT_PACKAGES += \
- 	resetprop_phh
+@@ -163,7 +163,6 @@ PRODUCT_PACKAGES += \
+     resetprop_phh
  
  PRODUCT_COPY_FILES += \
--	device/phh/treble/phh-securize.sh:system/bin/phh-securize.sh \
- 	device/phh/treble/files/ota.sh:system/bin/ota.sh \
+-    device/phh/treble/phh-securize.sh:system/bin/phh-securize.sh \
+     device/phh/treble/files/ota.sh:system/bin/ota.sh \
  
  PRODUCT_COPY_FILES += \
 diff --git a/rw-system.sh b/rw-system.sh
-index 28c4272..770be4d 100644
+index 055c2cd..6b7a45c 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
-@@ -784,32 +784,62 @@ copyprop() {
+@@ -785,32 +785,61 @@ copyprop() {
          resetprop_phh "$1" "$(getprop "$2")"
      fi
  }
 -if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
-+
 +# Do not spoof props if full gapps build - breaks ROM spoofing
 +if [ ! -f /system/priv-app/Velvet.apk ]; then
      copyprop ro.build.device ro.vendor.build.device
@@ -90,7 +89,7 @@ index 28c4272..770be4d 100644
      (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
          [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
      done
-@@ -837,21 +867,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
+@@ -838,21 +867,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
      resetprop_phh --delete ro.build.selinux
  
      resetprop_phh ro.adb.secure 1
@@ -98,7 +97,7 @@ index 28c4272..770be4d 100644
 -    # Hide system/xbin/su
 -    mount /mnt/phh/empty_dir /system/xbin
 -    mount /mnt/phh/empty_dir /system/app/me.phh.superuser
--    mount /system/phh/empty /system/xbin/phh-su
+-    mount /mnt/phh/empty /system/xbin/phh-su
 -else
 -    mkdir /mnt/phh/xbin
 -    chmod 0755 /mnt/phh/xbin
