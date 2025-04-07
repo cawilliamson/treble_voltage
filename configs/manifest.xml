@@ -38,7 +38,7 @@
   <project path="vendor/vndk-tests" name="vendor_vndk-tests" remote="phhusson" revision="master" clone-depth="1" />
 
   <!-- trebledroid: device -->
-  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="ab5b72cf7d67e10e3d8d384a54d197a8b09402e1" clone-depth="1" />
+  <project path="device/phh/treble" name="device_phh_treble" remote="trebledroid" revision="android-15.0" clone-depth="1" />
 
   <!-- trebledroid: hardware overlay -->
   <project path="vendor/hardware_overlay" name="vendor_hardware_overlay" remote="trebledroid" revision="pie" clone-depth="1" />
