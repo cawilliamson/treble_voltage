@@ -1,12 +1,12 @@
 From 1423a40a59b5d849e6161a3e7cdf0de003dcbad9 Mon Sep 17 00:00:00 2001
 From: Alberto Ponces <ponces26@gmail.com>
 Date: Wed, 25 Dec 2019 12:34:05 +0200
-Subject: [PATCH 11/11] Rework securize tweak
+Subject: [PATCH 12/12] Rework securize tweak
 
 ---
  base.mk      |  1 -
- rw-system.sh | 50 ++++++++++++++++++++++++++++++++------------------
- 2 files changed, 32 insertions(+), 19 deletions(-)
+ rw-system.sh | 53 +++++++++++++++++++++++++++++++---------------------
+ 2 files changed, 32 insertions(+), 22 deletions(-)
 
 diff --git a/base.mk b/base.mk
 index bbf2ef0..47b45f6 100644
@@ -21,10 +21,10 @@ index bbf2ef0..47b45f6 100644
  
  PRODUCT_COPY_FILES += \
 diff --git a/rw-system.sh b/rw-system.sh
-index 055c2cd..6b7a45c 100644
+index 055c2cd..c677858 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
-@@ -785,32 +785,61 @@ copyprop() {
+@@ -785,35 +785,61 @@ copyprop() {
          resetprop_phh "$1" "$(getprop "$2")"
      fi
  }
@@ -83,13 +83,16 @@ index 055c2cd..6b7a45c 100644
 +    copyprop ro.product.system_ext.manufacturer ro.vendor.product.manufacturer
      copyprop ro.system.product.manufacturer ro.product.vendor.manufacturer
      copyprop ro.product.manufacturer ro.product.vendor.manufacturer
+-    (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
+-        [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
+-    done
 +    copyprop ro.product.system.manufacturer ro.product.vendor.manufacturer
 +    copyprop ro.product.product.manufacturer ro.product.vendor.manufacturer
 +    copyprop ro.product.system_ext.manufacturer ro.product.vendor.manufacturer
-     (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
-         [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
-     done
-@@ -838,21 +867,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
+ 
+     resetprop_phh ro.build.user nobody
+     resetprop_phh ro.build.host android-build
+@@ -838,21 +864,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
      resetprop_phh --delete ro.build.selinux
  
      resetprop_phh ro.adb.secure 1
