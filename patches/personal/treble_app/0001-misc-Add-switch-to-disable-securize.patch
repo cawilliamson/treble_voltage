@@ -1,0 +1,45 @@
+From bc4925f6bf3100e7ae3a39b70ef91c4d2355715e Mon Sep 17 00:00:00 2001
+From: Christopher A. Williamson <contact@chrisaw.io>
+Date: Thu, 10 Apr 2025 22:48:35 +0100
+Subject: [PATCH 1/8] feat: Add switch to disable securize
+
+---
+ app/src/main/java/me/phh/treble/app/Misc.kt | 4 ++++
+ app/src/main/res/xml/pref_misc.xml          | 7 +++++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/app/src/main/java/me/phh/treble/app/Misc.kt b/app/src/main/java/me/phh/treble/app/Misc.kt
+index 7c0c1c9..b2fcde5 100644
+--- a/app/src/main/java/me/phh/treble/app/Misc.kt
++++ b/app/src/main/java/me/phh/treble/app/Misc.kt
+@@ -336,6 +336,10 @@ object Misc: EntryStartup {
+                 val value = sp.getString(key, "0")
+                 SystemProperties.set("persist.sys.bt.esco_transport_unit_size", value)
+             }
++            MiscSettings.securize -> {
++                val value = sp.getBoolean(key, false)
++                SystemProperties.set("persist.sys.phh.securize", if (value) "1" else "0")
++            }
+             MiscSettings.secureAdb -> {
+                 val value = sp.getBoolean(key, false)
+                 SystemProperties.set("persist.sys.phh.adb_secure", if (value) "1" else "0")
+diff --git a/app/src/main/res/xml/pref_misc.xml b/app/src/main/res/xml/pref_misc.xml
+index a8221a7..70280bc 100644
+--- a/app/src/main/res/xml/pref_misc.xml
++++ b/app/src/main/res/xml/pref_misc.xml
+@@ -203,8 +203,11 @@
+             android:entryValues="@array/pref_misc_fod_color_values"
+             android:key="key_misc_fod_color"
+             android:title="Under-display fp color" />
+-        <Preference android:title="Securize"
+-            android:key="key_misc_securize" />
++        <SwitchPreference
++            android:defaultValue="true"
++            android:key="key_misc_securize"
++            android:title="Enable Securize"
++            android:summary="May fix Play Services being uncertified on some devices" />
+         <SwitchPreference
+             android:defaultValue="false"
+             android:key="key_misc_secure_adb"
+-- 
+2.47.2
