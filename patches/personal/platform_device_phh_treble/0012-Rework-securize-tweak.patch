@@ -30,7 +30,7 @@ index 055c2cd..3e20dba 100644
  }
 -if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
 +# Do not spoof props if full gapps build - breaks ROM spoofing
-+if [[ ! -f /system/priv-app/Velvet.apk && "$(getprop persist.sys.phh.securize)" == "1" ]]; then
++if [[ ! -f /system/priv-app/Velvet.apk && "$(getprop persist.sys.phh.securize)" != "0" ]]; then
      copyprop ro.build.device ro.vendor.build.device
      copyprop ro.system.build.fingerprint ro.vendor.build.fingerprint
      copyprop ro.bootimage.build.fingerprint ro.vendor.build.fingerprint
