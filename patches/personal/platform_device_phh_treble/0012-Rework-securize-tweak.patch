@@ -32,7 +32,7 @@ index 055c2cd..fe6ab87 100644
 +# Do not spoof props if full gapps build - breaks ROM spoofing
 +if [[ ! -f /system/priv-app/Velvet.apk && "$(getprop persist.sys.phh.securize)" != "0" ]]; then
 +    # debug
-+    touch /tmp/securize_run
++    getprop > /tmp/securize_run
 +
      copyprop ro.build.device ro.vendor.build.device
      copyprop ro.system.build.fingerprint ro.vendor.build.fingerprint
