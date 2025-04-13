@@ -4,9 +4,9 @@ Date: Wed, 25 Dec 2019 12:34:05 +0200
 Subject: [PATCH 12/12] Rework securize tweak
 
 ---
- base.mk      |  1 -
- rw-system.sh | 53 +++++++++++++++++++++++++++++++---------------------
- 2 files changed, 32 insertions(+), 22 deletions(-)
+ base.mk      |   1 -
+ rw-system.sh | 106 +++++++++++++++++++++++++++++----------------------
+ 2 files changed, 60 insertions(+), 47 deletions(-)
 
 diff --git a/base.mk b/base.mk
 index bbf2ef0..47b45f6 100644
@@ -21,16 +21,19 @@ index bbf2ef0..47b45f6 100644
  
  PRODUCT_COPY_FILES += \
 diff --git a/rw-system.sh b/rw-system.sh
-index 055c2cd..3e20dba 100644
+index 055c2cd..fe6ab87 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
-@@ -785,35 +785,61 @@ copyprop() {
+@@ -785,75 +785,89 @@ copyprop() {
          resetprop_phh "$1" "$(getprop "$2")"
      fi
  }
 -if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
 +# Do not spoof props if full gapps build - breaks ROM spoofing
 +if [[ ! -f /system/priv-app/Velvet.apk && "$(getprop persist.sys.phh.securize)" != "0" ]]; then
++    # debug
++    touch /tmp/securize_run
++
      copyprop ro.build.device ro.vendor.build.device
      copyprop ro.system.build.fingerprint ro.vendor.build.fingerprint
      copyprop ro.bootimage.build.fingerprint ro.vendor.build.fingerprint
@@ -86,16 +89,30 @@ index 055c2cd..3e20dba 100644
 -    (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
 -        [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
 -    done
-+    copyprop ro.product.system.manufacturer ro.product.vendor.manufacturer
-+    copyprop ro.product.product.manufacturer ro.product.vendor.manufacturer
-+    copyprop ro.product.system_ext.manufacturer ro.product.vendor.manufacturer
- 
-     resetprop_phh ro.build.user nobody
-     resetprop_phh ro.build.host android-build
-@@ -838,21 +864,6 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
-     resetprop_phh --delete ro.build.selinux
- 
-     resetprop_phh ro.adb.secure 1
+-
+-    resetprop_phh ro.build.user nobody
+-    resetprop_phh ro.build.host android-build
+-    resetprop_phh ro.build.tags release-keys
+-    resetprop_phh ro.product.build.tags release-keys
+-    resetprop_phh ro.system.build.tags release-keys
+-    resetprop_phh ro.system_ext.build.tags release-keys
+-    resetprop_phh ro.vendor.build.tags release-keys
+-    resetprop_phh ro.boot.vbmeta.device_state locked
+-    resetprop_phh ro.boot.verifiedbootstate green
+-    resetprop_phh ro.boot.flash.locked 1
+-    resetprop_phh ro.boot.veritymode enforcing
+-    resetprop_phh ro.boot.warranty_bit 0
+-    resetprop_phh ro.warranty_bit 0
+-    resetprop_phh ro.debuggable 0
+-    resetprop_phh ro.secure 1
+-    resetprop_phh ro.build.type user
+-    resetprop_phh ro.product.build.type user
+-    resetprop_phh ro.system.build.type user
+-    resetprop_phh ro.system_ext.build.type user
+-    resetprop_phh ro.vendor.build.type user
+-    resetprop_phh --delete ro.build.selinux
+-
+-    resetprop_phh ro.adb.secure 1
 -
 -    # Hide system/xbin/su
 -    mount /mnt/phh/empty_dir /system/xbin
@@ -111,8 +128,37 @@ index 055c2cd..3e20dba 100644
 -    chcon u:object_r:system_file:s0 /mnt/phh/xbin/su
 -
 -    mount -o bind /mnt/phh/xbin /system/xbin
- fi
+-fi
++    copyprop ro.product.system.manufacturer ro.product.vendor.manufacturer
++    copyprop ro.product.product.manufacturer ro.product.vendor.manufacturer
++    copyprop ro.product.system_ext.manufacturer ro.product.vendor.manufacturer
++fi
++
++# always spoof critical props
++resetprop_phh ro.build.user nobody
++resetprop_phh ro.build.host android-build
++resetprop_phh ro.build.tags release-keys
++resetprop_phh ro.product.build.tags release-keys
++resetprop_phh ro.system.build.tags release-keys
++resetprop_phh ro.system_ext.build.tags release-keys
++resetprop_phh ro.vendor.build.tags release-keys
++resetprop_phh ro.boot.vbmeta.device_state locked
++resetprop_phh ro.boot.verifiedbootstate green
++resetprop_phh ro.boot.flash.locked 1
++resetprop_phh ro.boot.veritymode enforcing
++resetprop_phh ro.boot.warranty_bit 0
++resetprop_phh ro.warranty_bit 0
++resetprop_phh ro.debuggable 0
++resetprop_phh ro.secure 1
++resetprop_phh ro.build.type user
++resetprop_phh ro.product.build.type user
++resetprop_phh ro.system.build.type user
++resetprop_phh ro.system_ext.build.type user
++resetprop_phh ro.vendor.build.type user
++resetprop_phh --delete ro.build.selinux
++resetprop_phh ro.adb.secure 1
  
  for abi in "" 64;do
+     f=/vendor/lib$abi/libstagefright_foundation.so
 --
 2.34.1
