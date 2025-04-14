@@ -95,7 +95,7 @@ index a8221a7..70280bc 100644
 +            android:defaultValue="true"
 +            android:key="key_misc_securize"
 +            android:title="Enable Securize"
-+            android:summary="May fix Play Services being uncertified on some devices" />
++            android:summary="Disabling may fix play services on uncertified devices" />
          <SwitchPreference
              android:defaultValue="false"
              android:key="key_misc_secure_adb"

@@ -6,9 +6,9 @@ Subject: [PATCH 12/12] Rework securize tweak
 ---
  base.mk             |   1 -
  phh-prop-handler.sh |  11 +++++
- rw-system.sh        | 106 +++++++++++++++++++++++++-------------------
+ rw-system.sh        | 103 ++++++++++++++++++++++++--------------------
  vndk.rc             |   3 ++
- 4 files changed, 74 insertions(+), 47 deletions(-)
+ 4 files changed, 71 insertions(+), 47 deletions(-)
 
 diff --git a/base.mk b/base.mk
 index bbf2ef0..47b45f6 100644
@@ -45,19 +45,16 @@ index d036f24..777d60d 100644
      if [[ "$prop_value" != "0" && "$prop_value" != "1" ]]; then
          exit 1
 diff --git a/rw-system.sh b/rw-system.sh
-index 055c2cd..cec3a77 100644
+index 055c2cd..bce1428 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
-@@ -785,75 +785,89 @@ copyprop() {
+@@ -785,75 +785,86 @@ copyprop() {
          resetprop_phh "$1" "$(getprop "$2")"
      fi
  }
 -if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
-+# Do not spoof props if full gapps build - breaks ROM spoofing
-+if [[ ! -f /system/priv-app/Velvet.apk && ! -f /metadata/securize_disable ]]; then
-+    # debug
-+    touch /tmp/securize_run
 +
++if [ ! -f /metadata/securize_disable ]; then
      copyprop ro.build.device ro.vendor.build.device
      copyprop ro.system.build.fingerprint ro.vendor.build.fingerprint
      copyprop ro.bootimage.build.fingerprint ro.vendor.build.fingerprint
