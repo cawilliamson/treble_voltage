@@ -23,7 +23,7 @@
   <project path="vendor/partner_gms" name="android_vendor_partner_gms" remote="lineageos4microg" revision="master" clone-depth="1" />
 
   <!-- lmodroid: openeuicc -->
-  <project path="packages/apps/OpenEUICC" name="platform_packages_apps_OpenEUICC" remote="lmodroid" revision="fifteen-qpr1" clone-depth="1" sync-s="true" />
+  <project path="packages/apps/OpenEUICC" name="platform_packages_apps_OpenEUICC" remote="lmodroid" revision="fifteen-qpr2" clone-depth="1" sync-s="true" />
 
   <!-- mindthegapps: gapps -->
   <project path="vendor/gapps" name="vendor_gapps" remote="mindthegapps" revision="vic" clone-depth="1" />
