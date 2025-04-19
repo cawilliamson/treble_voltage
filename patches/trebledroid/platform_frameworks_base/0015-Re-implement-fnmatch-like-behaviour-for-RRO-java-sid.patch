@@ -66,10 +66,10 @@ index e3c75288e..c09a8e3e6 100644
 +             // no valid condition set - so no exclusion criteria, overlay will be included.
 +             return true;
 +         }
-+ 
++
 +         final String[] propNames = rawPropNames.split(",");
 +         final String[] propValues = rawPropValues.split(",");
-+ 
++
 +         if (propNames.length != propValues.length) {
 +             Slog.w(TAG, "Disabling overlay - property :'" + rawPropNames
 +                     + "=" + rawPropValues + "' - require both requiredSystemPropertyName"
