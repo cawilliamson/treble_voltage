@@ -13,19 +13,19 @@ Change-Id: If2d74b97a51b19c730a6f9a1b1f4293d1469a9f8
  2 files changed, 32 insertions(+)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index b3d85f8aac48..5dd872f4bc09 100644
+index d6ce6909b..0ad80ff5f 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
-@@ -247,6 +247,7 @@ java_library_static {
-         "profiling_flags_lib",
+@@ -258,6 +258,7 @@ java_library_static {
          "android.adpf.sessionmanager_aidl-java",
          "uprobestats_flags_java_lib",
+         "vendor.aospa.biometrics.face",
 +        "vendor.samsung.hardware.sysinput-V1.2-java", // HIDL
      ],
      javac_shard_size: 50,
      javacflags: [
 diff --git a/services/core/java/com/android/server/display/LocalDisplayAdapter.java b/services/core/java/com/android/server/display/LocalDisplayAdapter.java
-index d37dd3018fde..980a287dda27 100644
+index be041716b..bb7c7dcb5 100644
 --- a/services/core/java/com/android/server/display/LocalDisplayAdapter.java
 +++ b/services/core/java/com/android/server/display/LocalDisplayAdapter.java
 @@ -38,6 +38,7 @@ import android.os.Trace;
