@@ -97,5 +97,5 @@ index d37dd3018fde..980a287dda27 100644
                          setCommittedState(state);
  
                          // If we're entering a suspended (but not OFF) power state and we
--- 
+--
 2.43.0
