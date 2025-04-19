@@ -9,12 +9,12 @@ Subject: [PATCH 49/56] Don't crash system_server if we fail to parse dynamic
  1 file changed, 11 insertions(+), 7 deletions(-)
 
 diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-index 5fc5a57bd1ef..b13beef51177 100644
+index e798d7280..c51bdcdde 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-@@ -278,13 +278,17 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+@@ -261,13 +261,17 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
              android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
-         }
+        }
          if (prop.sensorLocations.length == 1 && prop.sensorLocations[0].sensorLocationX == 0) {
 -            int[] otherValues = com.android.server.biometrics.AuthService.dynamicUdfpsProps(mContext);
 -            if (otherValues.length > 0) {
@@ -37,5 +37,5 @@ index 5fc5a57bd1ef..b13beef51177 100644
              }
          }
  
--- 
+--
 2.43.0
