@@ -10,7 +10,7 @@ Change-Id: I72a0133e986f2c745af3c915ed65d7b540d2119b
  1 file changed, 2 insertions(+)
 
 diff --git a/service/java/com/android/server/wifi/WifiGlobals.java b/service/java/com/android/server/wifi/WifiGlobals.java
-index bc778dada4..6624aa6195 100644
+index bc778da..6624aa6 100644
 --- a/service/java/com/android/server/wifi/WifiGlobals.java
 +++ b/service/java/com/android/server/wifi/WifiGlobals.java
 @@ -344,6 +344,8 @@ public class WifiGlobals {
@@ -22,5 +22,5 @@ index bc778dada4..6624aa6195 100644
          return mWifiResourceCache
                  .getBoolean(R.bool.config_wifiSaeUpgradeEnabled);
      }
--- 
+--
 2.43.0
