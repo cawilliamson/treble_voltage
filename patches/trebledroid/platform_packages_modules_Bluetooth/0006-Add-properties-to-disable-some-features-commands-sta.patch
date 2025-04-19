@@ -1,15 +1,15 @@
-From f0158f8a9d0e97b7e97168524ba3a670af0a6073 Mon Sep 17 00:00:00 2001
+From 7af330446d9ba5e3009024f7cedc944138c96617 Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 27 May 2023 06:41:32 -0400
-Subject: [PATCH 6/9] Add properties to disable some features/commands/states
+Subject: [PATCH 6/8] Add properties to disable some features/commands/states
  that the ble chip declared but doesnt actually support
 
 ---
- system/gd/hci/controller.cc | 74 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 70 insertions(+), 4 deletions(-)
+ system/gd/hci/controller.cc | 73 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 69 insertions(+), 4 deletions(-)
 
 diff --git a/system/gd/hci/controller.cc b/system/gd/hci/controller.cc
-index 426175b..6a3a393 100644
+index eaba7da848..a34eb1efac 100644
 --- a/system/gd/hci/controller.cc
 +++ b/system/gd/hci/controller.cc
 @@ -20,6 +20,7 @@
@@ -20,7 +20,7 @@ index 426175b..6a3a393 100644
  #include <future>
  #include <memory>
  #include <string>
-@@ -37,6 +38,8 @@
+@@ -35,6 +36,8 @@
  #include "sysprops/sysprops_module.h"
  #endif
  
@@ -29,7 +29,7 @@ index 426175b..6a3a393 100644
  namespace bluetooth {
  namespace hci {
  
-@@ -360,7 +363,23 @@ struct Controller::impl {
+@@ -359,7 +362,23 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      log::assert_that(status == ErrorCode::SUCCESS, "Status {}", ErrorCodeText(status));
@@ -51,10 +51,10 @@ index 426175b..6a3a393 100644
 +    }
 +
 +    local_supported_commands_ = local_commands;
+   }
  
-     if (auto disabledCommands = os::GetSystemProperty(kPropertyDisabledCommands)) {
-       for (const auto& command : android::base::Split(*disabledCommands, ",")) {
-@@ -379,7 +398,25 @@ struct Controller::impl {
+   void read_local_extended_features_complete_handler(std::promise<void> promise,
+@@ -369,7 +388,25 @@ struct Controller::impl {
      ErrorCode status = complete_view.GetStatus();
      log::assert_that(status == ErrorCode::SUCCESS, "Status {}", ErrorCodeText(status));
      uint8_t page_number = complete_view.GetPageNumber();
@@ -81,7 +81,7 @@ index 426175b..6a3a393 100644
      if (page_number == 0 && local_version_information_.manufacturer_name_ == LMP_COMPID_INTEL &&
          local_version_information_.lmp_version_ == LmpVersion::V_4_2 &&
          local_version_information_.lmp_subversion_ == LMP_SUBVERSION_INTEL_AC7265) {
-@@ -542,7 +579,21 @@ struct Controller::impl {
+@@ -532,7 +569,21 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      log::assert_that(status == ErrorCode::SUCCESS, "Status {}", status, ErrorCodeText(status));
@@ -104,13 +104,12 @@ index 426175b..6a3a393 100644
    }
  
    void le_read_supported_states_handler(CommandCompleteView view) {
-@@ -550,7 +601,22 @@ struct Controller::impl {
+@@ -540,7 +591,21 @@ struct Controller::impl {
      ASSERT(complete_view.IsValid());
      ErrorCode status = complete_view.GetStatus();
      log::assert_that(status == ErrorCode::SUCCESS, "Status {}", ErrorCodeText(status));
 -    le_supported_states_ = complete_view.GetLeStates();
 +
-+    //le_supported_states_ = complete_view.GetLeStates();
 +    //le_supported_states_ = complete_view.GetLeStates();
 +    auto local_states = complete_view.GetLeStates();
 +    std::string ignored_states = GetSystemProperty("persist.sys.bt.unsupported.states").value_or("");
@@ -128,5 +127,5 @@ index 426175b..6a3a393 100644
    }
  
    void le_read_accept_list_size_handler(CommandCompleteView view) {
---
-2.34.1
+-- 
+2.43.0

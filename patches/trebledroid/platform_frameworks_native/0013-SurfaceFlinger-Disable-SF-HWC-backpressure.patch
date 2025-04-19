@@ -1,25 +1,25 @@
-From a13f454c1e86a0ec484bab4ab4c29ddaf98f01c0 Mon Sep 17 00:00:00 2001
+From fe7fc10ca7812296417e54612dc4fe642bed926c Mon Sep 17 00:00:00 2001
 From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
 Date: Sun, 26 May 2024 21:34:17 +0800
-Subject: [PATCH 13/14] SurfaceFlinger: Disable SF HWC backpressure
+Subject: [PATCH 13/15] SurfaceFlinger: Disable SF HWC backpressure
 
 ---
  services/surfaceflinger/SurfaceFlinger.cpp | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/services/surfaceflinger/SurfaceFlinger.cpp b/services/surfaceflinger/SurfaceFlinger.cpp
-index 7cf1717..728c61d 100644
+index 896d13d31d..8e0c2372e8 100644
 --- a/services/surfaceflinger/SurfaceFlinger.cpp
 +++ b/services/surfaceflinger/SurfaceFlinger.cpp
-@@ -2588,7 +2588,8 @@ bool SurfaceFlinger::commit(PhysicalDisplayId pacesetterId,
+@@ -2664,7 +2664,8 @@ bool SurfaceFlinger::commit(PhysicalDisplayId pacesetterId,
          }
      }
  
 -    if (pacesetterFrameTarget.wouldBackpressureHwc()) {
 +    if (base::GetBoolProperty("persist.sys.phh.enable_sf_hwc_backpressure"s, true)
 +            && pacesetterFrameTarget.isFramePending()) {
-         if (mPropagateBackpressure && (mBackpressureGpuComposition || pacesetterFrameTarget.didMissHwcFrame())) {
+         if (mBackpressureGpuComposition || pacesetterFrameTarget.didMissHwcFrame()) {
              if (FlagManager::getInstance().vrr_config()) {
                  mScheduler->getVsyncSchedule()->getTracker().onFrameMissed(
---
-2.34.1
+-- 
+2.43.0
