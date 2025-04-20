@@ -1,7 +1,7 @@
 From 657576b2b054cf14059321fc7b0c452616333f1b Mon Sep 17 00:00:00 2001
 From: Build <build@nobody>
 Date: Sun, 2 Mar 2025 23:26:55 +0000
-Subject: [PATCH 2/2] [HACK] allow Android.mk in packages
+Subject: [PATCH 1/1] [HACK] allow Android.mk in packages
 
 ---
  ui/build/androidmk_denylist.go | 4 ++--
