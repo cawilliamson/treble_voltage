@@ -8,16 +8,16 @@ Subject: [PATCH 43/56] Add Samsung sysinput
  1 file changed, 1 insertion(+)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index 3cae2d728753..cf7457b96423 100644
+index fb6c7ebc3..6ceee1af1 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
-@@ -257,6 +257,7 @@ java_library_static {
-         "vendor.xiaomi.hardware.fingerprintextension-V1.0-java",
- 
+@@ -262,6 +262,7 @@ java_library_static {
+         "vendor.mediatek.hardware.mtkpower-V1.1-java",
+         "vendor.samsung.hardware.sysinput-V1.2-java",
          //AIDL
 +        "vendor.samsung.hardware.sysinput-V1-java",
          "vendor.samsung.hardware.biometrics.fingerprint-V1-java",
          "vendor.samsung.hardware.light-V1-java",
      ],
--- 
+--
 2.43.0
