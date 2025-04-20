@@ -1,7 +1,7 @@
 From 8f60e7ce4249131483db3e31c71e91a7a060cdde Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Sun, 22 Dec 2024 22:37:50 +0100
-Subject: [PATCH 10/11] Revert "AuthService: HIDL and AIDL fingerprint services
+Subject: [PATCH 9/10] Revert "AuthService: HIDL and AIDL fingerprint services
  are mutually exclusive"
 
 Restores the HIDL FP sensor. I presume the virtual AIDL causes the HIDL not to register.
