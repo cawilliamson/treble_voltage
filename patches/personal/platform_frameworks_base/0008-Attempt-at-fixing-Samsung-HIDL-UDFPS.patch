@@ -1,7 +1,7 @@
 From f6909024ae63708714df3245a124b93404497fe8 Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Fri, 20 Dec 2024 22:14:35 +0100
-Subject: [PATCH 9/9] Attempt at fixing Samsung HIDL UDFPS
+Subject: [PATCH 8/8] Attempt at fixing Samsung HIDL UDFPS
 
 Now it's at least getting detected & getting placed in the right position.
 ---
