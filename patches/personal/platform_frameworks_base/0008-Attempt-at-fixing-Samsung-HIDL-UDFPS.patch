@@ -6,8 +6,8 @@ Subject: [PATCH 8/8] Attempt at fixing Samsung HIDL UDFPS
 Now it's at least getting detected & getting placed in the right position.
 ---
  .../server/biometrics/AuthService.java        | 18 +++++-
- .../fingerprint/aidl/FingerprintProvider.java | 59 +++++++++++++++++++
- 2 files changed, 76 insertions(+), 1 deletion(-)
+ .../fingerprint/aidl/FingerprintProvider.java | 60 +++++++++++++++++++
+ 2 files changed, 77 insertions(+), 1 deletion(-)
 
 diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
 index fc7930c62..dd324e014 100644
@@ -40,10 +40,18 @@ index fc7930c62..dd324e014 100644
          registerFaceSensors(mInjector.getFaceAidlInstances(),
                  mInjector.getFaceConfiguration(getContext()), getContext(),
 diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-index ccd69869b..0af8bbf4b 100644
+index ccd69869b..7fa848c65 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-@@ -57,6 +57,7 @@ import android.os.UserManager;
+@@ -38,6 +38,7 @@ import android.hardware.biometrics.SensorLocationInternal;
+ import android.hardware.biometrics.fingerprint.IFingerprint;
+ import android.hardware.biometrics.fingerprint.PointerContext;
+ import android.hardware.biometrics.fingerprint.SensorProps;
++import android.hardware.biometrics.fingerprint.SensorLocation;
+ import android.hardware.biometrics.fingerprint.virtualhal.IVirtualHal;
+ import android.hardware.fingerprint.Fingerprint;
+ import android.hardware.fingerprint.FingerprintAuthenticateOptions;
+@@ -57,6 +58,7 @@ import android.os.UserManager;
  import android.util.Slog;
  import android.util.proto.ProtoOutputStream;
  
@@ -51,7 +59,7 @@ index ccd69869b..0af8bbf4b 100644
  import com.android.internal.annotations.VisibleForTesting;
  import com.android.server.biometrics.AuthenticationStatsBroadcastReceiver;
  import com.android.server.biometrics.AuthenticationStatsCollector;
-@@ -64,6 +65,7 @@ import com.android.server.biometrics.BiometricDanglingReceiver;
+@@ -64,6 +66,7 @@ import com.android.server.biometrics.BiometricDanglingReceiver;
  import com.android.server.biometrics.BiometricHandlerProvider;
  import com.android.server.biometrics.Flags;
  import com.android.server.biometrics.Utils;
@@ -59,7 +67,7 @@ index ccd69869b..0af8bbf4b 100644
  import com.android.server.biometrics.log.BiometricContext;
  import com.android.server.biometrics.log.BiometricLogger;
  import com.android.server.biometrics.sensors.AuthSessionCoordinator;
-@@ -253,6 +255,49 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+@@ -253,6 +256,49 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
              @NonNull GestureAvailabilityDispatcher gestureAvailabilityDispatcher,
              boolean resetLockoutRequiresHardwareAuthToken) {
          final int sensorId = prop.commonProps.sensorId;
@@ -109,7 +117,7 @@ index ccd69869b..0af8bbf4b 100644
          final Sensor sensor = new HidlToAidlSensorAdapter(this, mContext, mHandler, prop,
                  mLockoutResetDispatcher, mBiometricContext, resetLockoutRequiresHardwareAuthToken,
                  () -> scheduleInternalCleanup(sensorId, ActivityManager.getCurrentUser(),
-@@ -275,6 +320,20 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+@@ -275,6 +321,20 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
              @NonNull List<SensorLocationInternal> workaroundLocations,
              boolean resetLockoutRequiresHardwareAuthToken) {
          final int sensorId = prop.commonProps.sensorId;
