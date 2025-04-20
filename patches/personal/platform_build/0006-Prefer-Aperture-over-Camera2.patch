@@ -1,7 +1,7 @@
 From 9199d38035ca66c753ea1fa394e1559bf2e8fef3 Mon Sep 17 00:00:00 2001
 From: Alberto Ponces <ponces26@gmail.com>
 Date: Wed, 7 Aug 2024 08:58:45 +0000
-Subject: [PATCH 6/6] Prefer Aperture over Camera2
+Subject: [PATCH 6/7] Prefer Aperture over Camera2
 
 ---
  target/product/handheld_product.mk | 2 +-
