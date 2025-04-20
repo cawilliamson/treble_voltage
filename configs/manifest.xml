@@ -16,6 +16,9 @@
   <!-- aosp: vndk-v28 -->
   <project path="prebuilts/vndk/v28" name="platform/prebuilts/vndk/v28" remote="aosp" revision="204f1bad00aaf480ba33233f7b8c2ddaa03155dd" clone-depth="1" />
 
+  <!-- aosp: vndk-v29 -->
+  <project path="prebuilts/vndk/v29" name="platform/prebuilts/vndk/v29" remote="aosp" revision="bef5d37dda9360940964f097d612c8032e140961" clone-depth="1" />
+
   <!-- grapheneos: app store -->
   <project path="external/Apps" name="platform_external_AppStore" remote="grapheneos" revision="15-qpr2" clone-depth="1" />
 
