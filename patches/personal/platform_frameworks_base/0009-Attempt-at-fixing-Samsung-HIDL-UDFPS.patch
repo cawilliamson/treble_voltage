@@ -1,18 +1,18 @@
 From f6909024ae63708714df3245a124b93404497fe8 Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Fri, 20 Dec 2024 22:14:35 +0100
-Subject: [PATCH 10/10] Attempt at fixing Samsung HIDL UDFPS
+Subject: [PATCH 9/9] Attempt at fixing Samsung HIDL UDFPS
 
 Now it's at least getting detected & getting placed in the right position.
 ---
- .../fingerprint/aidl/FingerprintProvider.java | 65 ++++++++++++++++++-
- 1 file changed, 64 insertions(+), 1 deletion(-)
+ .../fingerprint/aidl/FingerprintProvider.java | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
 diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-index 88d8009ee..3321e1130 100644
+index ccd69869b..48ddf3481 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-@@ -58,6 +58,7 @@ import android.os.UserManager;
+@@ -57,6 +57,7 @@ import android.os.UserManager;
  import android.util.Slog;
  import android.util.proto.ProtoOutputStream;
  
@@ -20,7 +20,7 @@ index 88d8009ee..3321e1130 100644
  import com.android.internal.annotations.VisibleForTesting;
  import com.android.server.biometrics.AuthenticationStatsBroadcastReceiver;
  import com.android.server.biometrics.AuthenticationStatsCollector;
-@@ -65,6 +66,7 @@ import com.android.server.biometrics.BiometricDanglingReceiver;
+@@ -64,6 +65,7 @@ import com.android.server.biometrics.BiometricDanglingReceiver;
  import com.android.server.biometrics.BiometricHandlerProvider;
  import com.android.server.biometrics.Flags;
  import com.android.server.biometrics.Utils;
@@ -28,8 +28,8 @@ index 88d8009ee..3321e1130 100644
  import com.android.server.biometrics.log.BiometricContext;
  import com.android.server.biometrics.log.BiometricLogger;
  import com.android.server.biometrics.sensors.AuthSessionCoordinator;
-@@ -258,6 +260,49 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
-             @NonNull List<SensorLocationInternal> workaroundLocations,
+@@ -253,6 +255,49 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+             @NonNull GestureAvailabilityDispatcher gestureAvailabilityDispatcher,
              boolean resetLockoutRequiresHardwareAuthToken) {
          final int sensorId = prop.commonProps.sensorId;
 +        final boolean forceUdfps = android.os.SystemProperties.getBoolean("persist.sys.phh.fingerprint.forceudfps", false);
@@ -76,56 +76,7 @@ index 88d8009ee..3321e1130 100644
 +        android.util.Log.e("PHH-Enroll", "UDFPS props FingerprintProvider isUdfps=" + isUdfps);
 +
          final Sensor sensor = new HidlToAidlSensorAdapter(this, mContext, mHandler, prop,
-                 mLockoutResetDispatcher, mBiometricContext, workaroundLocations,
-                 resetLockoutRequiresHardwareAuthToken,
-@@ -281,12 +326,25 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
-             @NonNull List<SensorLocationInternal> workaroundLocations,
-             boolean resetLockoutRequiresHardwareAuthToken) {
-         final int sensorId = prop.commonProps.sensorId;
-+        final boolean forceUdfps = android.os.SystemProperties.getBoolean("persist.sys.phh.fingerprint.forceudfps", false);
-+
-+        int[] udfpsProps = mContext.getResources().getIntArray(
-+                com.android.internal.R.array.config_udfps_sensor_props);
-+        boolean isUdfps = !ArrayUtils.isEmpty(udfpsProps);
-+        if (isUdfps) {
-+            SensorLocation loc = new SensorLocation();
-+            loc.sensorLocationX = udfpsProps[0];
-+            loc.sensorLocationY = udfpsProps[1];
-+            loc.sensorRadius = udfpsProps[2];
-+            prop.sensorLocations[0] = loc;
-+            Slog.d("PHH-Enroll", "Got udfps infos " + udfpsProps[0] + ", " + udfpsProps[1] + ", " + udfpsProps[2] + ", " + isUdfps);
-+        }
- 
-         android.util.Log.e("PHH-Enroll", "Got fp props -- pre");
-         for(SensorLocation loc: prop.sensorLocations) {
-             android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
-         }
--        if (prop.sensorLocations.length == 1 && prop.sensorLocations[0].sensorLocationX == 0) {
-+        if (forceUdfps || (prop.sensorLocations.length == 1 && prop.sensorLocations[0].sensorLocationX == 0)) {
-             try {
-                 int[] otherValues = com.android.server.biometrics.AuthService.dynamicUdfpsProps(mContext);
-                 if (otherValues.length > 0) {
-@@ -295,16 +353,21 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
-                     loc.sensorLocationY = otherValues[1];
-                     loc.sensorRadius = otherValues[2];
-                     prop.sensorLocations[0] = loc;
-+                    isUdfps = true;
-                 }
-             } catch(Throwable t) {
-                 android.util.Log.e("PHH-Enroll", "FingerprintProvider dynamicUdfpsProps", t);
-             }
-         }
-+        if (forceUdfps || isUdfps) {
-+            prop.sensorType = FingerprintSensorType.UNDER_DISPLAY_OPTICAL;
-+        }
- 
-         android.util.Log.e("PHH-Enroll", "Got fp props -- post");
-         for(SensorLocation loc: prop.sensorLocations) {
-             android.util.Log.e("PHH-Enroll", " - " + loc.sensorLocationX + ", " + loc.sensorLocationY + ", " +loc.sensorRadius + ", disp =" + loc.display + ", shape " + loc.sensorShape);
-         }
-+        android.util.Log.e("PHH-Enroll", "UDFPS props FingerprintProvider isUdfps=" + isUdfps);
- 
-         final Sensor sensor = new Sensor(this, mContext, mHandler, prop, mBiometricContext,
-                 workaroundLocations, resetLockoutRequiresHardwareAuthToken);
--- 
+                 mLockoutResetDispatcher, mBiometricContext, resetLockoutRequiresHardwareAuthToken,
+                 () -> scheduleInternalCleanup(sensorId, ActivityManager.getCurrentUser(),
+--
 2.34.1
