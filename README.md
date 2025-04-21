@@ -86,8 +86,8 @@ make ROM_VERSION=4.3 MAINTAINER="your-github-username" REPO_NAME="VoltageOS-GSI"
 
 Available variables:
 
-- `ROM_VERSION`: Version of the ROM (default: 4.2)
-- `ROM_TAG`: Git tag/branch to use for ROM source (default: 15-qpr1)
+- `ROM_VERSION`: Version of the ROM (default: 4.3)
+- `ROM_TAG`: Git tag/branch to use for ROM source (default: 15-qpr2)
 - `ANDROID_VERSION_TAG`: Android version tag for the build (default: ap4a)
 - `APPLY_DEBUG_PATCHES`: Whether to apply debug patches (default: false)
 - `VERIFY_SEPOLICY`: Whether to verify SELinux policy during build (default: true)
