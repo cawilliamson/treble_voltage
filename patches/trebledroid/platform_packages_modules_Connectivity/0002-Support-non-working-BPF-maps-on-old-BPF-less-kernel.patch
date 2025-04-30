@@ -4,20 +4,20 @@ Date: Wed, 26 Oct 2022 18:11:10 -0400
 Subject: [PATCH 2/8] Support non-working BPF maps on old BPF-less kernel
 
 ---
- bpf/headers/include/bpf/BpfMap.h              | 20 ++++++----
- bpf/loader/NetBpfLoad.cpp                     | 31 +++++++--------
+ bpf/headers/include/bpf/BpfMap.h              | 21 +++++-----
+ bpf/loader/NetBpfLoad.cpp                     | 34 +++++++---------
  .../src/android/net/BpfNetMapsUtils.java      |  7 ++++
  .../android/net/NetworkStackBpfNetMaps.java   |  6 +--
  .../libs/libnetworkstats/BpfNetworkStats.cpp  |  1 +
  .../server/net/NetworkStatsService.java       | 29 ++++++++------
  .../src/com/android/server/BpfNetMaps.java    | 39 ++++++++++++++++++-
- 7 files changed, 90 insertions(+), 43 deletions(-)
+ 7 files changed, 91 insertions(+), 46 deletions(-)
 
 diff --git a/bpf/headers/include/bpf/BpfMap.h b/bpf/headers/include/bpf/BpfMap.h
-index 1037beb..296e3d2 100644
+index 1037bebf29..b8e8991c57 100644
 --- a/bpf/headers/include/bpf/BpfMap.h
 +++ b/bpf/headers/include/bpf/BpfMap.h
-@@ -60,21 +60,25 @@ class BpfMapRO {
+@@ -60,21 +60,24 @@ class BpfMapRO {
  
    protected:
      void abortOnMismatch(bool writable) const {
@@ -43,7 +43,7 @@ index 1037beb..296e3d2 100644
          }
 +        return true;
      }
- 
+-
 -  public:
      explicit BpfMapRO<Key, Value>(const char* pathname) {
          mMapFd.reset(mapRetrieveRO(pathname));
@@ -52,18 +52,18 @@ index 1037beb..296e3d2 100644
  
      Result<Key> getFirstKey() const {
 diff --git a/bpf/loader/NetBpfLoad.cpp b/bpf/loader/NetBpfLoad.cpp
-index 9e8c3e2..b14241e 100644
+index 4834b09ab5..56e4eed355 100644
 --- a/bpf/loader/NetBpfLoad.cpp
 +++ b/bpf/loader/NetBpfLoad.cpp
-@@ -1433,6 +1433,7 @@ static int doLoad(char** argv, char * const envp[]) {
-     if (runningAsRoot) ++bpfloader_ver;  // [45] BPFLOADER_MAINLINE_U_QPR3_VERSION
-     if (isAtLeastV) ++bpfloader_ver;     // [46] BPFLOADER_MAINLINE_V_VERSION
-     if (isAtLeastW) ++bpfloader_ver;     // [47] BPFLOADER_MAINLINE_W_VERSION
+@@ -1418,6 +1418,7 @@ static int doLoad(char** argv, char * const envp[]) {
+     const bool isAtLeastU = (effective_api_level >= __ANDROID_API_U__);
+     const bool isAtLeastV = (effective_api_level >= __ANDROID_API_V__);
+     const bool isAtLeastW = (effective_api_level >  __ANDROID_API_V__);  // TODO: switch to W
 +    bool failed = false;
  
-     ALOGI("NetBpfLoad v0.%u (%s) api:%d/%d kver:%07x (%s) uid:%d rc:%d%d",
-           bpfloader_ver, argv[0], android_get_device_api_level(), effective_api_level,
-@@ -1453,32 +1454,33 @@ static int doLoad(char** argv, char * const envp[]) {
+     const int first_api_level = GetIntProperty("ro.board.first_api_level", effective_api_level);
+ 
+@@ -1453,26 +1454,26 @@ static int doLoad(char** argv, char * const envp[]) {
  
      if (!isAtLeastT) {
          ALOGE("Impossible - not reachable on Android <T.");
@@ -88,20 +88,31 @@ index 9e8c3e2..b14241e 100644
      // V bumps the kernel requirement up to 4.19
      // see also: //system/netd/tests/kernel_test.cpp TestKernel419
      if (isAtLeastV && !isAtLeastKernelVersion(4, 19, 0)) {
-         ALOGW("Android V requires kernel 4.19.");
+         ALOGE("Android V requires kernel 4.19.");
+-        return 1;
 +        failed = true;
      }
  
      // Technically already required by U, but only enforce on V+
-     // see also: //system/netd/tests/kernel_test.cpp TestKernel64Bit
-     if (isAtLeastV && isKernel32Bit() && isAtLeastKernelVersion(5, 16, 0)) {
-         ALOGE("Android V+ platform with 32 bit kernel version >= 5.16.0 is unsupported");
+@@ -1491,7 +1492,7 @@ static int doLoad(char** argv, char * const envp[]) {
+     // Various known ABI layout issues, particularly wrt. bpf and ipsec/xfrm.
+     if (isAtLeastV && isKernel32Bit() && isX86()) {
+         ALOGE("Android V requires X86 kernel to be 64-bit.");
 -        if (!isTV()) return 1;
 +        if (!isTV()) failed = true;
      }
  
-     // 6.6 is highest version supported by Android V, so this is effectively W+ (sdk=36+)
-@@ -1628,23 +1630,16 @@ static int doLoad(char** argv, char * const envp[]) {
+     if (isAtLeastV) {
+@@ -1575,7 +1576,7 @@ static int doLoad(char** argv, char * const envp[]) {
+     if (!isEng() && !isUser() && !isUserdebug()) {
+         ALOGE("Failed to determine the build type: got %s, want 'eng', 'user', or 'userdebug'",
+               getBuildType().c_str());
+-        return 1;
++        failed = true;
+     }
+ 
+     if (runningAsRoot) {
+@@ -1627,23 +1628,16 @@ static int doLoad(char** argv, char * const envp[]) {
      // Load all ELF objects, create programs and maps, and pin them
      for (const auto& location : locations) {
          if (loadAllElfObjects(bpfloader_ver, location) != 0) {
@@ -133,7 +144,7 @@ index 9e8c3e2..b14241e 100644
  
      // leave a flag that we're done
 diff --git a/framework/src/android/net/BpfNetMapsUtils.java b/framework/src/android/net/BpfNetMapsUtils.java
-index 1760fa7..408294c 100644
+index 1760fa7ec2..408294ce6d 100644
 --- a/framework/src/android/net/BpfNetMapsUtils.java
 +++ b/framework/src/android/net/BpfNetMapsUtils.java
 @@ -213,6 +213,8 @@ public class BpfNetMapsUtils {
@@ -172,7 +183,7 @@ index 1760fa7..408294c 100644
              return dataSaverEnabledMap.getValue(DATA_SAVER_ENABLED_KEY).val == DATA_SAVER_ENABLED;
          } catch (ErrnoException e) {
 diff --git a/framework/src/android/net/NetworkStackBpfNetMaps.java b/framework/src/android/net/NetworkStackBpfNetMaps.java
-index b7c4e34..750490a 100644
+index b7c4e34fad..750490ad24 100644
 --- a/framework/src/android/net/NetworkStackBpfNetMaps.java
 +++ b/framework/src/android/net/NetworkStackBpfNetMaps.java
 @@ -97,7 +97,7 @@ public class NetworkStackBpfNetMaps {
@@ -203,7 +214,7 @@ index b7c4e34..750490a 100644
          }
      }
 diff --git a/service-t/native/libs/libnetworkstats/BpfNetworkStats.cpp b/service-t/native/libs/libnetworkstats/BpfNetworkStats.cpp
-index d3e331e..541b8c8 100644
+index d3e331ec81..541b8c8f01 100644
 --- a/service-t/native/libs/libnetworkstats/BpfNetworkStats.cpp
 +++ b/service-t/native/libs/libnetworkstats/BpfNetworkStats.cpp
 @@ -195,6 +195,7 @@ int parseBpfNetworkStatsDetail(std::vector<stats_line>* lines) {
@@ -215,7 +226,7 @@ index d3e331e..541b8c8 100644
      if (!configuration.ok()) {
          ALOGE("Cannot read the old configuration from map: %s",
 diff --git a/service-t/src/com/android/server/net/NetworkStatsService.java b/service-t/src/com/android/server/net/NetworkStatsService.java
-index fb712a1..01ba86c 100644
+index fb712a18ec..01ba86cb35 100644
 --- a/service-t/src/com/android/server/net/NetworkStatsService.java
 +++ b/service-t/src/com/android/server/net/NetworkStatsService.java
 @@ -451,12 +451,12 @@ public class NetworkStatsService extends INetworkStatsService.Stub {
@@ -269,7 +280,7 @@ index fb712a1..01ba86c 100644
              mCookieTagMap.forEach((key, value) -> {
                  // If SkDestroyListener deletes the socket tag while this code is running,
 diff --git a/service/src/com/android/server/BpfNetMaps.java b/service/src/com/android/server/BpfNetMaps.java
-index 44868b2..8c11e11 100644
+index 44868b2db7..8c11e115cc 100644
 --- a/service/src/com/android/server/BpfNetMaps.java
 +++ b/service/src/com/android/server/BpfNetMaps.java
 @@ -369,7 +369,11 @@ public class BpfNetMaps {
@@ -416,5 +427,5 @@ index 44868b2..8c11e11 100644
          try {
              final short config = sDataSaverEnabledMap.getValue(DATA_SAVER_ENABLED_KEY).val;
              // Any non-zero value converted from short to boolean is true by convention.
---
+-- 
 2.43.0
