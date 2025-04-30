@@ -5,44 +5,67 @@ Subject: [PATCH 38/56] Fix brightness slider curve for some devices
 
 Some devices report max brightness as 2047 or 4095
 ---
- .../settingslib/display/BrightnessUtils.java   |  5 +++--
- .../brightness/shared/model/GammaBrightness.kt | 18 +++++++-----------
- 2 files changed, 10 insertions(+), 13 deletions(-)
+ .../settingslib/display/BrightnessUtils.java      | 15 ++++++++++-----
+ .../brightness/shared/model/GammaBrightness.kt    | 14 +++++++-------
+ 2 files changed, 17 insertions(+), 12 deletions(-)
 
 diff --git a/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java b/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
-index 35f01f672..e74501fe6 100644
+index 66ed10433459..f6820b4436fc 100644
 --- a/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
 +++ b/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
-@@ -24,9 +24,10 @@ import com.android.internal.display.BrightnessSynchronizer;
- import com.android.internal.display.BrightnessSynchronizer;
-
+@@ -16,13 +16,18 @@
+ 
+ package com.android.settingslib.display;
+ 
++import android.os.SystemProperties;
+ import android.util.MathUtils;
+ 
++import com.android.internal.display.BrightnessSynchronizer;
++
+ /** Utility methods for calculating the display brightness. */
  public class BrightnessUtils {
--
-     public static final boolean sysUseLowGamma = Boolean.parseBoolean(
--        SystemProperties.get("persist.sys.brightness.low.gamma", "false"));
-+        SystemProperties.get("persist.sys.brightness.low.gamma", "false")) ||
-+        Boolean.parseBoolean(
-+        SystemProperties.get("persist.sys.phh.low_gamma_brightness", "false"));
-
+ 
++    public static final boolean LowGammaBrightness = Boolean.parseBoolean(SystemProperties.get("persist.sys.phh.low_gamma_brightness", "false"));
++
      public static final int GAMMA_SPACE_MIN = 0;
-     public static final int GAMMA_SPACE_MAX = sysUseLowGamma ? 255 : 65535;
+-    public static final int GAMMA_SPACE_MAX = 65535;
++    public static final int GAMMA_SPACE_MAX = LowGammaBrightness ? 255 : 65535;
+ 
+     // Hybrid Log Gamma constant values
+     private static final float R = 0.5f;
+@@ -88,9 +93,8 @@ public class BrightnessUtils {
+         // it shouldn't be out of bounds.
+         final float normalizedRet = MathUtils.constrain(ret, 0, 12);
+ 
+-        // Re-normalize to the range [0, 1]
+-        // in order to derive the correct setting value.
+-        return MathUtils.lerp(min, max, normalizedRet / 12);
++        return LowGammaBrightness ? MathUtils.constrain(BrightnessSynchronizer.brightnessIntToFloat(val),
++                         min, max) : MathUtils.lerp(min, max, normalizedRet / 12);
+     }
+ 
+     /**
+@@ -137,6 +141,7 @@ public class BrightnessUtils {
+             ret = A * MathUtils.log(normalizedVal - B) + C;
+         }
+ 
+-        return Math.round(MathUtils.lerp(GAMMA_SPACE_MIN, GAMMA_SPACE_MAX, ret));
++        return LowGammaBrightness ? BrightnessSynchronizer.brightnessFloatToInt(
++                       MathUtils.constrain(val, min, max)) : Math.round(MathUtils.lerp(GAMMA_SPACE_MIN, GAMMA_SPACE_MAX, ret));
+     }
+ }
 diff --git a/packages/SystemUI/src/com/android/systemui/brightness/shared/model/GammaBrightness.kt b/packages/SystemUI/src/com/android/systemui/brightness/shared/model/GammaBrightness.kt
-index 5648e117a..b7a9d5f53 100644
+index 7eba6268869c..b7a9d5f535b4 100644
 --- a/packages/SystemUI/src/com/android/systemui/brightness/shared/model/GammaBrightness.kt
 +++ b/packages/SystemUI/src/com/android/systemui/brightness/shared/model/GammaBrightness.kt
-@@ -22,18 +22,14 @@ import com.android.systemui.log.table.TableLogBuffer
- import com.android.systemui.util.kotlin.pairwiseBy
+@@ -23,13 +23,13 @@ import com.android.systemui.util.kotlin.pairwiseBy
  import kotlinx.coroutines.flow.Flow
-
--// Define constants
--const val GAMMA_SPACE_MIN = 0
--const val GAMMA_SPACE_MAX = 255
--
+ 
  @JvmInline
 -value class GammaBrightness(
 -    @IntRange(
--        from = GAMMA_SPACE_MIN.toLong(),
--        to = GAMMA_SPACE_MAX.toLong()
+-        from = BrightnessUtils.GAMMA_SPACE_MIN.toLong(),
+-        to = BrightnessUtils.GAMMA_SPACE_MAX.toLong()
 -    )
 -    val value: Int
 -)
@@ -53,8 +76,8 @@ index 5648e117a..b7a9d5f53 100644
 +        }
 +    }
 +}
-
+ 
  internal fun Flow<GammaBrightness>.logDiffForTable(
      tableLogBuffer: TableLogBuffer,
---
+-- 
 2.43.0
