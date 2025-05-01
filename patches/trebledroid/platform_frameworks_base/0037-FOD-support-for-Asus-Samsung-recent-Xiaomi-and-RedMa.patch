@@ -31,8 +31,8 @@ Change-Id: I7af81218276c60afbfea6dac702c7bcd584f397a
  .../systemui/biometrics/UdfpsController.java  |  73 +++++
  services/core/Android.bp                      |   5 +
  .../server/biometrics/AuthService.java        | 306 +++++++++++++++++-
- .../fingerprint/aidl/FingerprintProvider.java |  22 ++
- 5 files changed, 400 insertions(+), 10 deletions(-)
+ .../fingerprint/aidl/FingerprintProvider.java |  23 ++
+ 5 files changed, 401 insertions(+), 10 deletions(-)
 
 diff --git a/packages/SystemUI/Android.bp b/packages/SystemUI/Android.bp
 index 2c5a1e7dc..816ae7212 100644
@@ -591,10 +591,18 @@ index fc7930c62..505e024f4 100644
 +    }
  }
 diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-index 913899102..33499bbb2 100644
+index 913899102..73e681aae 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
-@@ -237,6 +237,7 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+@@ -38,6 +38,7 @@ import android.hardware.biometrics.SensorLocationInternal;
+ import android.hardware.biometrics.fingerprint.IFingerprint;
+ import android.hardware.biometrics.fingerprint.PointerContext;
+ import android.hardware.biometrics.fingerprint.SensorProps;
++import android.hardware.biometrics.fingerprint.SensorLocation;
+ import android.hardware.biometrics.fingerprint.virtualhal.IVirtualHal;
+ import android.hardware.fingerprint.Fingerprint;
+ import android.hardware.fingerprint.FingerprintAuthenticateOptions;
+@@ -237,6 +238,7 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
              Slog.d(getTag(), "Adding AIDL configs");
              final List<SensorLocationInternal> workaroundLocations =
                      getWorkaroundSensorProps(mContext);
@@ -602,7 +610,7 @@ index 913899102..33499bbb2 100644
              for (SensorProps prop : props) {
                  addAidlSensors(prop, gestureAvailabilityDispatcher, workaroundLocations,
                          resetLockoutRequiresHardwareAuthToken);
-@@ -270,6 +271,27 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+@@ -270,6 +272,27 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
              @NonNull List<SensorLocationInternal> workaroundLocations,
              boolean resetLockoutRequiresHardwareAuthToken) {
          final int sensorId = prop.commonProps.sensorId;
