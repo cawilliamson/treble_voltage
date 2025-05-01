@@ -1,7 +1,7 @@
 From 517b73b7ba4e328c6ff1054a340e2ec135c6ec4e Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Thu, 1 May 2025 10:46:14 +0100
-Subject: [PATCH 1/3] Revert "core: pm: Use checkRequiredSystemProperties from
+Subject: [PATCH 1/6] Revert "core: pm: Use checkRequiredSystemProperties from
  FrameworkParsingPackageUtils"
 
 ---

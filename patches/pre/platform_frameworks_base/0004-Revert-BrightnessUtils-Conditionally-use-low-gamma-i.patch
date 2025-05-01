@@ -1,0 +1,24 @@
+From f9db36f934af91bc9c6359ee5d2a2bd3129bfc06 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <contact@chrisaw.io>
+Date: Thu, 1 May 2025 13:16:02 +0100
+Subject: [PATCH 4/6] Revert "BrightnessUtils: Conditionally use low gamma
+ implementation for brightness curve"
+
+---
+ .../src/com/android/settingslib/display/BrightnessUtils.java     | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java b/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
+index 35f01f672..c3ea64171 100644
+--- a/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
++++ b/packages/SettingsLib/DisplayUtils/src/com/android/settingslib/display/BrightnessUtils.java
+@@ -18,7 +18,6 @@ package com.android.settingslib.display;
+ 
+ import android.os.SystemProperties;
+ import android.util.MathUtils;
+-import com.android.internal.display.BrightnessSynchronizer;
+ 
+ /** Utility methods for calculating the display brightness. */
+ import com.android.internal.display.BrightnessSynchronizer;
+-- 
+2.47.2

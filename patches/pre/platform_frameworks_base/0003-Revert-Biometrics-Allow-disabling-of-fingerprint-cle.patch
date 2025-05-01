@@ -1,7 +1,7 @@
 From fcd3ddb48e437ec9a087bbf2ef3f990f6e76eb49 Mon Sep 17 00:00:00 2001
-From: "Christopher A. Williamson" <home@chrisaw.com>
+From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Thu, 1 May 2025 11:59:05 +0100
-Subject: [PATCH 3/3] Revert "Biometrics: Allow disabling of fingerprint cleanups"
+Subject: [PATCH 3/6] Revert "Biometrics: Allow disabling of fingerprint cleanups"
 
 ---
  core/res/res/values/voltage_config.xml                    | 4 ----
