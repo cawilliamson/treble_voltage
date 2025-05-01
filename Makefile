@@ -175,6 +175,7 @@ apply-patches: build-container create-folders
 		voltage-gsi-builder \
 		/bin/bash -e -c ' \
 			pushd /repo/src/ && \
+				/repo/patches/apply.sh . pre && \
 				/repo/patches/apply.sh . trebledroid && \
 				/repo/patches/apply.sh . personal && \
 				if [ "$$APPLY_DEBUG_PATCHES" = "true" ]; then \
