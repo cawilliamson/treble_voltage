@@ -1,0 +1,76 @@
+From fcd3ddb48e437ec9a087bbf2ef3f990f6e76eb49 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Thu, 1 May 2025 11:59:05 +0100
+Subject: [PATCH 3/3] Revert "Biometrics: Allow disabling of fingerprint cleanups"
+
+---
+ core/res/res/values/voltage_config.xml                    | 4 ----
+ core/res/res/values/voltage_symbols.xml                   | 4 ----
+ .../sensors/fingerprint/aidl/FingerprintProvider.java     | 8 --------
+ 3 files changed, 16 deletions(-)
+
+diff --git a/core/res/res/values/voltage_config.xml b/core/res/res/values/voltage_config.xml
+index 2ca113689..91c824d7f 100644
+--- a/core/res/res/values/voltage_config.xml
++++ b/core/res/res/values/voltage_config.xml
+@@ -5,10 +5,6 @@
+ -->
+ <resources>
+ 
+-    <!-- Whether to cleanup fingerprints upon connection to the daemon and when
+-         user switches -->
+-    <bool name="config_cleanupUnusedFingerprints">true</bool>
+-
+     <!-- Whether to cancel fingerprint operation if not idle -->
+     <bool name="config_fpCancelIfNotIdle">false</bool>
+ 
+diff --git a/core/res/res/values/voltage_symbols.xml b/core/res/res/values/voltage_symbols.xml
+index 227e912aa..e281148c4 100644
+--- a/core/res/res/values/voltage_symbols.xml
++++ b/core/res/res/values/voltage_symbols.xml
+@@ -5,10 +5,6 @@
+ -->
+ <resources>
+ 
+-    <!-- Whether to cleanup fingerprints upon connection to the daemon and when
+-         user switches -->
+-    <java-symbol type="bool" name="config_cleanupUnusedFingerprints" />
+-
+     <!-- Whether to cancel fingerprint operation if not idle -->
+     <java-symbol type="bool" name="config_fpCancelIfNotIdle" />
+ 
+diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
+index 817e81c11..0ee595875 100644
+--- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
++++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
+@@ -137,8 +137,6 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+     @Nullable private IVirtualHal mVhal;
+     @Nullable private String mHalInstanceNameCurrent;
+ 
+-    private boolean mCleanup;
+-
+     private final class BiometricTaskStackListener extends TaskStackListener {
+         @Override
+         public void onTaskStackChanged() {
+@@ -208,9 +206,6 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+         mTestHalEnabled = testHalEnabled;
+         mBiometricHandlerProvider = biometricHandlerProvider;
+ 
+-        mCleanup = context.getResources().getBoolean(
+-                com.android.internal.R.bool.config_cleanupUnusedFingerprints);
+-
+         initAuthenticationBroadcastReceiver();
+         initFingerprintDanglingBroadcastReceiver();
+         initSensors(resetLockoutRequiresHardwareAuthToken, props, gestureAvailabilityDispatcher);
+@@ -679,9 +674,6 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+     @Override
+     public void scheduleInternalCleanup(int sensorId, int userId,
+             @Nullable ClientMonitorCallback callback, boolean favorHalEnrollments) {
+-        if (!mCleanup) {
+-            return;
+-        }
+         mHandler.post(() -> {
+             final FingerprintInternalCleanupClient client =
+                     new FingerprintInternalCleanupClient(mContext,
+-- 
+2.47.2
