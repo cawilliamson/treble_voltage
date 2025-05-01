@@ -1,7 +1,7 @@
 From d5843f8a2bdea21821285710a04dc9cf3e170b4e Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <home@chrisaw.com>
 Date: Thu, 1 May 2025 11:41:03 +0100
-Subject: [PATCH 2/2] Revert "core: pm: Allow wildcard in RRO system property value
+Subject: [PATCH 2/3] Revert "core: pm: Allow wildcard in RRO system property value
  checks"
 
 ---
