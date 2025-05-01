@@ -9,7 +9,7 @@ Subject: [PATCH 6/8] More bpf errors ignore -- there are some 4.14 without the
  1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/bpf/loader/NetBpfLoad.cpp b/bpf/loader/NetBpfLoad.cpp
-index b14241e..e307064 100644
+index 7b2648b..792e2cd 100644
 --- a/bpf/loader/NetBpfLoad.cpp
 +++ b/bpf/loader/NetBpfLoad.cpp
 @@ -1586,8 +1586,7 @@ static int doLoad(char** argv, char * const envp[]) {

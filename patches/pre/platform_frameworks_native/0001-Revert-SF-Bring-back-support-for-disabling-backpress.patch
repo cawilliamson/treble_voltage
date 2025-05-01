@@ -1,0 +1,118 @@
+From 9ab4d4727c09d9436b5d2e1fa449c41d4ba8f311 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <contact@chrisaw.io>
+Date: Thu, 1 May 2025 15:13:35 +0100
+Subject: [PATCH 1/1] Revert "SF: Bring back support for disabling backpressure
+ propagation"
+
+---
+ .../Scheduler/include/scheduler/Features.h               | 1 -
+ .../Scheduler/include/scheduler/FrameTargeter.h          | 4 +---
+ services/surfaceflinger/Scheduler/src/FrameTargeter.cpp  | 6 +++---
+ services/surfaceflinger/SurfaceFlinger.cpp               | 9 +--------
+ services/surfaceflinger/SurfaceFlinger.h                 | 1 -
+ 5 files changed, 5 insertions(+), 16 deletions(-)
+
+diff --git a/services/surfaceflinger/Scheduler/include/scheduler/Features.h b/services/surfaceflinger/Scheduler/include/scheduler/Features.h
+index 6a3d7d0..52485fb 100644
+--- a/services/surfaceflinger/Scheduler/include/scheduler/Features.h
++++ b/services/surfaceflinger/Scheduler/include/scheduler/Features.h
+@@ -30,7 +30,6 @@ enum class Feature : std::uint8_t {
+     kBackpressureGpuComposition = 1 << 4,
+     kSmallDirtyContentDetection = 1 << 5,
+     kExpectedPresentTime = 1 << 6,
+-    kPropagateBackpressure = 1 << 7,
+ };
+ 
+ using FeatureFlags = ftl::Flags<Feature>;
+diff --git a/services/surfaceflinger/Scheduler/include/scheduler/FrameTargeter.h b/services/surfaceflinger/Scheduler/include/scheduler/FrameTargeter.h
+index 90c6599..813d4de 100644
+--- a/services/surfaceflinger/Scheduler/include/scheduler/FrameTargeter.h
++++ b/services/surfaceflinger/Scheduler/include/scheduler/FrameTargeter.h
+@@ -128,8 +128,7 @@ public:
+     FrameTargeter(PhysicalDisplayId displayId, FeatureFlags flags)
+           : FrameTarget(to_string(displayId)),
+             mBackpressureGpuComposition(flags.test(Feature::kBackpressureGpuComposition)),
+-            mSupportsExpectedPresentTime(flags.test(Feature::kExpectedPresentTime)),
+-            mPropagateBackpressure(flags.test(Feature::kPropagateBackpressure)) {}
++            mSupportsExpectedPresentTime(flags.test(Feature::kExpectedPresentTime)) {}
+ 
+     const FrameTarget& target() const { return *this; }
+ 
+@@ -166,7 +165,6 @@ private:
+ 
+     const bool mBackpressureGpuComposition;
+     const bool mSupportsExpectedPresentTime;
+-    const bool mPropagateBackpressure;
+ 
+     TimePoint mScheduledPresentTime;
+     CompositionCoverageFlags mCompositionCoverage;
+diff --git a/services/surfaceflinger/Scheduler/src/FrameTargeter.cpp b/services/surfaceflinger/Scheduler/src/FrameTargeter.cpp
+index 482f2bf..5019949 100644
+--- a/services/surfaceflinger/Scheduler/src/FrameTargeter.cpp
++++ b/services/surfaceflinger/Scheduler/src/FrameTargeter.cpp
+@@ -140,14 +140,14 @@ void FrameTargeter::beginFrame(const BeginFrameArgs& args, const IVsyncSource& v
+                 mBackpressureGpuComposition || !mCompositionCoverage.test(CompositionCoverage::Gpu);
+ 
+         if (!FlagManager::getInstance().allow_n_vsyncs_in_targeter()) {
+-            return mPropagateBackpressure && static_cast<int>(considerBackpressure);
++            return static_cast<int>(considerBackpressure);
+         }
+ 
+         if (!wouldBackpressure || !considerBackpressure) {
+-            return false;
++            return 0;
+         }
+ 
+-        return mPropagateBackpressure && static_cast<int>((std::abs(fence.expectedPresentTime.ns() - mFrameBeginTime.ns()) <=
++        return static_cast<int>((std::abs(fence.expectedPresentTime.ns() - mFrameBeginTime.ns()) <=
+                                  Duration(1ms).ns()));
+     }();
+ 
+diff --git a/services/surfaceflinger/SurfaceFlinger.cpp b/services/surfaceflinger/SurfaceFlinger.cpp
+index 18c7731..82679a7 100644
+--- a/services/surfaceflinger/SurfaceFlinger.cpp
++++ b/services/surfaceflinger/SurfaceFlinger.cpp
+@@ -487,10 +487,6 @@ SurfaceFlinger::SurfaceFlinger(Factory& factory) : SurfaceFlinger(factory, SkipI
+ 
+     mDebugFlashDelay = base::GetUintProperty("debug.sf.showupdates"s, 0u);
+ 
+-    property_get("debug.sf.disable_backpressure", value, "0");
+-    mPropagateBackpressure = !atoi(value);
+-    ALOGI_IF(!mPropagateBackpressure, "Disabling backpressure propagation");
+-
+     mBackpressureGpuComposition = base::GetBoolProperty("debug.sf.enable_gl_backpressure"s, true);
+     ALOGI_IF(mBackpressureGpuComposition, "Enabling backpressure for GPU composition");
+ 
+@@ -2671,7 +2667,7 @@ bool SurfaceFlinger::commit(PhysicalDisplayId pacesetterId,
+     }
+ 
+     if (pacesetterFrameTarget.wouldBackpressureHwc()) {
+-        if (mPropagateBackpressure && (mBackpressureGpuComposition || pacesetterFrameTarget.didMissHwcFrame())) {
++        if (mBackpressureGpuComposition || pacesetterFrameTarget.didMissHwcFrame()) {
+             if (FlagManager::getInstance().vrr_config()) {
+                 mScheduler->getVsyncSchedule()->getTracker().onFrameMissed(
+                         pacesetterFrameTarget.expectedPresentTime());
+@@ -4457,9 +4453,6 @@ void SurfaceFlinger::initScheduler(const sp<const DisplayDevice>& display) {
+     if (mBackpressureGpuComposition) {
+         features |= Feature::kBackpressureGpuComposition;
+     }
+-    if (mPropagateBackpressure) {
+-        features |= Feature::kPropagateBackpressure;
+-    }
+     if (getHwComposer().getComposer()->isSupported(
+                 Hwc2::Composer::OptionalFeature::ExpectedPresentTime)) {
+         features |= Feature::kExpectedPresentTime;
+diff --git a/services/surfaceflinger/SurfaceFlinger.h b/services/surfaceflinger/SurfaceFlinger.h
+index cd2312c..1e2c087 100644
+--- a/services/surfaceflinger/SurfaceFlinger.h
++++ b/services/surfaceflinger/SurfaceFlinger.h
+@@ -1311,7 +1311,6 @@ private:
+     std::atomic_bool mForceFullDamage = false;
+ 
+     bool mLayerCachingEnabled = false;
+-    bool mPropagateBackpressure = true;
+     bool mBackpressureGpuComposition = false;
+ 
+     LayerTracing mLayerTracing;
+-- 
+2.47.2
