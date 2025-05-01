@@ -8,11 +8,11 @@ Subject: [PATCH 5/6] Every voldmanaged storage is adoptable
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/main.cpp b/main.cpp
-index 078ee14b..475060dc 100644
+index 10407df..4f02e83 100644
 --- a/main.cpp
 +++ b/main.cpp
-@@ -269,7 +269,7 @@ static int process_config(VolumeManager* vm, VoldConfigs* configs) {
-             std::string nickname(entry.label);
+@@ -277,7 +277,7 @@ static int process_config(VolumeManager* vm, VoldConfigs* configs) {
+             int partnum = entry.partnum;
              int flags = 0;
  
 -            if (entry.is_encryptable()) {
@@ -20,5 +20,5 @@ index 078ee14b..475060dc 100644
                  flags |= android::vold::Disk::Flags::kAdoptable;
                  configs->has_adoptable = true;
              }
--- 
+--
 2.43.0
