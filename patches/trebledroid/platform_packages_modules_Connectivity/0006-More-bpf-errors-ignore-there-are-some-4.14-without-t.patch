@@ -5,11 +5,11 @@ Subject: [PATCH 6/8] More bpf errors ignore -- there are some 4.14 without the
  bpf jit file
 
 ---
- bpf/loader/NetBpfLoad.cpp | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ bpf/loader/NetBpfLoad.cpp | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/bpf/loader/NetBpfLoad.cpp b/bpf/loader/NetBpfLoad.cpp
-index 56e4eed355..1c504edace 100644
+index 7b2648b..792e2cd 100644
 --- a/bpf/loader/NetBpfLoad.cpp
 +++ b/bpf/loader/NetBpfLoad.cpp
 @@ -1586,8 +1586,7 @@ static int doLoad(char** argv, char * const envp[]) {
@@ -22,20 +22,22 @@ index 56e4eed355..1c504edace 100644
      }
  
      if (isAtLeastU) {
-@@ -1602,12 +1601,12 @@ static int doLoad(char** argv, char * const envp[]) {
+@@ -1602,14 +1601,12 @@ static int doLoad(char** argv, char * const envp[]) {
          //  kernel does not have CONFIG_BPF_JIT=y)
          // BPF_JIT is required by R VINTF (which means 4.14/4.19/5.4 kernels),
          // but 4.14/4.19 were released with P & Q, and only 5.4 is new in R+.
--        if (writeProcSysFile("/proc/sys/net/core/bpf_jit_enable", "1\n")) return 1;
+-        if (writeProcSysFile("/proc/sys/net/core/bpf_jit_enable", "1\n") &&
+-            android::bpf::isAtLeastKernelVersion(4, 14, 0)) return 1;
 +        writeProcSysFile("/proc/sys/net/core/bpf_jit_enable", "1\n");
  
          // Enable JIT kallsyms export for privileged users only
          // (Note: this (open) will fail with ENOENT 'No such file or directory' if
          //  kernel does not have CONFIG_HAVE_EBPF_JIT=y)
--        if (writeProcSysFile("/proc/sys/net/core/bpf_jit_kallsyms", "1\n")) return 1;
+-        if (writeProcSysFile("/proc/sys/net/core/bpf_jit_kallsyms", "1\n") &&
+-            android::bpf::isAtLeastKernelVersion(4, 14, 0)) return 1;
 +        writeProcSysFile("/proc/sys/net/core/bpf_jit_kallsyms", "1\n");
      }
  
      // Create all the pin subdirectories
--- 
+--
 2.43.0
