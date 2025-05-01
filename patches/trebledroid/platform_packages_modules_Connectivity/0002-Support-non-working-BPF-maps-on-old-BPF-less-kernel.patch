@@ -5,13 +5,13 @@ Subject: [PATCH 2/8] Support non-working BPF maps on old BPF-less kernel
 
 ---
  bpf/headers/include/bpf/BpfMap.h              | 20 ++++++----
- bpf/loader/NetBpfLoad.cpp                     | 31 +++++++--------
+ bpf/loader/NetBpfLoad.cpp                     | 33 +++++++---------
  .../src/android/net/BpfNetMapsUtils.java      |  7 ++++
  .../android/net/NetworkStackBpfNetMaps.java   |  6 +--
  .../libs/libnetworkstats/BpfNetworkStats.cpp  |  1 +
  .../server/net/NetworkStatsService.java       | 29 ++++++++------
  .../src/com/android/server/BpfNetMaps.java    | 39 ++++++++++++++++++-
- 7 files changed, 90 insertions(+), 43 deletions(-)
+ 7 files changed, 91 insertions(+), 44 deletions(-)
 
 diff --git a/bpf/headers/include/bpf/BpfMap.h b/bpf/headers/include/bpf/BpfMap.h
 index 1037beb..296e3d2 100644
@@ -52,17 +52,17 @@ index 1037beb..296e3d2 100644
  
      Result<Key> getFirstKey() const {
 diff --git a/bpf/loader/NetBpfLoad.cpp b/bpf/loader/NetBpfLoad.cpp
-index 9e8c3e2..b14241e 100644
+index 9e8c3e2..7b2648b 100644
 --- a/bpf/loader/NetBpfLoad.cpp
 +++ b/bpf/loader/NetBpfLoad.cpp
-@@ -1433,6 +1433,7 @@ static int doLoad(char** argv, char * const envp[]) {
-     if (runningAsRoot) ++bpfloader_ver;  // [45] BPFLOADER_MAINLINE_U_QPR3_VERSION
-     if (isAtLeastV) ++bpfloader_ver;     // [46] BPFLOADER_MAINLINE_V_VERSION
-     if (isAtLeastW) ++bpfloader_ver;     // [47] BPFLOADER_MAINLINE_W_VERSION
+@@ -1418,6 +1418,7 @@ static int doLoad(char** argv, char * const envp[]) {
+     const bool isAtLeastU = (effective_api_level >= __ANDROID_API_U__);
+     const bool isAtLeastV = (effective_api_level >= __ANDROID_API_V__);
+     const bool isAtLeastW = (effective_api_level >  __ANDROID_API_V__);  // TODO: switch to W
 +    bool failed = false;
  
-     ALOGI("NetBpfLoad v0.%u (%s) api:%d/%d kver:%07x (%s) uid:%d rc:%d%d",
-           bpfloader_ver, argv[0], android_get_device_api_level(), effective_api_level,
+     const int first_api_level = GetIntProperty("ro.board.first_api_level", effective_api_level);
+ 
 @@ -1453,32 +1454,33 @@ static int doLoad(char** argv, char * const envp[]) {
  
      if (!isAtLeastT) {
@@ -101,6 +101,15 @@ index 9e8c3e2..b14241e 100644
      }
  
      // 6.6 is highest version supported by Android V, so this is effectively W+ (sdk=36+)
+@@ -1574,7 +1576,7 @@ static int doLoad(char** argv, char * const envp[]) {
+     if (!isEng() && !isUser() && !isUserdebug()) {
+         ALOGE("Failed to determine the build type: got %s, want 'eng', 'user', or 'userdebug'",
+               getBuildType().c_str());
+-        return 1;
++        failed = true;
+     }
+ 
+     if (runningAsRoot) {
 @@ -1628,23 +1630,16 @@ static int doLoad(char** argv, char * const envp[]) {
      // Load all ELF objects, create programs and maps, and pin them
      for (const auto& location : locations) {
