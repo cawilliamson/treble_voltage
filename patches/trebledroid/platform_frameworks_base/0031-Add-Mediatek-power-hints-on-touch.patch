@@ -27,13 +27,13 @@ Change-Id: I9f1eac5a20b98920a5d0c8204fe4d165ba069f5a
  2 files changed, 52 insertions(+), 1 deletion(-)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index 5dd872f4bc09..950882bb5c9c 100644
+index 0ad80ff5f..ab90f1fa2 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
-@@ -247,7 +247,9 @@ java_library_static {
-         "profiling_flags_lib",
+@@ -258,7 +258,9 @@ java_library_static {
          "android.adpf.sessionmanager_aidl-java",
          "uprobestats_flags_java_lib",
+         "vendor.aospa.biometrics.face",
 -        "vendor.samsung.hardware.sysinput-V1.2-java", // HIDL
 +        // HIDL
 +        "vendor.mediatek.hardware.mtkpower-V1.1-java",
@@ -42,7 +42,7 @@ index 5dd872f4bc09..950882bb5c9c 100644
      javac_shard_size: 50,
      javacflags: [
 diff --git a/services/core/java/com/android/server/wm/DisplayPolicy.java b/services/core/java/com/android/server/wm/DisplayPolicy.java
-index 659bb6784c89..c890bb984f3c 100644
+index e1fa7c456..7621336a4 100644
 --- a/services/core/java/com/android/server/wm/DisplayPolicy.java
 +++ b/services/core/java/com/android/server/wm/DisplayPolicy.java
 @@ -213,6 +213,9 @@ public class DisplayPolicy {
@@ -122,5 +122,5 @@ index 659bb6784c89..c890bb984f3c 100644
                  }
  
                  @Override
--- 
+--
 2.43.0
