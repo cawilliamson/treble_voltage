@@ -10,7 +10,7 @@ Subject: [PATCH 3/8] Add options for status bar paddings
  3 files changed, 65 insertions(+), 1 deletion(-)
 
 diff --git a/app/src/main/java/me/phh/treble/app/Misc.kt b/app/src/main/java/me/phh/treble/app/Misc.kt
-index 7c0c1c9..f58c044 100644
+index b2fcde5..d5150bd 100644
 --- a/app/src/main/java/me/phh/treble/app/Misc.kt
 +++ b/app/src/main/java/me/phh/treble/app/Misc.kt
 @@ -143,6 +143,8 @@ object Misc: EntryStartup {
@@ -62,7 +62,7 @@ index 7c0c1c9..f58c044 100644
                  val value = sp.getBoolean(key, false)
                  SystemProperties.set("persist.sys.phh.low_gamma_brightness", if (value) "true" else "false")
 diff --git a/app/src/main/java/me/phh/treble/app/MiscSettings.kt b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-index e80012a..b153842 100644
+index bb29106..5e341ba 100644
 --- a/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 +++ b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 @@ -42,6 +42,10 @@ object MiscSettings : Settings {
@@ -77,7 +77,7 @@ index e80012a..b153842 100644
      val linearBrightness = "key_misc_linear_brightness"
      val forceDisplay5g = "key_misc_force_display_5g"
 diff --git a/app/src/main/res/xml/pref_misc.xml b/app/src/main/res/xml/pref_misc.xml
-index a8221a7..f90e94c 100644
+index 8295162..daa0aec 100644
 --- a/app/src/main/res/xml/pref_misc.xml
 +++ b/app/src/main/res/xml/pref_misc.xml
 @@ -33,7 +33,7 @@
@@ -93,30 +93,30 @@ index a8221a7..f90e94c 100644
              android:key="key_misc_rounded_corners_overlay"
              android:title="Set forced/faked rounded corners diameter"
              android:inputType="number" />
-+		<EditTextPreference
-+			android:defaultValue="-1"
-+			android:key="key_misc_sb_padding_top"
-+			android:title="Set status bar top padding"
-+			android:inputType="number"
-+			android:summary="Requires a reboot" />
-+		<EditTextPreference
-+			android:defaultValue="-1"
-+			android:key="key_misc_sb_padding_start"
-+			android:title="Set status bar start padding"
-+			android:inputType="number"
-+			android:summary="Requires a reboot" />
-+		<EditTextPreference
-+			android:defaultValue="-1"
-+			android:key="key_misc_sb_padding_end"
-+			android:title="Set status bar end padding"
-+			android:inputType="number"
-+			android:summary="Requires a reboot" />
-+                <EditTextPreference
-+                        android:defaultValue="-1"
-+                        android:key="key_misc_sb_padding_bottom"
-+                        android:title="Set status bar bottom padding"
-+                        android:inputType="number"
-+                        android:summary="Requires a SystemUI restart" />
++        <EditTextPreference
++            android:defaultValue="-1"
++            android:key="key_misc_sb_padding_top"
++            android:title="Set status bar top padding"
++            android:inputType="number"
++            android:summary="Requires a SystemUI restart" />
++        <EditTextPreference
++            android:defaultValue="-1"
++            android:key="key_misc_sb_padding_start"
++            android:title="Set status bar start padding"
++            android:inputType="number"
++            android:summary="Requires a SystemUI restart" />
++        <EditTextPreference
++            android:defaultValue="-1"
++            android:key="key_misc_sb_padding_end"
++            android:title="Set status bar end padding"
++            android:inputType="number"
++            android:summary="Requires a SystemUI restart" />
++        <EditTextPreference
++            android:defaultValue="-1"
++            android:key="key_misc_sb_padding_bottom"
++            android:title="Set status bar bottom padding"
++            android:inputType="number"
++            android:summary="Requires a SystemUI restart" />
 +    </PreferenceCategory>
 +    <PreferenceCategory android:title="Display">
          <ListPreference
