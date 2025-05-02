@@ -4,13 +4,13 @@ Date: Fri, 25 Aug 2023 09:18:32 -0300
 Subject: [PATCH 3/8] Add options for status bar paddings
 
 ---
- app/src/main/java/me/phh/treble/app/Misc.kt   | 26 +++++++++++++++++++
- .../java/me/phh/treble/app/MiscSettings.kt    |  3 +++
- app/src/main/res/xml/pref_misc.xml            | 22 +++++++++++++++-
- 3 files changed, 50 insertions(+), 1 deletion(-)
+ app/src/main/java/me/phh/treble/app/Misc.kt   | 35 +++++++++++++++++++
+ .../java/me/phh/treble/app/MiscSettings.kt    |  4 +++
+ app/src/main/res/xml/pref_misc.xml            | 28 ++++++++++++++-
+ 3 files changed, 66 insertions(+), 1 deletion(-)
 
 diff --git a/app/src/main/java/me/phh/treble/app/Misc.kt b/app/src/main/java/me/phh/treble/app/Misc.kt
-index 7c0c1c9..406a070 100644
+index b2fcde5..4528d74 100644
 --- a/app/src/main/java/me/phh/treble/app/Misc.kt
 +++ b/app/src/main/java/me/phh/treble/app/Misc.kt
 @@ -143,6 +143,8 @@ object Misc: EntryStartup {
@@ -22,12 +22,12 @@ index 7c0c1c9..406a070 100644
                  }
              }
              MiscSettings.roundedCornersOverlay -> {
-@@ -297,6 +299,30 @@ object Misc: EntryStartup {
-             MiscSettings.allowBinderThread -> {
+@@ -298,6 +300,39 @@ object Misc: EntryStartup {
                  val value = sp.getBoolean(key, false)
                  SystemProperties.set("persist.sys.phh.allow_binder_thread_on_incoming_calls", if(value) "1" else "0")
-+            }
-+	        MiscSettings.statusbarpaddingtop -> {
+             }
++
++            MiscSettings.statusbarpaddingtop -> {
 +                val value = sp.getString(key, "-1").toInt()
 +                if(value != -1) {
 +                SystemProperties.set("persist.sys.phh.status_bar_padding_top", value.toString())
@@ -50,25 +50,35 @@ index 7c0c1c9..406a070 100644
 +                } else {
 +                    SystemProperties.set("persist.sys.phh.status_bar_padding_end", null)
 +                }
-             }
++            }
++            MiscSettings.statusbarpaddingbottom -> {
++                val value = sp.getString(key, "-1").toInt()
++                if(value != -1) {
++                SystemProperties.set("persist.sys.phh.status_bar_padding_bottom", value.toString())
++                } else {
++                    SystemProperties.set("persist.sys.phh.status_bar_padding_bottom", null)
++                }
++            }
              MiscSettings.lowGammaBrightness -> {
                  val value = sp.getBoolean(key, false)
+                 SystemProperties.set("persist.sys.phh.low_gamma_brightness", if (value) "true" else "false")
 diff --git a/app/src/main/java/me/phh/treble/app/MiscSettings.kt b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-index bb29106..263cb0e 100644
+index bb29106..5e341ba 100644
 --- a/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 +++ b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-@@ -42,6 +42,9 @@ object MiscSettings : Settings {
+@@ -42,6 +42,10 @@ object MiscSettings : Settings {
      val mtkTouchHintIsRotate = "key_misc_mediatek_touch_hint_rotate"
      val mtkGedKpi = "key_misc_mediatek_ged_kpi"
      val allowBinderThread = "key_misc_allow_binder_thread_on_incoming_calls"
 +    val statusbarpaddingtop = "key_misc_sb_padding_top"
 +    val statusbarpaddingstart = "key_misc_sb_padding_start"
 +    val statusbarpaddingend = "key_misc_sb_padding_end"
++    val statusbarpaddingbottom = "key_misc_sb_padding_bottom"
      val lowGammaBrightness = "key_misc_low_gamma_brightness"
      val linearBrightness = "key_misc_linear_brightness"
      val forceDisplay5g = "key_misc_force_display_5g"
 diff --git a/app/src/main/res/xml/pref_misc.xml b/app/src/main/res/xml/pref_misc.xml
-index 950d3a2..721f51e 100644
+index 8295162..f1bd09a 100644
 --- a/app/src/main/res/xml/pref_misc.xml
 +++ b/app/src/main/res/xml/pref_misc.xml
 @@ -33,7 +33,7 @@
@@ -80,7 +90,7 @@ index 950d3a2..721f51e 100644
          <EditTextPreference
              android:defaultValue="-1"
              android:key="key_misc_rounded_corners"
-@@ -45,6 +45,26 @@
+@@ -45,6 +45,32 @@
              android:key="key_misc_rounded_corners_overlay"
              android:title="Set forced/faked rounded corners diameter"
              android:inputType="number" />
@@ -102,10 +112,16 @@ index 950d3a2..721f51e 100644
 +			android:title="Set status bar end padding"
 +			android:inputType="number"
 +			android:summary="Requires a reboot" />
++                <EditTextPreference
++                        android:defaultValue="-1"
++                        android:key="key_misc_sb_padding_bottom"
++                        android:title="Set status bar bottom padding"
++                        android:inputType="number"
++                        android:summary="Requires a SystemUI restart" />
 +    </PreferenceCategory>
 +    <PreferenceCategory android:title="Display">
          <ListPreference
              android:defaultValue="-1"
              android:entries="@array/pref_misc_display_fps"
--- 
+--
 2.34.1
