@@ -30,9 +30,9 @@ Change-Id: I7af81218276c60afbfea6dac702c7bcd584f397a
  packages/SystemUI/Android.bp                  |   4 +
  .../systemui/biometrics/UdfpsController.java  |  73 +++++
  services/core/Android.bp                      |   5 +
- .../server/biometrics/AuthService.java        | 306 +++++++++++++++++-
+ .../server/biometrics/AuthService.java        | 307 +++++++++++++++++-
  .../fingerprint/aidl/FingerprintProvider.java |  23 ++
- 5 files changed, 401 insertions(+), 10 deletions(-)
+ 5 files changed, 402 insertions(+), 10 deletions(-)
 
 diff --git a/packages/SystemUI/Android.bp b/packages/SystemUI/Android.bp
 index 2c5a1e7dc..816ae7212 100644
@@ -222,7 +222,7 @@ index ab90f1fa2..f0c0b65f0 100644
      javac_shard_size: 50,
      javacflags: [
 diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
-index fc7930c62..505e024f4 100644
+index fc7930c62..1b30d327e 100644
 --- a/services/core/java/com/android/server/biometrics/AuthService.java
 +++ b/services/core/java/com/android/server/biometrics/AuthService.java
 @@ -81,6 +81,25 @@ import java.util.ArrayList;
@@ -277,7 +277,7 @@ index fc7930c62..505e024f4 100644
                  configStrings = generateRSdkCompatibleConfiguration();
              }
              hidlConfigs = new SensorConfig[configStrings.length];
-@@ -778,6 +802,101 @@ public class AuthService extends SystemService {
+@@ -778,6 +802,102 @@ public class AuthService extends SystemService {
  
          registerAuthenticators();
          mInjector.publishBinderService(this, mImpl);
@@ -314,6 +314,7 @@ index fc7930c62..505e024f4 100644
 +                        }
 +                        if(mSamsungFingerprint != null) {
 +                            mSamsungFingerprint.sehRequest(22 /* SEM_FINGER_STATE */, eventReq, new java.util.ArrayList<Byte>(),
++                                    (int retval, java.util.ArrayList<Byte> out) -> {} );
 +                        }
 +                    } catch(Exception e) {
 +                        Slog.d("PHH-Enroll", "Failed setting samsung event for mask observer", e);
@@ -379,7 +380,7 @@ index fc7930c62..505e024f4 100644
      }
  
      private void registerAuthenticators() {
-@@ -910,15 +1029,13 @@ public class AuthService extends SystemService {
+@@ -910,15 +1030,13 @@ public class AuthService extends SystemService {
  
          handlerProvider.getFingerprintHandler().post(() -> {
              final FingerprintSensorConfigurations mFingerprintSensorConfigurations =
@@ -399,7 +400,7 @@ index fc7930c62..505e024f4 100644
              }
  
              if (fingerprintService != null) {
-@@ -987,14 +1104,119 @@ public class AuthService extends SystemService {
+@@ -987,14 +1105,119 @@ public class AuthService extends SystemService {
                  ? modality : (modality & ~BiometricAuthenticator.TYPE_CREDENTIAL);
      }
  
@@ -521,7 +522,7 @@ index fc7930c62..505e024f4 100644
  
          // config_is_powerbutton_fps indicates whether device has a power button fingerprint sensor.
          final boolean isPowerbuttonFps = getContext().getResources().getBoolean(
-@@ -1057,4 +1279,68 @@ public class AuthService extends SystemService {
+@@ -1057,4 +1280,68 @@ public class AuthService extends SystemService {
                  componentInfo, resetLockoutRequiresHardwareAuthToken,
                  resetLockoutRequiresChallenge);
      }
