@@ -135,7 +135,7 @@ index 3124b0abe..06edd3726 100644
              @NonNull UdfpsOverlayInteractor udfpsOverlayInteractor,
              @NonNull PowerInteractor powerInteractor,
              @Application CoroutineScope scope,
-+            @NonNull ColorDisplayManager colorDisplayManager
++            @NonNull ColorDisplayManager colorDisplayManager,
              @NonNull AuthController authController) {
          mContext = context;
          mExecution = execution;
