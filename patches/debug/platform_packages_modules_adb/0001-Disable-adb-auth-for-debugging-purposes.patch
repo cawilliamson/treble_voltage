@@ -1,7 +1,7 @@
 From dd5c99d83973e42e7e08a360ddb14ef9124cb98b Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Mon, 6 May 2024 11:20:26 +0100
-Subject: [PATCH] Disable adb auth for debugging purposes
+Subject: [PATCH 1/1] Disable adb auth for debugging purposes
 
 Or as PHH calls it - the "fuck it" method! :)
 
