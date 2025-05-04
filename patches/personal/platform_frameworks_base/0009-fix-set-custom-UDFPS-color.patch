@@ -1,0 +1,61 @@
+From c10bc0fd6a3480e4e5f2492e614a6bb20aa57200 Mon Sep 17 00:00:00 2001
+From: mytja <mitja@severkar.eu>
+Date: Sun, 6 Apr 2025 16:02:58 +0200
+Subject: [PATCH 9/9] fix: set custom UDFPS color
+
+This should enable changing UDFPS color on LineageOS-based ROMs.
+It's intended mostly since on A15 QPR2, Google has removed UdfpsView.kt,
+partially breaking UDFPS in TrebleDroid sources. This should serve as a
+temporary mitigation.
+
+After several hours I haven't found any AOSP files where I can change
+UDFPS color, sooo this's the easy route with LineageOS...
+
+If you want to use this patch on AOSP ROMs cherry-pick the following
+commits before applying this patch:
+
+https://review.lineageos.org/c/LineageOS/android_frameworks_base/+/421977
+https://review.lineageos.org/c/LineageOS/android_frameworks_base/+/421978
+
+I've used the patch "FOD support for Asus, Samsung recent Xiaomi and
+ RedMagic 8 devices" as a base, so huge thanks to phhusson.
+
+And no, this patch does not fix broken HIDL on Samsungs, I still haven't
+figured that out. This patch just "partially" restores the behaviour to
+A15 QPR1.
+
+Co-authored-by: Pierre-Hugues Husson <phh@phh.me>
+---
+ .../android/systemui/biometrics/UdfpsSurfaceView.java | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsSurfaceView.java b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsSurfaceView.java
+index dae25f71a..1b28fbcfb 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsSurfaceView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsSurfaceView.java
+@@ -68,13 +68,22 @@ public class UdfpsSurfaceView extends SurfaceView implements SurfaceHolder.Callb
+         //    what contents are added in which order to this view hierarchy.
+         setZOrderOnTop(true);
+ 
++        android.util.Log.e("PHH", "UdfpsSurfaceView");
++        String colorStr = android.os.SystemProperties.get("persist.sys.phh.fod_color", "00ff00");
++        int parsedColor = android.graphics.Color.WHITE;
++        try {
++            parsedColor = android.graphics.Color.parseColor("#" + colorStr);
++        } catch(Throwable t) {
++            android.util.Log.e("PHH", "Failed parsing color #" + colorStr, t);
++        }
++
+         mHolder = getHolder();
+         mHolder.addCallback(this);
+         mHolder.setFormat(PixelFormat.RGBA_8888);
+ 
+         mSensorPaint = new Paint(0 /* flags */);
+         mSensorPaint.setAntiAlias(true);
+-        mSensorPaint.setColor(context.getColor(R.color.config_udfpsColor));
++        mSensorPaint.setColor(parsedColor);
+         mSensorPaint.setStyle(Paint.Style.FILL);
+ 
+         mUdfpsIconPressed = context.getDrawable(R.drawable.udfps_icon_pressed);
+-- 
+2.34.1
