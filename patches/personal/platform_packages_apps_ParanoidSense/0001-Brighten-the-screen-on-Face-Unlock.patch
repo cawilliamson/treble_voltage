@@ -1,0 +1,67 @@
+From 22eeb5729214f6a6957e85889e86e0b4104116b9 Mon Sep 17 00:00:00 2001
+From: mytja <mitja@severkar.eu>
+Date: Sun, 27 Oct 2024 18:42:51 +0100
+Subject: [PATCH 1/1] Brighten the screen on Face Unlock
+
+This is similar to Samsung's Brighten screen feature.
+Feature should be GSI independent and is only reliant on AOSPA's ParanoidSense (Evolution X rebrands it to FaceUnlock).
+
+Requested by: https://github.com/mytja/treble_evo/issues/52
+---
+ .../FaceAuthenticationController.kt           | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/src/co/aospa/sense/controller/FaceAuthenticationController.kt b/src/co/aospa/sense/controller/FaceAuthenticationController.kt
+index 35d5266..7846b97 100644
+--- a/src/co/aospa/sense/controller/FaceAuthenticationController.kt
++++ b/src/co/aospa/sense/controller/FaceAuthenticationController.kt
+@@ -4,11 +4,13 @@ import android.content.Context
+ import android.graphics.ImageFormat
+ import android.graphics.SurfaceTexture
+ import android.hardware.Camera
++import android.hardware.display.DisplayManagerGlobal
+ import android.os.Handler
+ import android.os.HandlerThread
+ import android.os.Looper
+ import android.os.Message
+ import android.os.Process
++import android.os.SystemProperties
+ import android.util.Log
+ import co.aospa.sense.camera.CameraService
+ import co.aospa.sense.camera.CameraUtil
+@@ -71,9 +73,18 @@ open class FaceAuthenticationController(
+     private var mPreviewSize: Camera.Size? = null
+     private var mStop = false
+     private var mTexture: SurfaceTexture? = null
++    private val displayId = mContext.getDisplay().getDisplayId()
++    private var mDisplayManagerGlobal: DisplayManagerGlobal = DisplayManagerGlobal.getInstance()
++    private var mDisplayBrightnessBefore: Float? = null
+     fun start() {
+         Log.i(TAG, "start enter")
+         mHandler!!.sendEmptyMessageDelayed(MSG_CAMERA_OPEN, 0)
++        if (!SystemProperties.getBoolean("persist.sys.phh.brighten_screen_face_unlock", false)) {
++            return
++        }
++        mDisplayBrightnessBefore = mDisplayManagerGlobal.getBrightness(displayId)
++        Log.i(TAG, "Set mDisplayBrightnessBefore=" + mDisplayBrightnessBefore + ", displayId=" + displayId)
++        mDisplayManagerGlobal.setBrightness(displayId, 1.0f)
+     }
+ 
+     private fun handleCameraOpen() {
+@@ -120,6 +131,14 @@ open class FaceAuthenticationController(
+         if (!mCompareSuccess) {
+             mCompareSuccess = false
+         }
++        if (SystemProperties.getBoolean("persist.sys.phh.brighten_screen_face_unlock", false) && mDisplayManagerGlobal.getBrightness(displayId) == 1.0f) {
++            // brightness hasn't been changed by the user in the meantime
++            // reset the brightness to previous value
++            Log.i(TAG, "Resetting display brightness to " + mDisplayBrightnessBefore + " on display " + displayId)
++            if (mDisplayBrightnessBefore != null) {
++                mDisplayManagerGlobal.setBrightness(displayId, mDisplayBrightnessBefore!!)
++            }
++        }
+         Log.i(TAG, "stop exit")
+     }
+ 
+-- 
+2.34.1
