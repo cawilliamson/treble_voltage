@@ -43,7 +43,7 @@ index 018124fdd..cd9cd80d1 100644
 +        mStatusBarPaddingEnd = SystemProperties.getInt("persist.sys.phh.status_bar_padding_end", -1);
 +        if (mStatusBarPaddingEnd == -1)
 +                mStatusBarPaddingEnd = res.getDimensionPixelSize(
-+                        .dimen.status_bar_padding_end);
++                        R.dimen.status_bar_padding_end);
          mMinDotWidth = res.getDimensionPixelSize(
                  R.dimen.ongoing_appops_dot_min_padding);
          mCutoutSideNudge = getResources().getDimensionPixelSize(
