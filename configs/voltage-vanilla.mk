@@ -3,9 +3,6 @@ $(call inherit-product, vendor/voltage/config/common_full_phone.mk)
 $(call inherit-product, vendor/voltage/config/BoardConfigSoong.mk)
 $(call inherit-product, device/voltage/sepolicy/common/sepolicy.mk)
 
-# Animations
-TARGET_BOOT_ANIMATION_RES := 1080
-
 # Kernel
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 TARGET_NO_KERNEL_IMAGE := true
