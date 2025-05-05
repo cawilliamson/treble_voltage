@@ -1,7 +1,7 @@
 From c10bc0fd6a3480e4e5f2492e614a6bb20aa57200 Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Sun, 6 Apr 2025 16:02:58 +0200
-Subject: [PATCH 9/9] fix: set custom UDFPS color
+Subject: [PATCH 8/8] fix: set custom UDFPS color
 
 This should enable changing UDFPS color on LineageOS-based ROMs.
 It's intended mostly since on A15 QPR2, Google has removed UdfpsView.kt,
