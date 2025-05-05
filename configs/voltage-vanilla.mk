@@ -6,9 +6,6 @@ $(call inherit-product, device/voltage/sepolicy/common/sepolicy.mk)
 # Animations
 TARGET_BOOT_ANIMATION_RES := 1080
 
-# Emulator (we aren't one!)
-PRODUCT_CHARACTERISTICS := device
-
 # Kernel
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 TARGET_NO_KERNEL_IMAGE := true
@@ -24,6 +21,10 @@ PRODUCT_PACKAGES += \
   AuroraStorePrivilegedExtension \
   F-DroidPrivilegedExtension \
   OpenEUICC
+
+# Product
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+PRODUCT_CHARACTERISTICS := device
 
 # SELinux
 TARGET_USES_PREBUILT_VENDOR_SEPOLICY := true
