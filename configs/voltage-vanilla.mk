@@ -1,9 +1,16 @@
+$(call inherit-product, device/phh/treble/base.mk)
 $(call inherit-product, vendor/voltage/config/common_full_phone.mk)
-$(call inherit-product, vendor/voltage/config/BoardConfigVoltage.mk)
+$(call inherit-product, vendor/voltage/config/BoardConfigSoong.mk)
 $(call inherit-product, device/voltage/sepolicy/common/sepolicy.mk)
--include vendor/voltage/build/core/config.mk
+
+# Animations
+TARGET_BOOT_ANIMATION_RES := 1080
+
+# Emulator (we aren't one!)
+PRODUCT_CHARACTERISTICS := device
 
 # Kernel
+PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 TARGET_NO_KERNEL_IMAGE := true
 TARGET_NO_KERNEL_OVERRIDE := true
 
@@ -19,5 +26,4 @@ PRODUCT_PACKAGES += \
   OpenEUICC
 
 # SELinux
-SELINUX_IGNORE_NEVERALLOWS := true
 TARGET_USES_PREBUILT_VENDOR_SEPOLICY := true
