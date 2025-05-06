@@ -1,18 +1,18 @@
-From a417e8f397d7632c2cbd7d7f2d0783fbe455e2f5 Mon Sep 17 00:00:00 2001
-From: ahnet-69 <syedmusicrealise@gmail.com>
-Date: Mon, 11 Sep 2023 20:03:39 +0500
-Subject: [PATCH 2/12] Add Maintainer Overlay
+From ab9b5c8d529eb768e6d456c8c3fc21b9ac33f3e2 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <home@chrisaw.com>
+Date: Tue, 6 May 2025 22:42:54 +0100
+Subject: [PATCH] Add maintainer info to Settings
 
 ---
  .../Settings/res/values/voltage_strings.xml   | 19 +++++++++++++++++++
  1 file changed, 19 insertions(+)
- create mode 100644 overlay-voltage/packages/apps/Settings/res/values/voltage_strings.xml
+ create mode 100644 overlay/common/packages/apps/Settings/res/values/voltage_strings.xml
 
-diff --git a/overlay-voltage/packages/apps/Settings/res/values/voltage_strings.xml b/overlay-voltage/packages/apps/Settings/res/values/voltage_strings.xml
+diff --git a/overlay/common/packages/apps/Settings/res/values/voltage_strings.xml b/overlay/common/packages/apps/Settings/res/values/voltage_strings.xml
 new file mode 100644
-index 0000000..779c1a9
+index 0000000..0a5946b
 --- /dev/null
-+++ b/overlay-voltage/packages/apps/Settings/res/values/voltage_strings.xml
++++ b/overlay/common/packages/apps/Settings/res/values/voltage_strings.xml
 @@ -0,0 +1,19 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!-- Copyright (C) 2022 VoltageOS
@@ -34,4 +34,4 @@ index 0000000..779c1a9
 +
 +</resources>
 -- 
-2.39.2
+2.47.2
