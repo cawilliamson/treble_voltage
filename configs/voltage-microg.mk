@@ -1,5 +1,6 @@
 $(call inherit-product, device/phh/treble/base.mk)
 $(call inherit-product, vendor/voltage/config/common_full_phone.mk)
+$(call inherit-product, vendor/voltage/config/tablet.mk)
 $(call inherit-product, vendor/voltage/config/BoardConfigSoong.mk)
 $(call inherit-product, device/voltage/sepolicy/common/sepolicy.mk)
 
