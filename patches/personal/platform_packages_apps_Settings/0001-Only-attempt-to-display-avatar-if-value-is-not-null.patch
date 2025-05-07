@@ -1,0 +1,45 @@
+From 52fe22ce761169ec9c7a10c8e75ad946cfd5a7ed Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <contact@chrisaw.io>
+Date: Wed, 7 May 2025 17:45:31 +0100
+Subject: [PATCH 1/1] Only attempt to display avatar if value is not null
+
+---
+ .../homepage/SettingsHomepageActivity.java    | 23 +++++++++++--------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/src/com/android/settings/homepage/SettingsHomepageActivity.java b/src/com/android/settings/homepage/SettingsHomepageActivity.java
+index 5d8b1f9..9ecf1f4 100644
+--- a/src/com/android/settings/homepage/SettingsHomepageActivity.java
++++ b/src/com/android/settings/homepage/SettingsHomepageActivity.java
+@@ -293,16 +293,19 @@ public class SettingsHomepageActivity extends FragmentActivity implements
+         initSearchBarView();
+ 
+         avatarView = findViewById(R.id.account_avatar);
+-        avatarView.setImageDrawable(getCircularUserIcon(context));
+-        avatarView.setVisibility(View.VISIBLE);
+-        avatarView.setOnClickListener(new View.OnClickListener() {
+-            @Override
+-            public void onClick(View v) {
+-                Intent intent = new Intent(Intent.ACTION_MAIN);
+-                intent.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$UserSettingsActivity"));
+-                startActivity(intent);
+-            }
+-        });
++
++        if (avatarView != null) {
++          avatarView.setImageDrawable(getCircularUserIcon(context));
++          avatarView.setVisibility(View.VISIBLE);
++          avatarView.setOnClickListener(new View.OnClickListener() {
++              @Override
++              public void onClick(View v) {
++                  Intent intent = new Intent(Intent.ACTION_MAIN);
++                  intent.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$UserSettingsActivity"));
++                  startActivity(intent);
++              }
++          });
++        }
+ 
+         getLifecycle().addObserver(new HideNonSystemOverlayMixin(this));
+         mCategoryMixin = new CategoryMixin(this);
+-- 
+2.47.2
