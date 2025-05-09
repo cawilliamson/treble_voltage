@@ -1,3 +1,4 @@
+include build/make/target/product/aosp_arm64.mk
 $(call inherit-product, device/phh/treble/base.mk)
 $(call inherit-product, vendor/voltage/config/common_full_phone.mk)
 $(call inherit-product, vendor/voltage/config/BoardConfigVoltage.mk)
@@ -19,5 +20,9 @@ PRODUCT_PACKAGES += \
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 PRODUCT_CHARACTERISTICS := device
 
+# ROM
+VOLTAGE_BUILD_TYPE := UNOFFICIAL
+
 # SELinux
+SELINUX_IGNORE_NEVERALLOWS := true
 TARGET_USES_PREBUILT_VENDOR_SEPOLICY := true
