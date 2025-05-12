@@ -24,14 +24,12 @@ index bbf2ef0..47b45f6 100644
  
  PRODUCT_COPY_FILES += \
 diff --git a/phh-on-boot.sh b/phh-on-boot.sh
-index d2d5b0a..91eae1b 100644
+index d2d5b0a..c2c5932 100644
 --- a/phh-on-boot.sh
 +++ b/phh-on-boot.sh
-@@ -60,3 +60,31 @@ getprop | \
-     while read -r svc ;do
-         setprop ctl.stop "$svc"
-     done
-+
+@@ -1,5 +1,33 @@
+ #!/system/bin/sh
+ 
 +# spoof critical props
 +# should be applied after boot complete to prevent breaking device features
 +resetprop_phh ro.build.user nobody
@@ -59,6 +57,10 @@ index d2d5b0a..91eae1b 100644
 +resetprop_phh ro.vendor.build.type user
 +resetprop_phh --delete ro.build.selinux
 +resetprop_phh ro.adb.secure 1
++
+ vndk="$(getprop persist.sys.vndk)"
+ [ -z "$vndk" ] && vndk="$(getprop ro.vndk.version |grep -oE '^[0-9]+')"
+ 
 diff --git a/phh-prop-handler.sh b/phh-prop-handler.sh
 index d036f24..777d60d 100644
 --- a/phh-prop-handler.sh
@@ -218,5 +220,5 @@ index c2b8eae..876f445 100644
 +# hide adbd is running
 +on property:init.svc.adbd=*
 +    exec u:r:magisk:s0 root root -- /system/bin/resetprop_phh -n init.svc.adbd stopped
--- 
+--
 2.49.0
