@@ -8,6 +8,10 @@ PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 TARGET_NO_KERNEL_IMAGE := true
 TARGET_NO_KERNEL_OVERRIDE := true
 
+# OTA
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.system.ota.json_url=https://raw.githubusercontent.com/cawilliamson/treble_voltage/android-15.0/configs/ota.json
+
 # Packages
 PRODUCT_PACKAGES += \
   AuroraStorePrivilegedExtension \
