@@ -1,7 +1,7 @@
 From 0df56eaaf8123d70ef456d9f990dd95ed194dea2 Mon Sep 17 00:00:00 2001
 From: Alberto Ponces <ponces26@gmail.com>
 Date: Sun, 5 Mar 2023 17:54:25 +0000
-Subject: [PATCH 5/9] permissions: Pre-grant google restore permissions
+Subject: [PATCH 5/8] permissions: Pre-grant google restore permissions
 
 Change-Id: I241886b63e0660ef01e7801b273045c3c91d44ea
 ---
