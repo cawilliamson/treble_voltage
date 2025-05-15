@@ -1,7 +1,7 @@
 From ea343ad8a1e2f8b6deaf2bda440aaa0a294b9b41 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Thu, 14 Mar 2024 20:57:00 +0000
-Subject: [PATCH 7/11] Add microG to build script
+Subject: [PATCH 7/12] Add microG to build script
 
 ---
  generate.sh | 7 ++++++-
