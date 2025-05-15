@@ -1,0 +1,45 @@
+From e446ff06d397a795f455d8d78eaef0fa607fbfef Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <contact@chrisaw.io>
+Date: Thu, 15 May 2025 10:02:50 +0100
+Subject: [PATCH 9/9] Prefer HIDL when AIDL sensor is "virtual"
+
+---
+ .../server/biometrics/AuthService.java        | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
+index cb9fa2f0c..026489241 100644
+--- a/services/core/java/com/android/server/biometrics/AuthService.java
++++ b/services/core/java/com/android/server/biometrics/AuthService.java
+@@ -1131,12 +1131,27 @@ public class AuthService extends SystemService {
+             return;
+         }
+ 
++        final boolean preferHidlSensor;
++        if (!SystemProperties.getBoolean("persist.sys.phh.virtual_sensors_are_real", false)) {
++            if (hidlConfigStrings != null && hidlConfigStrings.length > 0
++                    && fingerprintAidlInstances != null && fingerprintAidlInstances.length == 1
++                    && fingerprintAidlInstances[0].contains("virtual")) {
++
++                Slog.w(TAG, "Preferring HIDL fingerprint sensor over virtual AIDL sensor");
++                preferHidlSensor = true;
++            } else {
++                preferHidlSensor = false;
++            }
++        } else {
++            preferHidlSensor = false;
++        }
++
+         handlerProvider.getFingerprintHandler().post(() -> {
+             final FingerprintSensorConfigurations mFingerprintSensorConfigurations =
+                     new FingerprintSensorConfigurations(fingerprintAidlInstances != null
+-                            && fingerprintAidlInstances.length > 0);
++                            && fingerprintAidlInstances.length > 0) && !preferHidlSensor;
+ 
+-            if (fingerprintAidlInstances != null && fingerprintAidlInstances.length > 0) {
++            if (fingerprintAidlInstances != null && fingerprintAidlInstances.length > 0 && !preferHidlSensor) {
+                 mFingerprintSensorConfigurations.addAidlSensors(fingerprintAidlInstances);
+             } else if (hidlConfigStrings != null && hidlConfigStrings.length > 0) {
+                 mFingerprintSensorConfigurations.addHidlSensors(hidlConfigStrings, context);
+-- 
+2.47.2

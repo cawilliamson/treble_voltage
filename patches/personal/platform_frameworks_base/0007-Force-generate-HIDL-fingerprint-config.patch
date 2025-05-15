@@ -1,7 +1,7 @@
 From b18b7a47a446f4fb9238c07d8c8e169aebef91f4 Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Fri, 20 Dec 2024 22:14:35 +0100
-Subject: [PATCH 7/8] Force generate HIDL fingerprint config
+Subject: [PATCH 7/9] Force generate HIDL fingerprint config
 
 Part of https://github.com/mytja/treble_evo_patches/blob/vic/personal/platform_frameworks_base/0007-Attempt-at-fixing-Samsung-HIDL-UDFPS.patch
 ---
