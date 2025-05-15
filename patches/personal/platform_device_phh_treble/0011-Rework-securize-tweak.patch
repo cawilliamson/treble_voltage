@@ -5,11 +5,11 @@ Subject: [PATCH 11/12] Rework securize tweak
 
 ---
  base.mk             |  1 -
- phh-on-boot.sh      | 28 +++++++++++++++++
+ phh-on-boot.sh      | 32 +++++++++++++++++++
  phh-prop-handler.sh | 11 +++++++
  rw-system.sh        | 77 +++++++++++++++++++--------------------------
  vndk.rc             | 11 +++++++
- 5 files changed, 82 insertions(+), 46 deletions(-)
+ 5 files changed, 86 insertions(+), 46 deletions(-)
 
 diff --git a/base.mk b/base.mk
 index bbf2ef0..47b45f6 100644
@@ -24,39 +24,43 @@ index bbf2ef0..47b45f6 100644
  
  PRODUCT_COPY_FILES += \
 diff --git a/phh-on-boot.sh b/phh-on-boot.sh
-index d2d5b0a..c2c5932 100644
+index d2d5b0a..4e052bb 100644
 --- a/phh-on-boot.sh
 +++ b/phh-on-boot.sh
-@@ -1,5 +1,33 @@
+@@ -1,5 +1,37 @@
  #!/system/bin/sh
  
-+# spoof critical props
++# spoof post-boot props
 +# should be applied after boot complete to prevent breaking device features
-+resetprop_phh ro.build.user nobody
-+resetprop_phh ro.build.host android-build
-+resetprop_phh ro.build.tags release-keys
-+resetprop_phh ro.product.build.tags release-keys
-+resetprop_phh ro.system.build.tags release-keys
-+resetprop_phh ro.system_ext.build.tags release-keys
-+resetprop_phh ro.vendor.build.tags release-keys
-+resetprop_phh ro.boot.vbmeta.device_state locked
-+resetprop_phh vendor.boot.vbmeta.device_state locked
-+resetprop_phh ro.boot.verifiedbootstate green
-+resetprop_phh vendor.boot.verifiedbootstate green
-+resetprop_phh ro.boot.flash.locked 1
-+resetprop_phh ro.boot.veritymode enforcing
-+resetprop_phh ro.boot.warranty_bit 0
-+resetprop_phh ro.vendor.warranty_bit 0
-+resetprop_phh ro.warranty_bit 0
-+resetprop_phh ro.debuggable 0
-+resetprop_phh ro.secure 1
-+resetprop_phh ro.build.type user
-+resetprop_phh ro.product.build.type user
-+resetprop_phh ro.system.build.type user
-+resetprop_phh ro.system_ext.build.type user
-+resetprop_phh ro.vendor.build.type user
-+resetprop_phh --delete ro.build.selinux
-+resetprop_phh ro.adb.secure 1
++if [ ! -f /metadata/securize_disable ]; then
++  resetprop_phh ro.build.user nobody
++  resetprop_phh ro.build.host android-build
++  resetprop_phh ro.build.tags release-keys
++  resetprop_phh ro.product.build.tags release-keys
++  resetprop_phh ro.system.build.tags release-keys
++  resetprop_phh ro.system_ext.build.tags release-keys
++  resetprop_phh ro.vendor.build.tags release-keys
++  resetprop_phh ro.boot.vbmeta.device_state locked
++  resetprop_phh vendor.boot.vbmeta.device_state locked
++  resetprop_phh ro.boot.verifiedbootstate green
++  resetprop_phh vendor.boot.verifiedbootstate green
++  resetprop_phh ro.boot.flash.locked 1
++  resetprop_phh ro.boot.veritymode enforcing
++  resetprop_phh ro.boot.warranty_bit 0
++  resetprop_phh ro.vendor.warranty_bit 0
++  resetprop_phh ro.warranty_bit 0
++  resetprop_phh ro.debuggable 0
++  resetprop_phh ro.secure 1
++  resetprop_phh ro.build.type user
++  resetprop_phh ro.product.build.type user
++  resetprop_phh ro.system.build.type user
++  resetprop_phh ro.system_ext.build.type user
++  resetprop_phh ro.vendor.build.type user
++  resetprop_phh --delete ro.build.selinux
++  resetprop_phh ro.adb.secure 1
++  resetprop_phh -n sys.oem_unlock_allowed 0
++  resetprop_phh -n init.svc.flash_recovery stopped
++fi
 +
  vndk="$(getprop persist.sys.vndk)"
  [ -z "$vndk" ] && vndk="$(getprop ro.vndk.version |grep -oE '^[0-9]+')"
