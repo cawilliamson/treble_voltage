@@ -34,7 +34,7 @@ index cb9fa2f0c..026489241 100644
              final FingerprintSensorConfigurations mFingerprintSensorConfigurations =
                      new FingerprintSensorConfigurations(fingerprintAidlInstances != null
 -                            && fingerprintAidlInstances.length > 0);
-+                            && fingerprintAidlInstances.length > 0) && !preferHidlSensor;
++                            && fingerprintAidlInstances.length > 0 && !preferHidlSensor);
  
 -            if (fingerprintAidlInstances != null && fingerprintAidlInstances.length > 0) {
 +            if (fingerprintAidlInstances != null && fingerprintAidlInstances.length > 0 && !preferHidlSensor) {
