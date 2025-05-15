@@ -1,7 +1,7 @@
 From 32de9dbb723f68f24901a20f7e3748ea7b4b2275 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Mon, 6 May 2024 19:35:41 +0100
-Subject: [PATCH 8/11] Disable enforcing unauthenticated adb
+Subject: [PATCH 8/12] Disable enforcing unauthenticated adb
 
 ---
  system.prop | 1 -
