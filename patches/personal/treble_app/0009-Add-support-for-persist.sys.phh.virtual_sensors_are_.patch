@@ -47,7 +47,7 @@ index 87a1dd3..141969d 100644
              android:summary="Computer requires approval" />
 +        <SwitchPreference
 +            android:defaultValue="false"
-+            android:key="key_misc_treat_virtual_fp_as_real"
++            android:key="key_misc_treat_virtual_sensors_as_real"
 +            android:title="Treat virtual sensors as real"
 +            android:summary="Treat all virtual fingerprint sensors as real\nWarning: This can cause bootloops - use with extreme care\nRequires a reboot" />
      </PreferenceCategory>
