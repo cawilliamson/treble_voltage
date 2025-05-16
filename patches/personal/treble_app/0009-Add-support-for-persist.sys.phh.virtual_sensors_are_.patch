@@ -33,7 +33,7 @@ index 2111126..c07f505 100644
      val bluetooth = "key_misc_bluetooth"
      val securize = "key_misc_securize"
      val secureAdb = "key_misc_secure_adb"
-+    val treatVirtualFpAsReal = "key_misc_treat_virtual_sensors_as_real"
++    val treatVirtualSensorsAsReal = "key_misc_treat_virtual_sensors_as_real"
      val removeTelephony = "key_misc_removetelephony"
      val simSlots = "key_misc_sim_slots"
      val disableAudioEffects = "key_misc_disable_audio_effects"
