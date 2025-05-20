@@ -1,0 +1,80 @@
+From 4622bc7f55ff88af1c43018ab447c56348c2f2f7 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <contact@chrisaw.io>
+Date: Tue, 20 May 2025 15:11:01 +0100
+Subject: [PATCH 2/2] Add Ulefone 28 Ultra overlay
+
+---
+ Ulefone/28Ultra/Android.mk              | 8 ++++++++
+ Ulefone/28Ultra/AndroidManifest.xml     | 4 ++++
+ Ulefone/28Ultra/res/values/bools.xml    | 8 ++++++++
+ Ulefone/28Ultra/res/values/integers.xml | 5 +++++
+ overlay.mk                              | 1 +
+ 5 files changed, 26 insertions(+)
+ create mode 100644 Ulefone/28Ultra/Android.mk
+ create mode 100644 Ulefone/28Ultra/AndroidManifest.xml
+ create mode 100644 Ulefone/28Ultra/res/values/bools.xml
+ create mode 100644 Ulefone/28Ultra/res/values/integers.xml
+
+diff --git a/Ulefone/28Ultra/Android.mk b/Ulefone/28Ultra/Android.mk
+new file mode 100644
+index 0000000..f6b416e
+--- /dev/null
++++ b/Ulefone/28Ultra/Android.mk
+@@ -0,0 +1,8 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_PACKAGE_NAME := treble-overlay-ulefone-28ultra
++LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/overlay
++LOCAL_IS_RUNTIME_RESOURCE_OVERLAY := true
++LOCAL_PRIVATE_PLATFORM_APIS := true
++include $(BUILD_PACKAGE)
+diff --git a/Ulefone/28Ultra/AndroidManifest.xml b/Ulefone/28Ultra/AndroidManifest.xml
+new file mode 100644
+index 0000000..ae2f142
+--- /dev/null
++++ b/Ulefone/28Ultra/AndroidManifest.xml
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8" standalone="no"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="me.phh.treble.overlay.ulefone.28ultra" platformBuildVersionCode="27" platformBuildVersionName="8.1.0">
++    <overlay android:isStatic="true" android:priority="999" android:requiredSystemPropertyName="ro.vendor.build.fingerprint" android:requiredSystemPropertyValue="+Ulefone/GQ5011AF1*" android:targetPackage="android"/>
++</manifest>
+diff --git a/Ulefone/28Ultra/res/values/bools.xml b/Ulefone/28Ultra/res/values/bools.xml
+new file mode 100644
+index 0000000..cad20ec
+--- /dev/null
++++ b/Ulefone/28Ultra/res/values/bools.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <bool name="config_displayBlanksAfterDoze">true</bool>
++    <bool name="config_dozeAfterScreenOff">true</bool>
++    <bool name="config_dozeAlwaysOnEnabled">true</bool>
++    <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">true</bool>
++    <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
++</resources>
+diff --git a/Ulefone/28Ultra/res/values/integers.xml b/Ulefone/28Ultra/res/values/integers.xml
+new file mode 100644
+index 0000000..25beefa
+--- /dev/null
++++ b/Ulefone/28Ultra/res/values/integers.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <integer name="config_screenBrightnessDoze">55</integer>
++    <integer name="config_screenBrightnessSettingMinimum">1</integer>
++</resources>
+diff --git a/overlay.mk b/overlay.mk
+index 60f66f4..49c05f3 100644
+--- a/overlay.mk
++++ b/overlay.mk
+@@ -343,6 +343,7 @@ PRODUCT_PACKAGES += \
+ 	treble-overlay-teracube-v7101o \
+ 	treble-overlay-tethering \
+ 	treble-overlay-tethering-nobpf \
++        treble-overlay-ulefone-28ultra \
+ 	treble-overlay-umidigi-A13-Pro-Max-5G \
+ 	treble-overlay-umidigi-A3S \
+ 	treble-overlay-umidigi-A5pro \
+-- 
+2.47.2
