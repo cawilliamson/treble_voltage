@@ -1,7 +1,7 @@
 From 4622bc7f55ff88af1c43018ab447c56348c2f2f7 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Tue, 20 May 2025 15:11:01 +0100
-Subject: [PATCH 2/2] Add Ulefone 28 Ultra overlay
+Subject: [PATCH 2/2] Add Ulefone Ultra28 overlay
 
 ---
  Ulefone/ultra28/Android.mk                |  8 ++
