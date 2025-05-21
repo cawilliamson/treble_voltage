@@ -6,11 +6,11 @@ Subject: [PATCH 2/2] Add Ulefone Ultra28 overlay
 ---
  Ulefone/ultra28/Android.mk                |  8 ++
  Ulefone/ultra28/AndroidManifest.xml       |  4 +
- Ulefone/ultra28/res/values/bools.xml      |  8 ++
+ Ulefone/ultra28/res/values/bools.xml      | 10 +++
  Ulefone/ultra28/res/values/integers.xml   |  5 ++
  Ulefone/ultra28/res/xml/power_profile.xml | 90 +++++++++++++++++++++++
  overlay.mk                                |  1 +
- 6 files changed, 116 insertions(+)
+ 6 files changed, 118 insertions(+)
  create mode 100644 Ulefone/ultra28/Android.mk
  create mode 100644 Ulefone/ultra28/AndroidManifest.xml
  create mode 100644 Ulefone/ultra28/res/values/bools.xml
@@ -19,7 +19,7 @@ Subject: [PATCH 2/2] Add Ulefone Ultra28 overlay
 
 diff --git a/Ulefone/ultra28/Android.mk b/Ulefone/ultra28/Android.mk
 new file mode 100644
-index 0000000..f6b416e
+index 0000000..ab984d3
 --- /dev/null
 +++ b/Ulefone/ultra28/Android.mk
 @@ -0,0 +1,8 @@
@@ -33,7 +33,7 @@ index 0000000..f6b416e
 +include $(BUILD_PACKAGE)
 diff --git a/Ulefone/ultra28/AndroidManifest.xml b/Ulefone/ultra28/AndroidManifest.xml
 new file mode 100644
-index 0000000..ae2f142
+index 0000000..2d3fe98
 --- /dev/null
 +++ b/Ulefone/ultra28/AndroidManifest.xml
 @@ -0,0 +1,4 @@
@@ -43,15 +43,17 @@ index 0000000..ae2f142
 +</manifest>
 diff --git a/Ulefone/ultra28/res/values/bools.xml b/Ulefone/ultra28/res/values/bools.xml
 new file mode 100644
-index 0000000..cad20ec
+index 0000000..a7bd0f5
 --- /dev/null
 +++ b/Ulefone/ultra28/res/values/bools.xml
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,10 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<resources>
 +    <bool name="config_displayBlanksAfterDoze">true</bool>
 +    <bool name="config_dozeAfterScreenOff">true</bool>
++    <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool>
 +    <bool name="config_dozeAlwaysOnEnabled">true</bool>
++    <bool name="config_enableAutoPowerModes">true</bool>
 +    <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">true</bool>
 +    <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
 +</resources>
@@ -163,7 +165,7 @@ index 0000000..27a24ef
 +    <item name="gps.voltage">0</item>
 +</device>
 diff --git a/overlay.mk b/overlay.mk
-index 60f66f4..49c05f3 100644
+index 60f66f4..731801a 100644
 --- a/overlay.mk
 +++ b/overlay.mk
 @@ -343,6 +343,7 @@ PRODUCT_PACKAGES += \
