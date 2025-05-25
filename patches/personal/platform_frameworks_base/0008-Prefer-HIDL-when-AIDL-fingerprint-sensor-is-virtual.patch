@@ -1,6 +1,6 @@
 From af45d41733b1821234531bd725d3dd65facfb669 Mon Sep 17 00:00:00 2001
-From: "Christopher A. Williamson" <contact@chrisaw.io>
-Date: Thu, 15 May 2025 10:25:21 +0100
+From: TBM13 <mateotrueba@gmail.com>
+Date: Wed, 26 Mar 2025 20:43:15 -0300
 Subject: [PATCH 8/8] Prefer HIDL when AIDL fingerprint sensor is "virtual"
 
 ---
