@@ -1,7 +1,7 @@
 From 47e5b0ac3ebb5c3affe56c490fd90d696642612a Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Sun, 27 Oct 2024 20:29:53 +0100
-Subject: [PATCH 5/9] treble_app: add a setting to force a specific number of
+Subject: [PATCH 5/10] treble_app: add a setting to force a specific number of
  SIM slots
 
 Some device models seemingly report a wrong number of SIM slots.
