@@ -1,7 +1,7 @@
 From 109a2472a314a10cbf6721aee734570cf7668a99 Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Thu, 26 Dec 2024 00:14:47 +0100
-Subject: [PATCH 6/8] fix: alternative way of measuring network traffic
+Subject: [PATCH 6/9] fix: alternative way of measuring network traffic
 
 Devices with Linux kernel versions 4.14 (maybe even 4.19) and below seem to have an issue
 reporting network traffic through TrafficStats.getXXBytes functions. This is likely because
