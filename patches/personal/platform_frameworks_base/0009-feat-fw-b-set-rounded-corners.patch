@@ -1,7 +1,7 @@
 From a2ee204fc2b77c1edff47f9bce5c2d9baa8f46b1 Mon Sep 17 00:00:00 2001
 From: mytja <mitja@severkar.eu>
 Date: Sat, 17 May 2025 15:48:46 +0200
-Subject: [PATCH 9/9] feat(fw/b): set rounded corners
+Subject: [PATCH 9/10] feat(fw/b): set rounded corners
 
 I honestly have no idea why people want to set rounded corners, but
 here you go, I guess.
