@@ -1,7 +1,7 @@
 From 6f997b6357e801f95f6521f25089472c36734681 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Wed, 5 Mar 2025 19:29:33 +0000
-Subject: [PATCH 1/1] Remove conflicting SELinux policies from Voltage
+Subject: [PATCH 1/2] Remove conflicting SELinux policies from Voltage
 
 ---
  common/private/genfs_contexts | 3 ---
