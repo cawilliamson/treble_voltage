@@ -55,9 +55,9 @@ index 0000000..eb4393b
 +    <bool name="config_dozeAfterScreenOff">true</bool>
 +    <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool>
 +    <bool name="config_dozeAlwaysOnEnabled">true</bool>
-+    <bool name="config_enableAutoPowerModes">true</bool>
-+    <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">true</bool>
-+    <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
++    <bool name="config_enableAutoPowerModes">false</bool>
++    <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">false</bool>
++    <bool name="config_powerDecoupleInteractiveModeFromDisplay">false</bool>
 +</resources>
 diff --git a/Ulefone/ultra28/res/values/integers.xml b/Ulefone/ultra28/res/values/integers.xml
 new file mode 100644
