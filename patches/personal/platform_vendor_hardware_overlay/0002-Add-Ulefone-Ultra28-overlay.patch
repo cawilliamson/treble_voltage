@@ -4,14 +4,20 @@ Date: Tue, 20 May 2025 15:11:01 +0100
 Subject: [PATCH 2/2] Add Ulefone Ultra28 overlay
 
 ---
- Ulefone/ultra28/Android.mk                |  8 ++
- Ulefone/ultra28/AndroidManifest.xml       |  4 +
- Ulefone/ultra28/res/values/bools.xml      | 10 +++
- Ulefone/ultra28/res/values/integers.xml   |  5 ++
- Ulefone/ultra28/res/values/strings.xml    |  5 ++
- Ulefone/ultra28/res/xml/power_profile.xml | 91 +++++++++++++++++++++++
- overlay.mk                                |  1 +
- 7 files changed, 124 insertions(+)
+ Ulefone/ultra28-SystemUI/Android.mk           |  8 ++
+ Ulefone/ultra28-SystemUI/AndroidManifest.xml  | 10 ++
+ .../ultra28-SystemUI/res/values/config.xml    | 24 +++++
+ Ulefone/ultra28/Android.mk                    |  8 ++
+ Ulefone/ultra28/AndroidManifest.xml           |  4 +
+ Ulefone/ultra28/res/values/bools.xml          | 10 ++
+ Ulefone/ultra28/res/values/integers.xml       |  5 +
+ Ulefone/ultra28/res/values/strings.xml        |  5 +
+ Ulefone/ultra28/res/xml/power_profile.xml     | 91 +++++++++++++++++++
+ overlay.mk                                    |  2 +
+ 10 files changed, 167 insertions(+)
+ create mode 100644 Ulefone/ultra28-SystemUI/Android.mk
+ create mode 100644 Ulefone/ultra28-SystemUI/AndroidManifest.xml
+ create mode 100644 Ulefone/ultra28-SystemUI/res/values/config.xml
  create mode 100644 Ulefone/ultra28/Android.mk
  create mode 100644 Ulefone/ultra28/AndroidManifest.xml
  create mode 100644 Ulefone/ultra28/res/values/bools.xml
@@ -19,6 +25,66 @@ Subject: [PATCH 2/2] Add Ulefone Ultra28 overlay
  create mode 100644 Ulefone/ultra28/res/values/strings.xml
  create mode 100644 Ulefone/ultra28/res/xml/power_profile.xml
 
+diff --git a/Ulefone/ultra28-SystemUI/Android.mk b/Ulefone/ultra28-SystemUI/Android.mk
+new file mode 100644
+index 0000000..db0def9
+--- /dev/null
++++ b/Ulefone/ultra28-SystemUI/Android.mk
+@@ -0,0 +1,8 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_PACKAGE_NAME := treble-overlay-ulefone-ultra28-systemui
++LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/overlay
++LOCAL_IS_RUNTIME_RESOURCE_OVERLAY := true
++LOCAL_PRIVATE_PLATFORM_APIS := true
++include $(BUILD_PACKAGE)
+diff --git a/Ulefone/ultra28-SystemUI/AndroidManifest.xml b/Ulefone/ultra28-SystemUI/AndroidManifest.xml
+new file mode 100644
+index 0000000..32a3aad
+--- /dev/null
++++ b/Ulefone/ultra28-SystemUI/AndroidManifest.xml
+@@ -0,0 +1,10 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++        package="me.phh.treble.overlay.ulefone.ultra28.systemui"
++        android:versionCode="1"
++        android:versionName="1.0">
++        <overlay android:targetPackage="com.android.systemui"
++                android:requiredSystemPropertyName="ro.vendor.build.fingerprint"
++                android:requiredSystemPropertyValue="+Ulefone/GQ5011AF1*"
++                android:priority="999"
++                android:isStatic="true" />
++</manifest>
+diff --git a/Ulefone/ultra28-SystemUI/res/values/config.xml b/Ulefone/ultra28-SystemUI/res/values/config.xml
+new file mode 100644
+index 0000000..9690087
+--- /dev/null
++++ b/Ulefone/ultra28-SystemUI/res/values/config.xml
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++ * Copyright (c) 2006, The Android Open Source Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++*/
++-->
++<resources>
++    <!-- Doze: does this device support STATE_DOZE?  -->
++    <bool name="doze_display_state_supported">true</bool>
++
++    <!-- Doze: does this device support STATE_DOZE_SUSPEND?  -->
++    <bool name="doze_suspend_display_state_supported">false</bool>
++</resources>
 diff --git a/Ulefone/ultra28/Android.mk b/Ulefone/ultra28/Android.mk
 new file mode 100644
 index 0000000..ab984d3
@@ -35,23 +101,23 @@ index 0000000..ab984d3
 +include $(BUILD_PACKAGE)
 diff --git a/Ulefone/ultra28/AndroidManifest.xml b/Ulefone/ultra28/AndroidManifest.xml
 new file mode 100644
-index 0000000..2d3fe98
+index 0000000..66b40c4
 --- /dev/null
 +++ b/Ulefone/ultra28/AndroidManifest.xml
 @@ -0,0 +1,4 @@
 +<?xml version="1.0" encoding="utf-8" standalone="no"?>
 +<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="me.phh.treble.overlay.ulefone.ultra28" platformBuildVersionCode="27" platformBuildVersionName="8.1.0">
-+    <overlay android:isStatic="true" android:priority="999" android:requiredSystemPropertyName="ro.vendor.build.fingerprint" android:requiredSystemPropertyValue="+Ulefone/GQ5011AF1*" android:targetPackage="android"/>
++    <overlay android:isStatic="true" android:priority="998" android:requiredSystemPropertyName="ro.vendor.build.fingerprint" android:requiredSystemPropertyValue="+Ulefone/GQ5011AF1*" android:targetPackage="android"/>
 +</manifest>
 diff --git a/Ulefone/ultra28/res/values/bools.xml b/Ulefone/ultra28/res/values/bools.xml
 new file mode 100644
-index 0000000..eb4393b
+index 0000000..901e0c3
 --- /dev/null
 +++ b/Ulefone/ultra28/res/values/bools.xml
 @@ -0,0 +1,10 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<resources>
-+    <bool name="config_displayBlanksAfterDoze">false</bool>
++    <bool name="config_displayBlanksAfterDoze">true</bool>
 +    <bool name="config_dozeAfterScreenOff">true</bool>
 +    <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool>
 +    <bool name="config_dozeAlwaysOnEnabled">true</bool>
@@ -179,14 +245,15 @@ index 0000000..4d6552b
 +    <item name="gps.voltage">0</item>
 +</device>
 diff --git a/overlay.mk b/overlay.mk
-index 60f66f4..731801a 100644
+index 60f66f4..e3b618d 100644
 --- a/overlay.mk
 +++ b/overlay.mk
-@@ -343,6 +343,7 @@ PRODUCT_PACKAGES += \
+@@ -343,6 +343,8 @@ PRODUCT_PACKAGES += \
  	treble-overlay-teracube-v7101o \
  	treble-overlay-tethering \
  	treble-overlay-tethering-nobpf \
 +	treble-overlay-ulefone-ultra28 \
++	treble-overlay-ulefone-ultra28-systemui \
  	treble-overlay-umidigi-A13-Pro-Max-5G \
  	treble-overlay-umidigi-A3S \
  	treble-overlay-umidigi-A5pro \
