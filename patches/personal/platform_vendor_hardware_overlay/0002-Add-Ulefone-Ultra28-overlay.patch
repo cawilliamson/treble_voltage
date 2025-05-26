@@ -9,9 +9,9 @@ Subject: [PATCH 2/2] Add Ulefone Ultra28 overlay
  Ulefone/ultra28/res/values/bools.xml      | 10 +++
  Ulefone/ultra28/res/values/integers.xml   |  5 ++
  Ulefone/ultra28/res/values/strings.xml    |  5 ++
- Ulefone/ultra28/res/xml/power_profile.xml | 90 +++++++++++++++++++++++
+ Ulefone/ultra28/res/xml/power_profile.xml | 91 +++++++++++++++++++++++
  overlay.mk                                |  1 +
- 7 files changed, 123 insertions(+)
+ 7 files changed, 124 insertions(+)
  create mode 100644 Ulefone/ultra28/Android.mk
  create mode 100644 Ulefone/ultra28/AndroidManifest.xml
  create mode 100644 Ulefone/ultra28/res/values/bools.xml
@@ -45,13 +45,13 @@ index 0000000..2d3fe98
 +</manifest>
 diff --git a/Ulefone/ultra28/res/values/bools.xml b/Ulefone/ultra28/res/values/bools.xml
 new file mode 100644
-index 0000000..a7bd0f5
+index 0000000..eb4393b
 --- /dev/null
 +++ b/Ulefone/ultra28/res/values/bools.xml
 @@ -0,0 +1,10 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<resources>
-+    <bool name="config_displayBlanksAfterDoze">true</bool>
++    <bool name="config_displayBlanksAfterDoze">false</bool>
 +    <bool name="config_dozeAfterScreenOff">true</bool>
 +    <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool>
 +    <bool name="config_dozeAlwaysOnEnabled">true</bool>
@@ -83,10 +83,10 @@ index 0000000..47b9c51
 +</resources>
 diff --git a/Ulefone/ultra28/res/xml/power_profile.xml b/Ulefone/ultra28/res/xml/power_profile.xml
 new file mode 100644
-index 0000000..27a24ef
+index 0000000..4d6552b
 --- /dev/null
 +++ b/Ulefone/ultra28/res/xml/power_profile.xml
-@@ -0,0 +1,90 @@
+@@ -0,0 +1,91 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<device name="Android">
 +    <item name="ambient.on">10</item>
@@ -120,7 +120,8 @@ index 0000000..27a24ef
 +    </array>
 +    <item name="cpu.idle">6</item>
 +    <item name="cpu.suspend">5</item>
-+    <item name="cpu.active">2.55</item>. <item name="cpu.cluster_power.cluster0">2.11</item>
++    <item name="cpu.active">2.55</item>
++    <item name="cpu.cluster_power.cluster0">2.11</item>
 +    <item name="cpu.cluster_power.cluster1">2.22</item>
 +    <array name="cpu.core_speeds.cluster0">
 +        <value>300000</value>
