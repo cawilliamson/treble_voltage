@@ -114,16 +114,17 @@ new file mode 100644
 index 0000000..901e0c3
 --- /dev/null
 +++ b/Ulefone/ultra28/res/values/bools.xml
-@@ -0,0 +1,10 @@
+@@ -0,0 +1,11 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<resources>
-+    <bool name="config_displayBlanksAfterDoze">true</bool>
++    <bool name="config_displayBlanksAfterDoze">false</bool>
 +    <bool name="config_dozeAfterScreenOff">true</bool>
 +    <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool>
 +    <bool name="config_dozeAlwaysOnEnabled">true</bool>
 +    <bool name="config_enableAutoPowerModes">true</bool>
-+    <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">true</bool>
-+    <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
++    <bool name="config_enableBurnInProtection">true</bool>
++    <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">false</bool>
++    <bool name="config_powerDecoupleInteractiveModeFromDisplay">false</bool>
 +</resources>
 diff --git a/Ulefone/ultra28/res/values/integers.xml b/Ulefone/ultra28/res/values/integers.xml
 new file mode 100644
