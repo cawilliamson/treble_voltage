@@ -1,0 +1,29 @@
+From 1498535116f1bab1bacb0c5432dcdfa561be5611 Mon Sep 17 00:00:00 2001
+From: "Christopher A. Williamson" <contact@chrisaw.io>
+Date: Tue, 27 May 2025 09:21:08 +0100
+Subject: [PATCH 11/11] Allow a prop to override DOZE_SUSPEND to DOZE for AoD if
+ device doesnt support DOZE_SUSPEND
+
+---
+ .../com/android/server/display/DisplayPowerController.java  | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/services/core/java/com/android/server/display/DisplayPowerController.java b/services/core/java/com/android/server/display/DisplayPowerController.java
+index 7721bef26..66f47d126 100644
+--- a/services/core/java/com/android/server/display/DisplayPowerController.java
++++ b/services/core/java/com/android/server/display/DisplayPowerController.java
+@@ -2259,6 +2259,12 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
+         final boolean isOff = (state == Display.STATE_OFF);
+         final boolean isOn = (state == Display.STATE_ON);
+         final boolean changed = mPowerState.getScreenState() != state;
++        boolean disableDisplayDozeSuspend = SystemProperties.get("persist.sys.phh.disable_display_doze_suspend", "0").equals("1");
++
++        // Force override DOZE_SUSPEND to DOZE (for AoD)
++        if (disableDisplayDozeSuspend && state == Display.STATE_DOZE_SUSPEND) {
++            state = Display.STATE_DOZE;
++        }
+ 
+         // If the screen is turning on, give displayoffload a chance to do something before the
+         // screen actually turns on.
+-- 
+2.47.2

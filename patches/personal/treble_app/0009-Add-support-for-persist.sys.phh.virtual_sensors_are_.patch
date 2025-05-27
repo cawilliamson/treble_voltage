@@ -1,7 +1,7 @@
 From 2c5f11e2054055ec7527a33577c2f41dee2f4be4 Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Fri, 16 May 2025 13:54:01 +0100
-Subject: [PATCH 9/11] Add support for persist.sys.phh.virtual_sensors_are_real to 
+Subject: [PATCH 9/12] Add support for persist.sys.phh.virtual_sensors_are_real to 
  TrebleApp
 
 ---
