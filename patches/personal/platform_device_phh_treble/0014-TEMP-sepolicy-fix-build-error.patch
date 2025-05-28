@@ -1,0 +1,19 @@
+From 8553d82ad28844a7c20089860f8ba507f99f68ad Mon Sep 17 00:00:00 2001
+From: Mateo Trueba Di Como <mateotrueba@gmail.com>
+Date: Wed, 28 May 2025 11:26:31 -0300
+Subject: [PATCH] sepolicy: Fix build error
+
+---
+ sepolicy/samsung.te | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sepolicy/samsung.te b/sepolicy/samsung.te
+index 50fbf2cf..c12a61b6 100644
+--- a/sepolicy/samsung.te
++++ b/sepolicy/samsung.te
+@@ -21,4 +21,5 @@ allow kernel tmpfs:file relabelfrom;
+ type sysfs_ski_display_writable, file_type;
+ allow platform_app sysfs_ski_display_writable:file r_file_perms;
+ 
++type sysfs_mmc_host, fs_type, sysfs_type;
+ allow apexd sysfs_mmc_host:file write;
