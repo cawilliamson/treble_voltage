@@ -16,7 +16,7 @@ Change-Id: Ib1618cd4e1f83ba1f211a04429538b32e8de79da
  6 files changed, 171 insertions(+), 51 deletions(-)
 
 diff --git a/services/surfaceflinger/RegionSamplingThread.cpp b/services/surfaceflinger/RegionSamplingThread.cpp
-index 21d3396ebe..08f831c8e5 100644
+index 21d3396..08f831c 100644
 --- a/services/surfaceflinger/RegionSamplingThread.cpp
 +++ b/services/surfaceflinger/RegionSamplingThread.cpp
 @@ -353,13 +353,21 @@ void RegionSamplingThread::captureSample() {
@@ -49,10 +49,10 @@ index 21d3396ebe..08f831c8e5 100644
          fenceResult.value()->waitForever(LOG_TAG);
      }
 diff --git a/services/surfaceflinger/SurfaceFlinger.cpp b/services/surfaceflinger/SurfaceFlinger.cpp
-index 8e0c2372e8..9a877112de 100644
+index 4904ed7..32dec4a 100644
 --- a/services/surfaceflinger/SurfaceFlinger.cpp
 +++ b/services/surfaceflinger/SurfaceFlinger.cpp
-@@ -7390,41 +7390,79 @@ void SurfaceFlinger::captureScreenCommon(RenderAreaBuilderVariant renderAreaBuil
+@@ -7431,41 +7431,79 @@ void SurfaceFlinger::captureScreenCommon(RenderAreaBuilderVariant renderAreaBuil
          return;
      }
  
@@ -166,7 +166,7 @@ index 8e0c2372e8..9a877112de 100644
  }
  
  std::optional<SurfaceFlinger::OutputCompositionState>
-@@ -7490,7 +7528,7 @@ ftl::SharedFuture<FenceResult> SurfaceFlinger::captureScreenshot(
+@@ -7531,7 +7569,7 @@ ftl::SharedFuture<FenceResult> SurfaceFlinger::captureScreenshot(
  
      ftl::SharedFuture<FenceResult> renderFuture =
              renderScreenImpl(renderArea.get(), buffer, regionSampling, grayscale, isProtected,
@@ -175,7 +175,7 @@ index 8e0c2372e8..9a877112de 100644
  
      if (captureResults.capturedHdrLayers && attachGainmap &&
          FlagManager::getInstance().true_hdr_screenshots()) {
-@@ -7525,7 +7563,8 @@ ftl::SharedFuture<FenceResult> SurfaceFlinger::captureScreenshot(
+@@ -7566,7 +7604,8 @@ ftl::SharedFuture<FenceResult> SurfaceFlinger::captureScreenshot(
              ScreenCaptureResults unusedResults;
              ftl::SharedFuture<FenceResult> hdrRenderFuture =
                      renderScreenImpl(renderArea.get(), hdrTexture, regionSampling, grayscale,
@@ -185,7 +185,7 @@ index 8e0c2372e8..9a877112de 100644
  
              renderFuture =
                      ftl::Future(std::move(renderFuture))
-@@ -7571,10 +7610,67 @@ ftl::SharedFuture<FenceResult> SurfaceFlinger::captureScreenshot(
+@@ -7612,10 +7651,67 @@ ftl::SharedFuture<FenceResult> SurfaceFlinger::captureScreenshot(
      return renderFuture;
  }
  
@@ -255,7 +255,7 @@ index 8e0c2372e8..9a877112de 100644
          std::vector<std::pair<Layer*, sp<LayerFE>>>& layers) {
      SFTRACE_CALL();
  
-@@ -7720,9 +7816,15 @@ ftl::SharedFuture<FenceResult> SurfaceFlinger::renderScreenImpl(
+@@ -7761,9 +7857,15 @@ ftl::SharedFuture<FenceResult> SurfaceFlinger::renderScreenImpl(
      //
      // TODO(b/196334700) Once we use RenderEngineThreaded everywhere we can always defer the call
      // to CompositionEngine::present.
@@ -275,7 +275,7 @@ index 8e0c2372e8..9a877112de 100644
      return presentFuture;
  }
 diff --git a/services/surfaceflinger/SurfaceFlinger.h b/services/surfaceflinger/SurfaceFlinger.h
-index 1e2c08747b..835cb572b4 100644
+index da92e3b..7d973f4 100644
 --- a/services/surfaceflinger/SurfaceFlinger.h
 +++ b/services/surfaceflinger/SurfaceFlinger.h
 @@ -885,10 +885,16 @@ private:
@@ -296,9 +296,9 @@ index 1e2c08747b..835cb572b4 100644
 +            ScreenCaptureResults&, std::optional<OutputCompositionState>& displayState,
              std::vector<std::pair<Layer*, sp<LayerFE>>>& layers);
  
-     void readPersistentProperties();
+     bool canAllocateHwcDisplayIdForVDS(uint64_t usage);
 diff --git a/services/surfaceflinger/common/FlagManager.cpp b/services/surfaceflinger/common/FlagManager.cpp
-index 5e78426c77..5c417ba748 100644
+index 5e78426..5c417ba 100644
 --- a/services/surfaceflinger/common/FlagManager.cpp
 +++ b/services/surfaceflinger/common/FlagManager.cpp
 @@ -166,6 +166,7 @@ void FlagManager::dump(std::string& result) const {
@@ -318,7 +318,7 @@ index 5e78426c77..5c417ba748 100644
  FLAG_MANAGER_ACONFIG_FLAG(display_config_error_hal, "");
  FLAG_MANAGER_ACONFIG_FLAG(connected_display_hdr, "debug.sf.connected_display_hdr");
 diff --git a/services/surfaceflinger/common/include/common/FlagManager.h b/services/surfaceflinger/common/include/common/FlagManager.h
-index d8887f538f..15284ba0ee 100644
+index d8887f5..15284ba 100644
 --- a/services/surfaceflinger/common/include/common/FlagManager.h
 +++ b/services/surfaceflinger/common/include/common/FlagManager.h
 @@ -95,6 +95,7 @@ public:
@@ -330,7 +330,7 @@ index d8887f538f..15284ba0ee 100644
      bool true_hdr_screenshots() const;
      bool display_config_error_hal() const;
 diff --git a/services/surfaceflinger/tests/unittests/TestableSurfaceFlinger.h b/services/surfaceflinger/tests/unittests/TestableSurfaceFlinger.h
-index 7f0b7a6585..fd8bc0d22d 100644
+index 7f0b7a6..fd8bc0d 100644
 --- a/services/surfaceflinger/tests/unittests/TestableSurfaceFlinger.h
 +++ b/services/surfaceflinger/tests/unittests/TestableSurfaceFlinger.h
 @@ -475,7 +475,8 @@ public:
@@ -343,5 +343,5 @@ index 7f0b7a6585..fd8bc0d22d 100644
      }
  
      auto getLayerSnapshotsForScreenshotsFn(ui::LayerStack layerStack, uint32_t uid) {
--- 
+--
 2.43.0
