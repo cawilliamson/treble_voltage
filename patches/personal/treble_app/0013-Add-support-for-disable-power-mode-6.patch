@@ -48,7 +48,7 @@ index b6d12db..3f7c250 100644
 +            android:defaultValue="false"
 +            android:key="key_misc_disable_expensive_rendering_mode"
 +            android:title="Disable EXPENSIVE_RENDERING power mode"
-+            android:summary="Fixes constant log spam on some MTK devices about power mode 6" />
++            android:summary="Fixes constant log spam on some MTK devices about power mode 6\nRequires reboot" />
          <SwitchPreference
              android:defaultValue="false"
              android:key="key_misc_secure_adb"
