@@ -1,7 +1,7 @@
 From f0bcfd0508d8ae5426b737884d2d16157719fccf Mon Sep 17 00:00:00 2001
 From: ChonDoit <thphantomblog@gmail.com>
 Date: Fri, 25 Aug 2023 09:18:32 -0300
-Subject: [PATCH 3/12] Add options for status bar paddings
+Subject: [PATCH 3/13] Add options for status bar paddings
 
 ---
  app/src/main/java/me/phh/treble/app/Misc.kt   | 34 +++++++++++++++++++
