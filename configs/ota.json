@@ -1,36 +1,36 @@
 {
-  "version": "20250511.181705",
-  "date": "1746983825",
+  "version": "4.3-20250601.211442",
+  "date": "1759410882",
   "variants": [
     {
       "name": "treble_a64_bgN",
-      "size": "943922508",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250511.181705/VoltageOS-gapps-arm32_binder64-ab-4.3-20250511.181705-UNOFFICIAL.img.xz"
+      "size": "948338892",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250601.211442/VoltageOS-gapps-arm32_binder64-ab-4.3-20250601.211442-UNOFFICIAL.img.xz"
     },
     {
       "name": "treble_arm64_bgN",
-      "size": "1138486252",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250511.181705/VoltageOS-gapps-arm64-ab-4.3-20250511.181705-UNOFFICIAL.img.xz"
+      "size": "1139319072",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250601.211442/VoltageOS-gapps-arm64-ab-4.3-20250601.211442-UNOFFICIAL.img.xz"
     },
     {
       "name": "treble_a64_bmN",
-      "size": "794904916",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250511.181705/VoltageOS-microg-arm32_binder64-ab-4.3-20250511.181705-UNOFFICIAL.img.xz"
+      "size": "858235588",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250601.211442/VoltageOS-microg-arm32_binder64-ab-4.3-20250601.211442-UNOFFICIAL.img.xz"
     },
     {
       "name": "treble_arm64_bmN",
-      "size": "977853660",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250511.181705/VoltageOS-microg-arm64-ab-4.3-20250511.181705-UNOFFICIAL.img.xz"
+      "size": "1042763684",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250601.211442/VoltageOS-microg-arm64-ab-4.3-20250601.211442-UNOFFICIAL.img.xz"
     },
     {
       "name": "treble_a64_bvN",
-      "size": "736916496",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250511.181705/VoltageOS-vanilla-arm32_binder64-ab-4.3-20250511.181705-UNOFFICIAL.img.xz"
+      "size": "738884288",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250601.211442/VoltageOS-vanilla-arm32_binder64-ab-4.3-20250601.211442-UNOFFICIAL.img.xz"
     },
     {
       "name": "treble_arm64_bvN",
-      "size": "924152360",
-      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250511.181705/VoltageOS-vanilla-arm64-ab-4.3-20250511.181705-UNOFFICIAL.img.xz"
+      "size": "927334296",
+      "url": "https://github.com/cawilliamson/treble_voltage/releases/download/4.3-20250601.211442/VoltageOS-vanilla-arm64-ab-4.3-20250601.211442-UNOFFICIAL.img.xz"
     }
   ]
 }
