@@ -27,7 +27,7 @@ APPLY_DEBUG_PATCHES ?= false
 BUILD_DATE := $(shell date "+%Y%m%d")
 BUILD_TIME := $(shell date "+%H%M%S")
 ROM_TAG ?= 15-qpr2
-ROM_VERSION ?= 4.3
+ROM_VERSION ?= 4.5
 VERIFY_SEPOLICY ?= true
 UPLOAD_TO_GITHUB ?= false
 
