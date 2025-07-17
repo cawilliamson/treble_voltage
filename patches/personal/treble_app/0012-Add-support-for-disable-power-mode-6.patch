@@ -1,7 +1,7 @@
 From 2954f3190387ebd804b1752748463125a0288b9f Mon Sep 17 00:00:00 2001
 From: "Christopher A. Williamson" <contact@chrisaw.io>
 Date: Sun, 1 Jun 2025 14:55:46 +0100
-Subject: [PATCH 13/13] Add support for disable power mode 6
+Subject: [PATCH 12/12] Add support for disable power mode 6
 
 ---
  app/src/main/java/me/phh/treble/app/Misc.kt         | 4 ++++
