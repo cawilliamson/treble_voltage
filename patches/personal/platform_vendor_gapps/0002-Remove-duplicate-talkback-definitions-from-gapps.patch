@@ -5,80 +5,78 @@ Subject: [PATCH 2/2] Remove duplicate talkback definitions from gapps
 
 ---
  arm/Android.bp        | 12 ------------
- arm/arm-vendor.mk     |  1 -
+ arm/arm-vendor.mk     |  3 +--
  arm64/Android.bp      | 12 ------------
- arm64/arm64-vendor.mk |  1 -
- 4 files changed, 26 deletions(-)
+ arm64/arm64-vendor.mk |  3 +--
+ 4 files changed, 2 insertions(+), 28 deletions(-)
 
 diff --git a/arm/Android.bp b/arm/Android.bp
-index f966708..f9c93b1 100644
+index 8ac9ea5..9b1185e 100644
 --- a/arm/Android.bp
 +++ b/arm/Android.bp
-@@ -46,18 +46,6 @@ android_app_import {
- 	product_specific: true,
+@@ -68,15 +68,3 @@ android_app_import {
+     privileged: true,
+     product_specific: true,
  }
- 
--android_app_import {
--	name: "talkback",
--	owner: "gapps",
--	apk: "proprietary/product/app/talkback/talkback.apk",
--	preprocessed: true,
--	presigned: true,
--	dex_preopt: {
--		enabled: false,
--	},
--	product_specific: true,
--}
 -
- android_app_import {
- 	name: "Velvet",
- 	owner: "gapps",
+-android_app_import {
+-    name: "talkback",
+-    owner: "gapps",
+-    apk: "proprietary/product/app/talkback/talkback.apk",
+-    preprocessed: true,
+-    presigned: true,
+-    dex_preopt: {
+-        enabled: false,
+-    },
+-    product_specific: true,
+-}
 diff --git a/arm/arm-vendor.mk b/arm/arm-vendor.mk
-index 0f99e2a..695f256 100644
+index 4e559d2..90b6100 100644
 --- a/arm/arm-vendor.mk
 +++ b/arm/arm-vendor.mk
-@@ -14,7 +14,6 @@ ifeq ($(TARGET_IS_GROUPER),)
- 
+@@ -12,8 +12,7 @@ ifeq ($(TARGET_IS_GROUPER),)
  PRODUCT_PACKAGES += \
+     SetupWizard \
      SpeechServicesByGoogle \
--    talkback \
-     Velvet \
-     SetupWizard
+-    Velvet \
+-    talkback
++    Velvet
  endif
+
+ $(call inherit-product, vendor/gapps/common/common-vendor.mk)
 diff --git a/arm64/Android.bp b/arm64/Android.bp
-index a06eee4..2ef2b92 100644
+index e942c16..3f34f94 100644
 --- a/arm64/Android.bp
 +++ b/arm64/Android.bp
-@@ -58,18 +58,6 @@ android_app_import {
- 	product_specific: true,
+@@ -94,15 +94,3 @@ android_app_import {
+     privileged: true,
+     product_specific: true,
  }
- 
--android_app_import {
--	name: "talkback",
--	owner: "gapps",
--	apk: "proprietary/product/app/talkback/talkback.apk",
--	preprocessed: true,
--	presigned: true,
--	dex_preopt: {
--		enabled: false,
--	},
--	product_specific: true,
--}
 -
- android_app_import {
- 	name: "Velvet",
- 	owner: "gapps",
+-android_app_import {
+-    name: "talkback",
+-    owner: "gapps",
+-    apk: "proprietary/product/app/talkback/talkback.apk",
+-    preprocessed: true,
+-    presigned: true,
+-    dex_preopt: {
+-        enabled: false,
+-    },
+-    product_specific: true,
+-}
 diff --git a/arm64/arm64-vendor.mk b/arm64/arm64-vendor.mk
-index 1277c45..d65234f 100644
+index a6f9aa6..578dd74 100644
 --- a/arm64/arm64-vendor.mk
 +++ b/arm64/arm64-vendor.mk
-@@ -15,7 +15,6 @@ ifeq ($(TARGET_IS_GROUPER),)
- PRODUCT_PACKAGES += \
+@@ -13,8 +13,7 @@ PRODUCT_PACKAGES += \
      MarkupGoogle_v2 \
+     SetupWizard \
      SpeechServicesByGoogle \
--    talkback \
-     Velvet \
-     SetupWizard
+-    Velvet \
+-    talkback
++    Velvet
  endif
--- 
+
+ ifneq ($(filter %tangorpro,$(TARGET_PRODUCT)),)
+--
 2.47.2
