@@ -16,7 +16,7 @@ Change-Id: I54cd19f02c7633912f0d272c7a038093182975c7
  4 files changed, 27 insertions(+)
 
 diff --git a/app/src/main/java/me/phh/treble/app/Misc.kt b/app/src/main/java/me/phh/treble/app/Misc.kt
-index 5fa810a..8038e65 100644
+index a0a841b..6e2e039 100644
 --- a/app/src/main/java/me/phh/treble/app/Misc.kt
 +++ b/app/src/main/java/me/phh/treble/app/Misc.kt
 @@ -187,6 +187,10 @@ object Misc: EntryStartup {
@@ -31,7 +31,7 @@ index 5fa810a..8038e65 100644
                  val thisModeIndex = sp.getString(key, "-1").toInt()
                  val displayInfo = displayManager.displays[0]
 diff --git a/app/src/main/java/me/phh/treble/app/MiscSettings.kt b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
-index b374fae..a023297 100644
+index fa605fe..e17611a 100644
 --- a/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 +++ b/app/src/main/java/me/phh/treble/app/MiscSettings.kt
 @@ -24,6 +24,7 @@ object MiscSettings : Settings {
@@ -49,7 +49,7 @@ index ae3ae4f..8e38cb2 100644
 @@ -37,6 +37,21 @@
        <item>"huawei"</item>
      </array>
- 
+
 +    <array name="pref_misc_sim_slots">
 +      <item>"Don't force"</item>
 +      <item>"No SIM slot"</item>
@@ -69,13 +69,13 @@ index ae3ae4f..8e38cb2 100644
        <item>"Don't force"</item>
        <item>"60fps"</item>
 diff --git a/app/src/main/res/xml/pref_misc.xml b/app/src/main/res/xml/pref_misc.xml
-index e9db275..6339fde 100644
+index fea2460..4720ec5 100644
 --- a/app/src/main/res/xml/pref_misc.xml
 +++ b/app/src/main/res/xml/pref_misc.xml
-@@ -213,6 +213,13 @@
+@@ -217,6 +217,13 @@
+             android:defaultValue="false"
+             android:key="key_misc_restart_ril"
              android:title="Automatically restart RIL" />
-         <Preference android:title="@string/remove_telephony_subsystem"
-             android:key="key_misc_removetelephony" />
 +        <ListPreference
 +            android:defaultValue="-1"
 +            android:entries="@array/pref_misc_sim_slots"
@@ -83,8 +83,8 @@ index e9db275..6339fde 100644
 +            android:key="key_misc_sim_slots"
 +            android:title="Force a specific number of SIM slots"
 +            android:summary="Might lead to instability of system\nRequires a reboot" />
-     </PreferenceCategory>
-     <PreferenceCategory android:title="Other">
          <SwitchPreference
--- 
+             android:defaultValue="true"
+             android:key="key_misc_patch_smsc"
+--
 2.34.1
